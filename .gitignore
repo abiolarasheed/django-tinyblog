@@ -34,3 +34,4 @@ celerybeat-schedule
 *_pycache__
 */__pycache__
 db.sqlite3
+Coverage
