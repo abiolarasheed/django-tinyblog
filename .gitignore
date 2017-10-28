@@ -1,0 +1,35 @@
+# Packaging
+*.pyc
+*.egg-info
+/dist/
+/build/
+# Vagrant
+.vagrant
+# Temporary/OS files
+*.swp
+*.swo
+*.*~
+.~lock.*
+*.DS_Store
+# IDE files
+.project
+.pydevproject
+.settings
+.idea
+.metadata/*
+# Docs
+/docs/build/*
+*.pdf
+TODO
+# media
+*/media/*
+*/static/*
+*/.git
+MyProject.komodoproject
+fixtures
+fixtures/*
+djcelery.schedulers.DatabaseScheduler
+celerybeat.pid
+celerybeat-schedule
+*_pycache__
+*/__pycache__
