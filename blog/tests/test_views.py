@@ -18,13 +18,13 @@ class BlogViewTestCase(TestCase):
         self.assertIsInstance(get_template(template_name).render(), SafeText)
 
     def test_index_page(self):
-        self.generic_templateview_tester('/', 'index', 'index.html')
+        self.generic_template_view_tester('/', 'index', 'index.html')
 
     def test_about(self):
-        self.generic_templateview_tester("/about/", 'about', "about.html")
+        self.generic_template_view_tester("/about/", 'about', "about.html")
 
     def test_feedback_blog(self):
-        self.generic_templateview_tester('/blog/', 'blog', 'blog.html')
+        self.generic_template_view_tester('/blog/', 'blog', 'blog.html')
 
     def test_feedback(self):
-        self.generic_templateview_tester("/feedback/", "feedback", "feedback.html")
+        self.generic_template_view_tester("/feedback/", "feedback", "feedback.html")
