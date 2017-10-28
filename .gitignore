@@ -33,3 +33,4 @@ celerybeat.pid
 celerybeat-schedule
 *_pycache__
 */__pycache__
+db.sqlite3
