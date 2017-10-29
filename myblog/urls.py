@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^about/$', TemplateView.as_view(template_name="about.html"), name='about'),
     url(r'^blog/$', TemplateView.as_view(template_name="blog.html"), name='blog'),
     url(r'^feedback/$', TemplateView.as_view(template_name="feedback.html"), name='feedback'),
-    url(r'^', TemplateView.as_view(template_name="index.html"), name='index'),
+    url(r'^$', TemplateView.as_view(template_name="index.html"), name='index'),
     url(r'^admin/', admin.site.urls),
 ]
 
