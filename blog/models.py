@@ -38,8 +38,8 @@ class Entry(models.Model):
         return unique_slug
 
     def save(self, *args, **kwargs):
-        if self.is_published and self.id is None:
-            self.published_date = timezone.now().date()
+        if self.is_published and self.published_date is None:
+            self.published_date = timezone.now()
 
         if not self.slug:
             self.slug = self.__get_unique_slug()
