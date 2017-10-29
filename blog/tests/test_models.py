@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from ..models import Entry
 
 
 class BlogModelTestCase(TestCase):
     def setUp(self):
-        self.author, auth_created = User.objects.get_or_create(email="iamatest@gmail.com",
-                                                               username="iamatest")
+        self.author, auth_created = get_user_model().objects.get_or_create(email="iamatest@gmail.com",
+                                                                   username="iamatest")
         self.blog_title = "Test blog Title"
         self.blog_body = "This is my test blog"
 
