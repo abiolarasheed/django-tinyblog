@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
 from django.urls.base import reverse
 from django.template.loader import get_template
 from django.utils.safestring import SafeText
