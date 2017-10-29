@@ -50,4 +50,3 @@ class Entry(models.Model):
             self.slug = self.__get_unique_slug()
 
         super(Entry, self).save(*args, **kwargs)
-
