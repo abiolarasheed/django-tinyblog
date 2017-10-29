@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog',
+    'taggit',
 ]
 
 MIDDLEWARE = [
@@ -125,3 +126,6 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(DIR, 'static/')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(DIR, 'media/')
+
+#  django-taggit settings
+TAGGIT_CASE_INSENSITIVE = True
