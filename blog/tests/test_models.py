@@ -24,6 +24,10 @@ class BlogModelTestCase(TestCase):
         self.assertIsNone(entry.published_date)
         self.assertFalse(entry.is_published)
 
+    def test_get_absolute_url(self):
+        entry = self.get_entry()[0]
+        self.assertIsNotNone(entry.get_absolute_url())
+
     def test_on_publish(self):
         entry, created = self.get_entry()
         entry.is_published = True
