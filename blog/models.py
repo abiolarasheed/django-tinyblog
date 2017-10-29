@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.utils import timezone
+from django.urls.base import reverse
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
@@ -37,6 +38,9 @@ class Entry(models.Model):
             unique_slug = '{}-{}'.format(slug, num)
             num += 1
         return unique_slug
+
+    def get_absolute_url(self):
+        return reverse('entry_detail', kwargs={'pk': self.pk})
 
     def save(self, *args, **kwargs):
         if self.is_published and self.published_date is None:
