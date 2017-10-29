@@ -1,0 +1,37 @@
+{% extends "base.html" %} {%load static%} {% block content %}
+<main role="main" class="container">
+    <div class="starter-template">
+        <h1>Programming For Fun and Profit</h1>
+        <p class="lead">This blog is a collection of codes and steps I documented to help me remember stuff that I have worked on.
+            <br> All codes and snippets on this blog are free for use by any one.</p>
+    </div>
+</main>
+<!-- /.container -->
+<div class="masthead-followup row m-0 border border-white">
+
+    <div class="col-12 col-md-3 p-3 p-md-5 bg-light border border-white">
+        <img class="post-imag" src="{% static 'image/tux.png'  %}">
+        <h3>Linux</h3>
+        <p>Linux is a name which broadly denotes a family of free and open-source software operating system distributions built around the Linux kernel. The defining component of a Linux distribution is the Linux kernel, an operating system kernel first released on September 17, 1991 by Linus Torvalds</p>
+    </div>
+    <div class="col-12 col-md-3 p-3 p-md-5 bg-light border border-white">
+        <img class="post-imag" src="{% static 'image/py.png' %}">
+        <h3>Python</h3>
+        <p>Python is a programming language that lets you work quickly
+and integrate systems more effectivel</p>
+    </div>
+
+    <div class="col-12 col-md-3 p-3 p-md-5 bg-light border border-white">
+        <img class="post-imag" src="{% static 'image/django.png' %}">
+        <h3>Django</h3>
+        <p>Django is a high-level Python Web framework that encourages rapid development and clean, pragmatic design. Built by experienced developers, it takes care of much of the hassle of Web development, so you can focus on writing your app without needing to reinvent the wheel. It’s free and open source.</p>
+    </div>
+
+    <div class="col-12 col-md-3 p-3 p-md-5 bg-light border border-white">
+        <img class="post-imag" src="{% static 'image/flask.png'%}">
+        <h3>Flask</h3>
+        <p>Flask is a microframework for Python based on Werkzeug, Jinja 2 and good intentions.</p>
+    </div>
+
+</div>
+{% endblock content %}
