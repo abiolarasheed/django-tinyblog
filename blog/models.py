@@ -9,7 +9,8 @@ from taggit.managers import TaggableManager
 
 class Entry(models.Model):
     title = models.CharField(max_length=500, unique=True, db_index=True, null=False, blank=False)
-    slug = models.SlugField(max_length=140, unique=True, db_index=True, null=False, blank=False)
+    slug = models.SlugField(max_length=140, unique=True, db_index=True, null=False,
+                            blank=False, editable=False)
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     body = models.TextField(null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
