@@ -6,8 +6,8 @@ from ..models import Entry
 
 class BlogModelTestCase(TestCase):
     def setUp(self):
-        self.author, auth_created = get_user_model().objects.get_or_create(email="iamatest@gmail.com",
-                                                                   username="iamatest")
+        self.author, auth_created = get_user_model().\
+            objects.get_or_create(email="iamatest@gmail.com", username="iamatest")
         self.blog_title = "Test blog Title"
         self.blog_body = "This is my test blog"
 
