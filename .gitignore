@@ -1,8 +1,17 @@
-# Packaging
+# Packaging, Databases and Executables
 *.pyc
 *.egg-info
 /dist/
 /build/
+djcelery.schedulers.DatabaseScheduler
+celerybeat.pid
+celerybeat-schedule
+db.sqlite3
+fixtures
+fixtures/*
+*_pycache__
+*/__pycache__
+
 # Vagrant
 .vagrant
 # Temporary/OS files
@@ -11,21 +20,25 @@
 *.*~
 .~lock.*
 *.DS_Store
+
 # IDE files
 .project
 .pydevproject
 .settings
 .idea
 .metadata/*
+MyProject.komodoproject
+
 # Docs
 /docs/build/*
 *.pdf
+
 TODO
 # media
 */media/*
 */static/*
 */.git
-MyProject.komodoproject
+
 fixtures
 fixtures/*
 djcelery.schedulers.DatabaseScheduler
@@ -34,4 +47,8 @@ celerybeat-schedule
 *_pycache__
 */__pycache__
 db.sqlite3
-Coverage
+
+
+# Coverage
+.coverage
+coverage_html_report
