@@ -18,6 +18,7 @@ class EntryDetail(DetailView):
 class EntryListView(ListView):
     template_name = 'entry_list.html'
     context_object_name = 'entries'
+    paginate_by = 12
     model = Entry
     queryset = model.objects.filter(is_published=True)
 
