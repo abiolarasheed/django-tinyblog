@@ -67,7 +67,8 @@ class EntryListViewTestCase(TestCase):
     def update_entries(self):
         self.entries = [Entry.objects.get_or_create(title=self.blog_title + str(index),
                                                     body=self.blog_body + str(index),
-                                                    author=self.author)[0]
+                                                    author=self.author,
+                                                    is_published=True)[0]
                         for index in range(30)]
 
     def test_results_not_found(self):
