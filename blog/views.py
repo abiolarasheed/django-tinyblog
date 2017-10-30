@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+from django.http.response import Http404
+from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, ListView
+
 from .models import Entry
 
 
@@ -16,3 +19,4 @@ class EntryDetail(DetailView):
 
 class EntryListView(ListView):
     model = Entry
+    queryset = model.objects.filter(is_published=True)
