@@ -18,5 +18,6 @@ class EntryDetail(DetailView):
 
 
 class EntryListView(ListView):
+    template_name = 'entry_detail.html'
     model = Entry
     queryset = model.objects.filter(is_published=True)
