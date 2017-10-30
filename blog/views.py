@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.http.response import Http404
-from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, ListView
 
 from .models import Entry
@@ -18,6 +16,12 @@ class EntryDetail(DetailView):
 
 
 class EntryListView(ListView):
-    template_name = 'entry_detail.html'
+    template_name = 'entry_list.html'
+    context_object_name = 'entries'
     model = Entry
     queryset = model.objects.filter(is_published=True)
+
+    def get_context_data(self, **kwargs):
+        context = super(EntryListView, self).get_context_data(**kwargs)
+        context['title'] = "My Blog list"
+        return context
