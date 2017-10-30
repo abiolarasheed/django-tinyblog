@@ -65,13 +65,27 @@ class EntryListViewTestCase(TestCase):
         self.entries = Entry.objects.none()
 
     def update_entries(self):
-        self.entries = [Entry.objects.get_or_create(title=self.blog_title + str(index),
-                                                    body=self.blog_body + str(index),
-                                                    author=self.author,
-                                                    is_published=True)[0]
-                        for index in range(30)]
+        [Entry.objects.get_or_create(title=self.blog_title + str(index),
+                                     body=self.blog_body + str(index),
+                                     author=self.author, is_published=True)
+         for index in range(30)]
+        self.entries = Entry.objects.all()
 
     def test_results_not_found(self):
         url = reverse('entry_list')
         response = self.client.get(url)
         self.assertContains(response, 'Results Not Found.')
+
+    def test_single_entry(self):
+        entry, __ = Entry.objects.get_or_create(title=self.blog_title,
+                                                body=self.blog_body,
+                                                author=self.author,
+                                                is_published=True)
+        response = self.client.get(reverse('entry_list'))
+        self.assertContains(response, entry.title)
+        self.assertContains(response, entry.slug)
+
+    def test_multiple_entries(self):
+        self.update_entries()
+        response = self.client.get(reverse('entry_list'))
+        self.assertEquals(response.context['entries'].count(), self.entries.count())
