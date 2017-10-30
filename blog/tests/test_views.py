@@ -5,7 +5,8 @@ from django.test import TestCase
 from django.urls.base import reverse
 from django.utils.safestring import SafeText
 
-from ..models import Entry
+from blog.models import Entry
+from blog.views import EntryListView
 
 
 class BlogViewTestCase(TestCase):
@@ -62,7 +63,6 @@ class EntryListViewTestCase(TestCase):
             objects.get_or_create(email="iamatest@gmail.com", username="iamatest")
         self.blog_title = "Test blog Title"
         self.blog_body = "This is my test blog"
-        self.entries = Entry.objects.none()
 
     def update_entries(self):
         [Entry.objects.get_or_create(title=self.blog_title + str(index),
@@ -88,4 +88,5 @@ class EntryListViewTestCase(TestCase):
     def test_multiple_entries(self):
         self.update_entries()
         response = self.client.get(reverse('entry_list'))
-        self.assertEquals(response.context['entries'].count(), self.entries.count())
+        self.assertEquals(response.context['entries'].count(),
+                          EntryListView.paginate_by)
