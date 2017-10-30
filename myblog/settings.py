@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from urllib.parse import urlparse
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,7 +22,7 @@ DIR = os.path.dirname(os.path.abspath(__file__))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '_2os9_%m3ssaix4cf+v8)0m^=x0s709ft$1gpumr(yf%h@)&hd'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -38,8 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blog',
+    'haystack',
     'taggit',
+    'blog',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +131,31 @@ MEDIA_ROOT = os.path.join(DIR, 'media/')
 
 #  django-taggit settings
 TAGGIT_CASE_INSENSITIVE = True
+
+# https://github.com/django-haystack/django-haystack/issues/1046
+parsed = urlparse("127.0.0.1:9200")
+HAYSTACK_USE_SSL = True if parsed.port == 443 else False
+HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.RealtimeSignalProcessor"
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 20
+HAYSTACK_ITERATOR_LOAD_PER_QUERY = 50
+HAYSTACK_CONNECTIONS = {
+    "default": {
+        "ENGINE": "haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine",
+        "URL": parsed.hostname,
+        "INDEX_NAME": "default",
+        "EXCLUDED_INDEXES": ["location.search_indexes.LocationIndex",
+                             "location.search_indexes.OtherPropertyWebsiteIndex",
+                             "owners.search_indexes.LandLordIndex",
+                             "owners.search_indexes.LandLordAssistantIndex",
+                             "owners.search_indexes.PropertyOccupierIndex",
+                             "owners.search_indexes.ServiceAdvertiserIndex",
+                             "owners.search_indexes.StaffIndex",
+                             "sitemanager.search_indexes.UserManualIndex",
+                             "accounts.search_indexes.FinancialInstitutionsIndex",
+                             ],
+        "KWARGS": {
+                   "port": parsed.port,
+                   "use_ssl": HAYSTACK_USE_SSL,
+                   }
+    },
+}
