@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView
 from .models import Entry
 
 
@@ -12,3 +12,7 @@ class EntryDetail(DetailView):
         context = super(EntryDetail, self).get_context_data(**kwargs)
         context['title'] = context['entry'].title
         return context
+
+
+class EntryListView(ListView):
+    model = Entry
