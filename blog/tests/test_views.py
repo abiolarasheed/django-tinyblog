@@ -70,3 +70,7 @@ class EntryListViewTestCase(TestCase):
                                                     author=self.author)[0]
                         for index in range(30)]
 
+    def test_results_not_found(self):
+        url = reverse('entry_list')
+        response = self.client.get(url)
+        self.assertContains(response, 'Results Not Found.')
