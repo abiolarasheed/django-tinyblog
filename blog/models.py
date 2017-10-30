@@ -40,7 +40,7 @@ class Entry(models.Model):
         return unique_slug
 
     def get_absolute_url(self):
-        return reverse('entry_detail', kwargs={'pk': self.pk})
+        return reverse('entry_detail', kwargs={'slug': self.slug})
 
     def save(self, *args, **kwargs):
         if self.is_published and self.published_date is None:
