@@ -20,7 +20,7 @@ class EntryListView(ListView):
     context_object_name = 'entries'
     paginate_by = 12
     model = Entry
-    queryset = model.objects.filter(is_published=True)
+    queryset = model.objects.filter(is_published=True).order_by('-modified_at')
 
     def get_context_data(self, **kwargs):
         context = super(EntryListView, self).get_context_data(**kwargs)
