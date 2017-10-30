@@ -62,7 +62,7 @@ class EntryListViewTestCase(TestCase):
             objects.get_or_create(email="iamatest@gmail.com", username="iamatest")
         self.blog_title = "Test blog Title"
         self.blog_body = "This is my test blog"
-        self.entries = []
+        self.entries = Entry.objects.none()
 
     def update_entries(self):
         self.entries = [Entry.objects.get_or_create(title=self.blog_title + str(index),
