@@ -57,4 +57,13 @@ class EntryViewTestCase(TestCase):
 
 
 class EntryListViewTestCase(TestCase):
-    pass
+    def setUp(self):
+        self.author, auth_created = get_user_model().\
+            objects.get_or_create(email="iamatest@gmail.com", username="iamatest")
+        self.blog_title = "Test blog Title"
+        self.blog_body = "This is my test blog"
+        self.entries = [Entry.objects.get_or_create(title=self.blog_title + str(index),
+                                                    body=self.blog_body + str(index),
+                                                    author=self.author)[0]
+                        for index in range(30)]
+
