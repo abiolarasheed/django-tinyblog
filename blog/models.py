@@ -42,6 +42,10 @@ class Entry(models.Model):
     def get_absolute_url(self):
         return reverse('entry_detail', kwargs={'slug': self.slug})
 
+    def as_json(self):
+        return {"title": self.title,
+                "url": self.get_absolute_url()}
+
     def save(self, *args, **kwargs):
         if self.is_published and self.published_date is None:
             self.published_date = timezone.now()
