@@ -45,3 +45,7 @@ class BlogModelTestCase(TestCase):
         self.assertFalse(" " in slug)
         self.assertTrue("-" in slug)
 
+    def test_as_json(self):
+        entry = self.get_entry()[0]
+        self.assertTrue(hasattr(entry, 'as_json'))
+        self.assertIsInstance(entry.as_json(), dict)
