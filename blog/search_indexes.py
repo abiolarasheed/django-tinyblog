@@ -5,6 +5,7 @@ from blog.models import Entry
 
 class EntryIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
+    content_auto = indexes.EdgeNgramField(model_attr='body')
 
     def get_model(self):
         return Entry
