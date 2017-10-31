@@ -52,3 +52,5 @@ db.sqlite3
 # Coverage
 .coverage
 coverage_html_report
+# whoosh_index
+*/whoosh_index
