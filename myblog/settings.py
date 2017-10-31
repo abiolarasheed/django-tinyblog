@@ -85,7 +85,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
@@ -118,44 +117,26 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 STATICFILES_DIRS = [
     os.path.join(DIR, 'assets/'),
 ]
+
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(DIR, 'static/')
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(DIR, 'media/')
+STATIC_ROOT = os.path.join(DIR, 'static')
+MEDIA_ROOT = os.path.join(DIR, 'media')
 
 #  django-taggit settings
 TAGGIT_CASE_INSENSITIVE = True
 
-# https://github.com/django-haystack/django-haystack/issues/1046
-parsed = urlparse("127.0.0.1:9200")
-HAYSTACK_USE_SSL = True if parsed.port == 443 else False
-HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.RealtimeSignalProcessor"
-HAYSTACK_SEARCH_RESULTS_PER_PAGE = 20
-HAYSTACK_ITERATOR_LOAD_PER_QUERY = 50
 HAYSTACK_CONNECTIONS = {
-    "default": {
-        "ENGINE": "haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine",
-        "URL": parsed.hostname,
-        "INDEX_NAME": "default",
-        "EXCLUDED_INDEXES": ["location.search_indexes.LocationIndex",
-                             "location.search_indexes.OtherPropertyWebsiteIndex",
-                             "owners.search_indexes.LandLordIndex",
-                             "owners.search_indexes.LandLordAssistantIndex",
-                             "owners.search_indexes.PropertyOccupierIndex",
-                             "owners.search_indexes.ServiceAdvertiserIndex",
-                             "owners.search_indexes.StaffIndex",
-                             "sitemanager.search_indexes.UserManualIndex",
-                             "accounts.search_indexes.FinancialInstitutionsIndex",
-                             ],
-        "KWARGS": {
-                   "port": parsed.port,
-                   "use_ssl": HAYSTACK_USE_SSL,
-                   }
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
     },
 }
+
+#  return empty on next and previous page is page is 1
+EMPTY_ON_1 = True
