@@ -21,10 +21,11 @@ from django.views.generic import TemplateView
 
 import blog.urls
 from blog.views import JsonSearchView
+from blog.utils import ajax_required
 
 
 urlpatterns = [
-    url(r'^search/', JsonSearchView(), name='navbar_search'),
+    url(r'^search/', ajax_required(JsonSearchView()), name='navbar_search'),
     url(r'^about/$', TemplateView.as_view(template_name="about.html"), name='about'),
     url(r'^blog/$', TemplateView.as_view(template_name="blog.html"), name='blog'),
     url(r'^feedback/$', TemplateView.as_view(template_name="feedback.html"), name='feedback'),
