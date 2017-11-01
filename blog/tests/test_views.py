@@ -173,6 +173,9 @@ class JsonSearchViewTestCase(TestCase):
     def test_create_response(self):
         url = reverse('navbar_search')
         query_string = {'q': 'django tips 6 get_or_create'}
-        response = self.client.get(url, query_string)
+
+        # Make request via ajax.
+        response = self.client.get(url, query_string,
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertTrue(response.status_code == 200)
         self.assertIsInstance(json.loads(response.content), dict)
