@@ -13,5 +13,11 @@ def ajax_required(view_function):
                                 status=400)
         return view_function(request, *args, **kwargs)
     wrap.__doc__ = view_function.__doc__
-    wrap.__name__ = view_function.__name__
+
+    try:
+        wrap.__name__ = view_function.__name__
+    except AttributeError:
+        """If for some reason the view has no name we move on."""
+        pass
+
     return wrap
