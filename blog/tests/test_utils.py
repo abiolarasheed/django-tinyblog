@@ -64,3 +64,28 @@ class AjaxRequiredTestCase(TestCase):
 
         # View function returned response.content.
         self.assertEqual(response.content, "Am a Mock Response!")
+
+    def test_is_ajax_true_no_func_name(self):
+        """ajax_required decorator called via ajax from view
+          with no attr __name__.
+        """
+
+        # Setup.
+        delattr(self.test_view, '__name__')  # Del function __name__
+        attributes = {'is_ajax.return_value': True}
+        self.ajax_request.configure_mock(**attributes)
+
+        # Run.
+        decorated = ajax_required(self.test_view)
+        response = decorated(self.ajax_request)
+
+        # Check.
+        # View was called.
+        self.test_view.assert_called_once_with(self.ajax_request)
+
+        # View function returned response.status_code 200.
+        self.assertEqual(response.status_code, 200)
+
+        # View function returned response.content.
+        self.assertEqual(response.content, "Am a Mock Response!")
+
