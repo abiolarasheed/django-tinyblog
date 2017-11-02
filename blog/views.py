@@ -3,8 +3,10 @@ from collections import OrderedDict
 from urllib.parse import urlencode
 
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.http.response import JsonResponse
 from django.urls.base import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, CreateView
 
 from haystack.views import SearchView
@@ -12,11 +14,18 @@ from haystack.views import SearchView
 from .models import Entry
 
 
+@method_decorator(login_required(), name='dispatch')
 class EntryCreateView(CreateView):
     model = Entry
-    success_url = reverse_lazy('entry_detail')
+    success_url = reverse_lazy('entry_list')
     fields = ['body', 'title']
     template_name = "entry_create.html"
+
+    def form_valid(self, form):
+        entry = form.save(commit=False)
+        entry.author = self.request.user
+        entry.save()
+        return super(EntryCreateView, self).form_valid(form)
 
 
 class EntryDetail(DetailView):
