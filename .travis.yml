@@ -3,17 +3,13 @@ language: python
 python:
   - 3.6
 
-env:
-  - DJANGO=1.11.6
-
 before_install:
   - export DJANGO_SETTINGS_MODULE=tinyblog.settings
   - export PIP_USE_MIRRORS=true
 
 install:
-  - pip install -q Django==$DJANGO_VERSION --quiet
+  - pip install .
   - pip install -r requirements.txt
-  - pip install -e .
 
 script:
   - python manage.py makemigrations --noinput
