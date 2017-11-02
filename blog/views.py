@@ -4,11 +4,18 @@ from urllib.parse import urlencode
 
 from django.conf import settings
 from django.http.response import JsonResponse
+from django.urls.base import reverse_lazy
 from django.views.generic import DetailView, ListView, CreateView
 
 from haystack.views import SearchView
 
 from .models import Entry
+
+
+class EntryCreateView(CreateView):
+    model = Entry
+    success_url = reverse_lazy('entry_detail')
+    fields = ['body', 'title']
 
 
 class EntryDetail(DetailView):
