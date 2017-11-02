@@ -12,7 +12,7 @@ from django.urls.base import reverse
 from django.utils.safestring import SafeText
 
 from blog.models import Entry
-from blog.views import EntryCreateView, EntryListView, JsonSearchView
+from blog.views import EntryListView, JsonSearchView
 
 TEST_LOGIN_URL = "/admin/login/"
 
@@ -197,10 +197,10 @@ class JsonSearchViewTestCase(TestCase):
 @override_settings(LOGIN_URL=TEST_LOGIN_URL)
 class EntryCreateViewTestCase(TestCase):
     def setUp(self):
-        user, __ = get_user_model().objects.get_or_create(email="iamatest@test.com",
+        self.user, __ = get_user_model().objects.get_or_create(email="iamatest@test.com",
                                                           username="iamatest")
-        user.set_password('123456')
-        user.save()
+        self.user.set_password('123456')
+        self.user.save()
 
     def test_get_on_logged_in_user(self):
         self.client.login(username='iamatest', password='123456')
@@ -208,11 +208,115 @@ class EntryCreateViewTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(str(response.context['user']), 'iamatest')
         self.assertTrue(response.status_code == 200)
-        self.assertTemplateUsed(response,"entry_create.html")
+        self.assertTemplateUsed(response, "entry_create.html")
 
     def test_get_on_anonymous_user(self):
         url = reverse('entry_create')
         response = self.client.get(url)
         self.assertTrue(response.status_code == 302)
-        self.assertRedirects(response, "{test_login_url}?next={url}".format(test_login_url=TEST_LOGIN_URL,
-                                                                            url=url))
+        self.assertRedirects(response, "{test_login_url}?next={url}".
+                             format(test_login_url=TEST_LOGIN_URL,url=url))
+
+    def test_post(self):
+        """Test to see normal post."""
+        url = reverse('entry_create')
+        post_data = {'title': u'AM a test post',
+                     'body': 'This is a test post'}
+
+        last_total = Entry.objects.all().count()
+
+        self.client.login(username='iamatest', password='123456')
+
+        # Post data
+        response = self.client.post(url, data=post_data)
+
+        # Check there was redirect
+        self.assertTrue(response.status_code == 302)
+
+        # Check redirected to expected view
+        self.assertRedirects(response, reverse('entry_list'))
+
+        # Check new entry was added
+        self.assertGreater(Entry.objects.all().count(), last_total)
+
+        # Check is our post is the new one
+        self.assertEqual(Entry.objects.last().title, post_data['title'])
+
+        # Check is right user was associated with blog
+        self.assertEqual(Entry.objects.get(title=post_data['title']).author, self.user)
+
+
+    def test_post_existing_entry(self):
+        """Test to see effect of creating an existing entry."""
+        url = reverse('entry_create')
+        post_data = {'title': u'AM a test post',
+                     'body': 'This is a test post'}
+
+        # Create the entry we will try to recreate again via a post.
+        entry = Entry(**post_data)
+        entry.author = get_user_model().objects.last()
+        entry.save()
+
+        # Get total Entry before we try POST data.
+        last_total = Entry.objects.all().count()
+
+        self.client.login(username='iamatest', password='123456')
+
+        # Post data
+        response = self.client.post(url, data=post_data)
+
+        # Get the form errors if any and convert to dict.
+        form_errors = json.loads(response.context['form'].errors.as_json())
+
+        # Check there was no redirect.
+        self.assertTrue(response.status_code == 200)
+
+        # Check the right template was rendered.
+        self.assertTemplateUsed(response, "entry_create.html")
+
+        # Check no new Entry was created.
+        self.assertEqual(Entry.objects.all().count(), last_total)
+
+        # Check the title is the/one of the issues.
+        self.assertIn('title', form_errors.keys())
+
+        # Check the Entry with title exists.
+        self.assertEqual(form_errors['title'][0]['code'], "unique")
+
+    def test_post_empty_data(self):
+        """Test to see effects of an empty post data."""
+        url = reverse('entry_create')
+        post_data = dict()
+
+        # Get total Entry before we try POST data.
+        last_total = Entry.objects.all().count()
+
+        # Log user in.
+        self.client.login(username='iamatest', password='123456')
+
+        # Post data.
+        response = self.client.post(url, data=post_data)
+
+        # Get the form errors if any and convert to dict.
+        form_errors = json.loads(response.context['form'].errors.as_json())
+
+        # Check there was no redirect.
+        self.assertTrue(response.status_code == 200)
+
+        # Check the right template was rendered.
+        self.assertTemplateUsed(response, "entry_create.html")
+
+        # Check no new Entry was created.
+        self.assertEqual(Entry.objects.all().count(), last_total)
+
+        # Check the title is the/one of the issues.
+        self.assertIn('title', form_errors.keys())
+
+        # Check the body is the/one of the issues.
+        self.assertIn('body', form_errors.keys())
+
+        # Check the Entry with title exists.
+        self.assertEqual(form_errors['title'][0]['code'], "required")
+
+        # Check the Entry with title exists.
+        self.assertEqual(form_errors['body'][0]['code'], "required")
