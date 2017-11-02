@@ -179,3 +179,15 @@ class JsonSearchViewTestCase(TestCase):
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertTrue(response.status_code == 200)
         self.assertIsInstance(json.loads(response.content), dict)
+
+    def test_render_json_response(self):
+        url = reverse('navbar_search')
+        query_string = {'q': 'django tips 6 get_or_create'}
+
+        request = RequestFactory().get(url, query_string,
+                                       HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        json_search_view = JsonSearchView()
+        json_search_view.request = request
+        response = json_search_view.render_json_response()
+        self.assertTrue(response.status_code == 200)
+        self.assertIsInstance(json.loads(response.content), dict)
