@@ -1,11 +1,7 @@
 language: python
 
 python:
-  - 3.4
-  - 3.5
   - 3.6
-  - "pypy-5.8"
-  - "pypy-5.9"
 
 env:
   - DJANGO_VERSION=1.10.8
