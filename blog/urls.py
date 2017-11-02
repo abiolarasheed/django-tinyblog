@@ -1,8 +1,12 @@
 from django.conf.urls import url
 
 from . import views
+from .utils import ajax_required
+
 
 urlpatterns = [
-    url(r'^post/$', views.EntryListView.as_view(), name='entry_list'),
+    url(r'^create/$', views.EntryCreateView.as_view(), name='entry_create'),
+    url(r'^list/$', views.EntryListView.as_view(), name='entry_list'),
+    url(r'^search/$', ajax_required(views.JsonSearchView()), name='navbar_search'),
     url(r'^(?P<slug>[-\w]+)/$', views.EntryDetail.as_view(), name='entry_detail'),
 ]
