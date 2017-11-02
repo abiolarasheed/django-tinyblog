@@ -203,5 +203,4 @@ class EntryCreateViewTestCase(TestCase):
         url = reverse('entry_create')
         response = self.client.get(url)
         self.assertTrue(response.status_code == 200)
-        self.assertIsInstance(json.loads(response.content), dict)
-
+        self.assertTemplateUsed(response,"entry_create.html")
