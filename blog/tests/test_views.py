@@ -14,6 +14,7 @@ from django.utils.safestring import SafeText
 from blog.models import Entry
 from blog.views import EntryCreateView, EntryListView, JsonSearchView
 
+TEST_LOGIN_URL = "/admin/login/"
 
 TEST_INDEX = {
     'default': {
@@ -193,14 +194,25 @@ class JsonSearchViewTestCase(TestCase):
         self.assertIsInstance(json.loads(response.content), dict)
 
 
+@override_settings(LOGIN_URL=TEST_LOGIN_URL)
 class EntryCreateViewTestCase(TestCase):
     def setUp(self):
-        self.request = RequestFactory()
-        self.request.user, auth_created = get_user_model().\
-            objects.get_or_create(email="iamatest@test.com", username="iamatest")
+        user, __ = get_user_model().objects.get_or_create(email="iamatest@test.com",
+                                                          username="iamatest")
+        user.set_password('123456')
+        user.save()
 
-    def test_get(self):
+    def test_get_on_logged_in_user(self):
+        self.client.login(username='iamatest', password='123456')
         url = reverse('entry_create')
         response = self.client.get(url)
+        self.assertEqual(str(response.context['user']), 'iamatest')
         self.assertTrue(response.status_code == 200)
         self.assertTemplateUsed(response,"entry_create.html")
+
+    def test_get_on_anonymous_user(self):
+        url = reverse('entry_create')
+        response = self.client.get(url)
+        self.assertTrue(response.status_code == 302)
+        self.assertRedirects(response, "{test_login_url}?next={url}".format(test_login_url=TEST_LOGIN_URL,
+                                                                            url=url))
