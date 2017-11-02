@@ -12,7 +12,7 @@ from django.urls.base import reverse
 from django.utils.safestring import SafeText
 
 from blog.models import Entry
-from blog.views import EntryListView, JsonSearchView
+from blog.views import EntryCreateView, EntryListView, JsonSearchView
 
 
 TEST_INDEX = {
@@ -191,3 +191,7 @@ class JsonSearchViewTestCase(TestCase):
         response = json_search_view.render_json_response()
         self.assertTrue(response.status_code == 200)
         self.assertIsInstance(json.loads(response.content), dict)
+
+
+class EntryCreateViewTestCase(TestCase):
+    pass
