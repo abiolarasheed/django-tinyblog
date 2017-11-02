@@ -1,0 +1,19 @@
+language: python
+
+python:
+  - 3.6
+
+env:
+  - DJANGO=1.11.6
+
+before_install:
+  - export DJANGO_SETTINGS_MODULE=tinyblog.settings
+  - export PYTHONPATH=$HOME/repo/tinyblog
+  - export PIP_USE_MIRRORS=true
+
+install:
+  - pip install -r requirements.txt
+  - pip install django==$DJANGO --quiet
+
+script:
+  - python manage.py migrate --noinput
