@@ -16,6 +16,7 @@ class EntryCreateView(CreateView):
     model = Entry
     success_url = reverse_lazy('entry_detail')
     fields = ['body', 'title']
+    template_name = "entry_create.html"
 
 
 class EntryDetail(DetailView):
