@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 
 from django.conf import settings
 from django.http.response import JsonResponse
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, CreateView
 
 from haystack.views import SearchView
 
@@ -82,3 +82,5 @@ class JsonSearchView(SearchView):
         context.update(self.build_pager(page, paginator))
 
         return JsonResponse(context)
+
+    render_json_response = create_response
