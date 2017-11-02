@@ -194,4 +194,14 @@ class JsonSearchViewTestCase(TestCase):
 
 
 class EntryCreateViewTestCase(TestCase):
-    pass
+    def setUp(self):
+        self.request = RequestFactory()
+        self.request.user, auth_created = get_user_model().\
+            objects.get_or_create(email="iamatest@test.com", username="iamatest")
+
+    def test_get(self):
+        url = reverse('entry_create')
+        response = self.client.get(url)
+        self.assertTrue(response.status_code == 200)
+        self.assertIsInstance(json.loads(response.content), dict)
+
