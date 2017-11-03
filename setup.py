@@ -17,7 +17,7 @@ setup(
     author_email='rasheed.abiola3@gmail.com',
     description='A mini django blogging app written in python3.6+ ',
     long_description=open('README.rst').read(),
-    keywords=['forms', 'django', 'crispy', 'DRY'],
+    keywords=['blog', 'django', 'tinyblog', 'tiny'],
     install_requires=required,
     include_package_data=True,
     zip_safe=False,
