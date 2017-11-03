@@ -7,6 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from taggit.managers import TaggableManager
 
+from blog.managers import PublishedEntryQuerySet
+
 
 class Entry(models.Model):
     title = models.CharField(max_length=500, unique=True, db_index=True, null=False, blank=False)
@@ -20,6 +22,8 @@ class Entry(models.Model):
     poster = models.ImageField(null=True, blank=True)
     is_published = models.BooleanField(default=False)
     tags = TaggableManager()
+    objects = models.Manager()
+    published = PublishedEntryQuerySet.as_manager()
 
     class Meta:
         verbose_name = _("Entry")
