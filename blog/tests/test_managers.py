@@ -26,3 +26,14 @@ class PublishedEntryQuerySetTestCase(TestCase):
 
         # Check if QuerySet was returned
         self.assertIsInstance(Entry.published.all(), QuerySet)
+
+        # Check to see if 15 exist since we created 15 as published.
+        self.assertEqual(Entry.published.all().order_by('id').count(), 15)
+
+        # Check if all results 'is_published' value is the same
+        self.assertEqual(Entry.published.all().
+                         values('is_published').distinct().count(), 1)
+
+        # Check if all results 'is_published' value is the same and is True
+        self.assertTrue(Entry.published.all().
+                        values('is_published').distinct()[0]['is_published'])
