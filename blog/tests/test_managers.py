@@ -19,3 +19,10 @@ class PublishedEntryQuerySetTestCase(TestCase):
                                      author=author, is_published=True)
          for index in range(30)]
         Entry.objects.filter(id__gte=16).update(is_published=False)
+
+    def test_entry_published(self):
+        # Check if 'Entry' has attribute 'published'
+        self.assertIsInstance(Entry.published, models.Manager)
+
+        # Check if QuerySet was returned
+        self.assertIsInstance(Entry.published.all(), QuerySet)
