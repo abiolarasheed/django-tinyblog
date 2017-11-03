@@ -10,4 +10,4 @@ django-tinyblog
    :alt: Build Status
    :target: https://coveralls.io/github/orangedigitallab/django-tinyblog
 
-My new Django Blog
+A mini django blogging app written in python3.6+
