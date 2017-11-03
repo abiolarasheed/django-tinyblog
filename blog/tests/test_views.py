@@ -245,7 +245,6 @@ class EntryCreateViewTestCase(TestCase):
         # Check is right user was associated with blog
         self.assertEqual(Entry.objects.get(title=post_data['title']).author, self.user)
 
-
     def test_post_existing_entry(self):
         """Test to see effect of creating an existing entry."""
         url = reverse('entry_create')
