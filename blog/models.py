@@ -8,6 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from taggit.managers import TaggableManager
 
 from blog.managers import PublishedEntryQuerySet
+from blog.utils import FileUploader
 
 
 class Entry(models.Model):
@@ -19,7 +20,7 @@ class Entry(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     modified_at = models.DateTimeField(auto_now=True, editable=False)
     published_date = models.DateTimeField(null=True, blank=True, editable=False)
-    poster = models.ImageField(null=True, blank=True)
+    poster = models.ImageField(null=True, blank=True, upload_to=FileUploader())
     is_published = models.BooleanField(default=False)
     tags = TaggableManager()
     objects = models.Manager()
