@@ -33,4 +33,7 @@ class FileUploader:
       Usage: class MyModel(models.Model):
                  image = models.ImageField(upload_to=FileUploader())
     """
-    pass
+    def __call__(self, instance, filename):
+        new_filename = '{0}_{1}'.format(instance.id, filename)
+        path = os.path.join('entry', 'poster')
+        return os.path.join(path, new_filename)
