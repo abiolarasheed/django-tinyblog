@@ -28,12 +28,15 @@ class FileUploader:
     """
     This class helps set the filename and pat, for a file like field and
       gives us the possibility of extending it and adding more functionalities
-      for different backends, dynamic nameing paths and filename.
+      for different backends, dynamic naming of paths and/or filename.
 
       Usage: class MyModel(models.Model):
                  image = models.ImageField(upload_to=FileUploader())
     """
+    def __init__(self, path=None):
+        self.path = path
+
     def __call__(self, instance, filename):
         new_filename = '{0}_{1}'.format(instance.id, filename)
-        path = os.path.join('entry', 'poster')
+        path = self.path or os.path.join('entry', 'poster')
         return os.path.join(path, new_filename)
