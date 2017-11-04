@@ -57,7 +57,8 @@ class EntryViewTestCase(TestCase):
         self.blog_body = "This is my test blog"
         self.entry = Entry.objects.get_or_create(title=self.blog_title,
                                                  body=self.blog_body,
-                                                 author=self.author)[0]
+                                                 author=self.author,
+                                                 is_published=True)[0]
 
     def test_basic_view(self):
         response = self.client.get(self.entry.get_absolute_url())
