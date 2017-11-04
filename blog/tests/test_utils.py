@@ -2,7 +2,7 @@
 import json
 from django.test import TestCase
 from unittest.mock import MagicMock, Mock
-from blog.utils import ajax_required
+from blog.utils import ajax_required, FileUploader
 
 
 class AjaxRequiredTestCase(TestCase):

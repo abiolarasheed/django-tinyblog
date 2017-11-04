@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 from django.http.response import JsonResponse
 
 
@@ -21,3 +22,15 @@ def ajax_required(view_function):
         pass
 
     return wrap
+
+
+class FileUploader:
+    """
+    This class helps set the filename and pat, for a file like field and
+      gives us the possibility of extending it and adding more functionalities
+      for different backends, dynamic nameing paths and filename.
+
+      Usage: class MyModel(models.Model):
+                 image = models.ImageField(upload_to=FileUploader())
+    """
+    pass
