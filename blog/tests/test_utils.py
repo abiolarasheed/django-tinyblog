@@ -89,3 +89,7 @@ class AjaxRequiredTestCase(TestCase):
         # View function returned response.content.
         self.assertEqual(response.content, "Am a Mock Response!")
 
+
+class FileUploaderTestCase(TestCase):
+    def test_fileuploader(self):
+        self.assertIsInstance(FileUploader(), FileUploader)
