@@ -11,4 +11,4 @@ class EntryIndex(indexes.SearchIndex, indexes.Indexable):
         return Entry
 
     def index_queryset(self, using=None):
-        return self.get_model().objects.filter(is_published=True)
+        return self.get_model().published.all()
