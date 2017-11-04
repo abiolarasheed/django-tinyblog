@@ -19,7 +19,7 @@ from .models import Entry
 class EntryCreateView(CreateView):
     model = Entry
     success_url = reverse_lazy('entry_list')
-    fields = ['body', 'title']
+    fields = ['title', 'poster', 'body']
     template_name = "entry_create.html"
 
     def form_valid(self, form):
