@@ -2,7 +2,7 @@
 django-tinyblog
 ===================
 
-.. image:: https://travis-ci.org/orangedigitallab/django-tinyblog.svg?branch=master
+.. image:: https://travis-ci.org/abiolarasheed/django-tinyblog.svg?branch=master
    :alt: Build Status
    :target: https://travis-ci.org/abiolarasheed/django-tinyblog
 
