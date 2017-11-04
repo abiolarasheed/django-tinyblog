@@ -64,6 +64,14 @@ class EntryViewTestCase(TestCase):
         response = self.client.get(self.entry.get_absolute_url())
         self.assertEqual(response.status_code, 200)
 
+        # Unpublish entry
+        self.entry.is_published = False
+        self.entry.save()
+
+        #  Check now to see it entry will no longer be found
+        response = self.client.get(self.entry.get_absolute_url())
+        self.assertEqual(response.status_code, 404)
+
     def test_title_in_entry(self):
         response = self.client.get(self.entry.get_absolute_url())
         self.assertContains(response, self.entry.title)
