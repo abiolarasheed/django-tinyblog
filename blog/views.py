@@ -12,7 +12,7 @@ from django.views.generic import DetailView, ListView, CreateView
 
 from haystack.views import SearchView
 
-from .models import Entry
+from .models import Entry, Image
 
 
 @method_decorator(login_required(), name='dispatch')
@@ -105,3 +105,13 @@ class JsonSearchView(SearchView):
         return JsonResponse(context)
 
     render_json_response = create_response
+
+
+class ImageDetailView(DetailView):
+    template_name = 'entry_detail.html'
+    context_object_name = 'image'
+    model = Image
+
+    def get(self, request, *args, **kwargs):
+        image = self.get_object()
+        return JsonResponse(image.as_json())
