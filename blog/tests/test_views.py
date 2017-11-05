@@ -18,9 +18,9 @@ from django.test.utils import override_settings
 from django.utils.safestring import SafeText
 from django.utils.six import BytesIO
 
-
-from blog.models import Entry
+from blog.models import Entry, Image as ImageModel
 from blog.views import EntryListView, JsonSearchView
+
 
 TEST_LOGIN_URL = "/admin/login/"
 
@@ -383,3 +383,43 @@ class EntryCreateViewTestCase(TestCase):
 
         # Check redirected to expected view
         self.assertRedirects(response, reverse('entry_list'))
+
+
+@override_settings(LOGIN_URL=TEST_LOGIN_URL,
+                   MEDIA_ROOT=tempfile.gettempdir())
+class ImageDetailViewTestCase(TestCase):
+    def setUp(self):
+        self.author = get_user_model()(email="iamatest@gmail.com", username="iamatest")
+        self.author.set_password('123456')
+        self.author.save()
+
+        self.blog_title = "Test blog Title"
+        self.blog_body = "This is my test blog"
+
+        entry = Entry.objects.get_or_create(title=self.blog_title,
+                                            body=self.blog_body,
+                                            author=self.author,
+                                            is_published=True)[0]
+
+        # Create image
+        temp_file = tempfile.NamedTemporaryFile()
+        image = create_image(None, temp_file)
+        uploaded_image = SimpleUploadedFile('image.png', image.getvalue())
+
+        image = ImageModel(caption='Am a test image',entry=entry, photo=uploaded_image.name)
+        image.save()
+
+        self.client.login(username='iamatest', password='123456')
+
+    def test_get(self):
+        image = ImageModel.objects.last()
+        response = self.client.get(image.get_absolute_url())
+
+        # Check there was redirect
+        self.assertTrue(response.status_code == 200)
+
+        # Check there was redirect
+        self.assertIsInstance(response.json(), dict)
+
+
+
