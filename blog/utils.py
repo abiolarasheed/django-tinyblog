@@ -4,6 +4,7 @@ import os
 from django.http.response import JsonResponse
 from django.utils.deconstruct import deconstructible
 
+
 def ajax_required(view_function):
     """
     AJAX request required decorator
