@@ -198,7 +198,8 @@ class JsonSearchViewTestCase(TestCase):
         paginator = Paginator(results, results_per_page)
         page = paginator.page(1)
 
-        request = RequestFactory().get(url, query_string)
+        request = RequestFactory().get(url, query_string,
+                                       HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         json_search_view = JsonSearchView()
         json_search_view.request = request
 
@@ -232,7 +233,7 @@ class JsonSearchViewTestCase(TestCase):
 class EntryCreateViewTestCase(TestCase):
     def setUp(self):
         self.user, __ = get_user_model().objects.get_or_create(email="iamatest@test.com",
-                                                          username="iamatest")
+                                                               username="iamatest")
         self.user.set_password('123456')
         self.user.save()
 
@@ -413,7 +414,8 @@ class ImageDetailViewTestCase(TestCase):
 
     def test_get(self):
         image = ImageModel.objects.last()
-        response = self.client.get(image.get_absolute_url())
+        response = self.client.get(image.get_absolute_url(),
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
         # Check there was redirect
         self.assertTrue(response.status_code == 200)
@@ -422,4 +424,38 @@ class ImageDetailViewTestCase(TestCase):
         self.assertIsInstance(response.json(), dict)
 
 
+@override_settings(LOGIN_URL=TEST_LOGIN_URL,
+                   MEDIA_ROOT=tempfile.gettempdir())
+class ImageCreateViewTestCase(TestCase):
+    def setUp(self):
+        self.author = get_user_model()(email="iamatest@gmail.com", username="iamatest")
+        self.author.set_password('123456')
+        self.author.save()
 
+        self.blog_title = "Test blog Title"
+        self.blog_body = "This is my test blog"
+
+        self.entry = Entry.objects.get_or_create(title=self.blog_title,
+                                                 body=self.blog_body,
+                                                 author=self.author,
+                                                 is_published=True)[0]
+
+        # set up image data
+        temp_file = tempfile.NamedTemporaryFile()
+        uploaded_image = create_image(None, temp_file)
+        self.uploaded_image = SimpleUploadedFile('poster.png', uploaded_image.getvalue())
+
+        self.client.login(username='iamatest', password='123456')
+
+    def test_post(self):
+        data = dict(caption='Am a test image',
+                    entry=self.entry.pk,
+                    photo=self.uploaded_image)
+        response = self.client.post(reverse('image_create'), data,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        # Check there was redirect
+        self.assertTrue(response.status_code == 201)
+
+        # Check there was redirect
+        self.assertIsInstance(response.json(), dict)
