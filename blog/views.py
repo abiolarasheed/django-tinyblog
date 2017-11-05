@@ -58,6 +58,10 @@ class EntryListView(ListView):
 
 
 class JsonSearchView(SearchView):
+    @method_decorator(ajax_required)
+    def dispatch(self, *args, **kwargs):
+        return super(JsonSearchView, self).dispatch(*args, **kwargs)
+
     def build_absolute_uri(self, page_num, empty_on_1=False):
         host = self.request.get_host()
         path = self.request.path
@@ -123,7 +127,7 @@ class ImageDetailView(DetailView):
 @method_decorator(ajax_required, name='post')
 class ImageCreateView(CreateView):
     model = Image
-    fields = ['caption', 'photo']
+    fields = ['caption', 'photo', 'entry']
 
     def form_invalid(self, form):
         super(ImageCreateView, self).form_invalid(form)
