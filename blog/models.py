@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 from django.db import models
 from django.utils import timezone
 from django.urls.base import reverse
@@ -20,7 +21,8 @@ class Entry(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     modified_at = models.DateTimeField(auto_now=True, editable=False)
     published_date = models.DateTimeField(null=True, blank=True, editable=False)
-    poster = models.ImageField(null=True, blank=True, upload_to=FileUploader())
+    poster = models.ImageField(null=True, blank=True, upload_to=
+                               FileUploader(os.path.join('entry', 'poster')))
     is_published = models.BooleanField(default=False)
     tags = TaggableManager()
     objects = models.Manager()
@@ -63,7 +65,8 @@ class Entry(models.Model):
 
 class Image(models.Model):
     caption = models.CharField(max_length=255, blank=False, null=False)
-    photo = models.ImageField(blank=False, null=False, upload_to=FileUploader())
+    photo = models.ImageField(blank=False, null=False, upload_to=
+                              FileUploader(path=os.path.join('entry', 'images')))
     entry = models.ForeignKey(Entry, blank=False, null=False,
                               on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
