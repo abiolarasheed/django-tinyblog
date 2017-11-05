@@ -74,3 +74,11 @@ class Image(models.Model):
 
     def __str__(self):
         return self.caption
+
+    def get_absolute_url(self):
+        return reverse('image_detail', kwargs={'pk': self.pk})
+
+    def as_json(self):
+        return dict(caption=self.caption,
+                    photo=self.photo.url,
+                    entry=self.entry.slug)
