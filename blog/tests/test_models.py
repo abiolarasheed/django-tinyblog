@@ -1,7 +1,15 @@
 # -*- coding: utf-8 -*-
+import os
+import shutil
+import tempfile
+
+from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
-from ..models import Entry
+from django.test.utils import override_settings
+
+from ..models import Entry, Image
 
 
 class BlogModelTestCase(TestCase):
@@ -49,3 +57,41 @@ class BlogModelTestCase(TestCase):
         entry = self.get_entry()[0]
         self.assertTrue(hasattr(entry, 'as_json'))
         self.assertIsInstance(entry.as_json(), dict)
+
+
+@override_settings(MEDIA_ROOT=tempfile.gettempdir())
+class ImageModelTestCase(TestCase):
+    def setUp(self):
+        self.author, auth_created = get_user_model().\
+            objects.get_or_create(email="iamatest@gmail.com", username="iamatest")
+        self.blog_title = "Test blog Title"
+        self.blog_body = "This is my test blog"
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(os.path.join(settings.MEDIA_ROOT, 'entry'))
+        super(ImageModelTestCase, cls).tearDownClass()
+
+    def get_entry(self):
+        return Entry.objects.get_or_create(title=self.blog_title,
+                                           body=self.blog_body,
+                                           author=self.author,
+                                           is_published=True)[0]
+
+    def get_image(self):
+        from .test_views import create_image
+        temp_file = tempfile.NamedTemporaryFile()
+        image = create_image(None, temp_file)
+        uploaded_image = SimpleUploadedFile('image.png', image.getvalue())
+        return uploaded_image
+
+    def test_create(self):
+        entry = self.get_entry()
+        image_obj = self.get_image()
+
+        image = Image(caption='Am a test image',
+                      entry=entry, photo=image_obj.name)
+        image.save()
+
+        self.assertIsInstance(image, Image)
+        self.assertIsNotNone(image.photo)
