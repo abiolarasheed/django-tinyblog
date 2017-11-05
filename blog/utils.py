@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
-from django.http.response import JsonResponse
 
+from django.http.response import JsonResponse
+from django.utils.deconstruct import deconstructible
 
 def ajax_required(view_function):
     """
@@ -24,6 +25,7 @@ def ajax_required(view_function):
     return wrap
 
 
+@deconstructible
 class FileUploader:
     """
     This class helps set the filename and pat, for a file like field and
@@ -39,3 +41,9 @@ class FileUploader:
     def __call__(self, instance, filename):
         new_filename = '{0}_{1}'.format(instance.id, filename)
         return os.path.join(self.path, new_filename)
+
+    def __str__(self):
+        return self.path
+
+    def __eq__(self, other):
+        return self.path == other.path
