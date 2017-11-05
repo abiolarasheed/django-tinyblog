@@ -67,11 +67,6 @@ class ImageModelTestCase(TestCase):
         self.blog_title = "Test blog Title"
         self.blog_body = "This is my test blog"
 
-    @classmethod
-    def tearDownClass(cls):
-        shutil.rmtree(os.path.join(settings.MEDIA_ROOT, 'entry'))
-        super(ImageModelTestCase, cls).tearDownClass()
-
     def get_entry(self):
         return Entry.objects.get_or_create(title=self.blog_title,
                                            body=self.blog_body,
@@ -85,13 +80,24 @@ class ImageModelTestCase(TestCase):
         uploaded_image = SimpleUploadedFile('image.png', image.getvalue())
         return uploaded_image
 
-    def test_create(self):
+    def create_image_obj(self):
         entry = self.get_entry()
         image_obj = self.get_image()
 
         image = Image(caption='Am a test image',
                       entry=entry, photo=image_obj.name)
         image.save()
+        return image
 
+    def test_create(self):
+        image = self.create_image_obj()
         self.assertIsInstance(image, Image)
         self.assertIsNotNone(image.photo)
+
+    def test_get_absolute_url(self):
+        image = self.create_image_obj()
+        self.assertIsNotNone(image.get_absolute_url())
+
+    def test_as_json(self):
+        image = self.create_image_obj()
+        self.assertIsInstance(image.as_json(), dict)
