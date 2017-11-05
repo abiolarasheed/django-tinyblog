@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.urls.base import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, CreateView
+from django.views.generic.edit import UpdateView
 
 from haystack.views import SearchView
 
@@ -28,6 +29,21 @@ class EntryCreateView(CreateView):
         entry.author = self.request.user
         entry.save()
         return super(EntryCreateView, self).form_valid(form)
+
+
+@method_decorator(ajax_required, name='post')
+@method_decorator(login_required(), name='dispatch')
+class EntryUpdateView(UpdateView):
+    model = Entry
+    fields = ['body']
+
+    def form_invalid(self, form):
+        super(EntryUpdateView, self).form_invalid(form)
+        return JsonResponse(form.errors, status=400)
+
+    def form_valid(self, form):
+        super(EntryUpdateView, self).form_valid(form)
+        return JsonResponse(self.object.as_json())
 
 
 class EntryDetail(DetailView):
