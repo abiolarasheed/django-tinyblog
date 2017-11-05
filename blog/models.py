@@ -59,3 +59,15 @@ class Entry(models.Model):
             self.slug = self.__get_unique_slug()
 
         super(Entry, self).save(*args, **kwargs)
+
+
+class Image(models.Model):
+    caption = models.CharField(max_length=255, blank=False, null=False)
+    photo = models.ImageField(blank=False, null=False, upload_to=FileUploader())
+    entry = models.ForeignKey(Entry, blank=False, null=False,
+                              on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    modified_at = models.DateTimeField(auto_now=True, editable=False)
+
+    def __str__(self):
+        return self.caption
