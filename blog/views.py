@@ -51,7 +51,7 @@ class EntryDetail(DetailView):
     context_object_name = 'entry'
     model = Entry
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         return get_object_or_404(self.model.published, slug__iexact=self.kwargs['slug'])
 
     def get_context_data(self, **kwargs):
