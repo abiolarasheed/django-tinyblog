@@ -1,15 +1,23 @@
 # -*- coding: utf-8 -*-
 import os
 import json
+import shutil
+import tempfile
+from PIL import Image
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.paginator import Paginator
+from django.core.urlresolvers import reverse
 from django.template.loader import get_template
 from django.test import RequestFactory
 from django.test import TestCase
 from django.test.utils import override_settings
-from django.urls.base import reverse
 from django.utils.safestring import SafeText
+from django.utils.six import BytesIO
+
 
 from blog.models import Entry
 from blog.views import EntryListView, JsonSearchView
@@ -22,6 +30,22 @@ TEST_INDEX = {
         'PATH': os.path.join(os.path.dirname(__file__), 'test_whoosh_index'),
     },
 }
+
+
+def create_image(storage, filename, size=(100, 100), image_mode='RGB', image_format='PNG'):
+    """
+    Generate a test image, returning the filename that it was saved as.
+
+    If ``storage`` is ``None``, the BytesIO containing the image data
+    will be passed instead.
+    """
+    data = BytesIO()
+    Image.new(image_mode, size).save(data, image_format)
+    data.seek(0)
+    if not storage:
+        return data
+    image_file = ContentFile(data.read())
+    return storage.save(filename, image_file)
 
 
 class BlogViewTestCase(TestCase):
@@ -203,13 +227,19 @@ class JsonSearchViewTestCase(TestCase):
         self.assertIsInstance(json.loads(response.content), dict)
 
 
-@override_settings(LOGIN_URL=TEST_LOGIN_URL)
+@override_settings(LOGIN_URL=TEST_LOGIN_URL,
+                   MEDIA_ROOT=tempfile.gettempdir())
 class EntryCreateViewTestCase(TestCase):
     def setUp(self):
         self.user, __ = get_user_model().objects.get_or_create(email="iamatest@test.com",
                                                           username="iamatest")
         self.user.set_password('123456')
         self.user.save()
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(os.path.join(settings.MEDIA_ROOT, 'entry'))
+        super(EntryCreateViewTestCase, cls).tearDownClass()
 
     def test_get_on_logged_in_user(self):
         self.client.login(username='iamatest', password='123456')
@@ -248,7 +278,7 @@ class EntryCreateViewTestCase(TestCase):
         # Check new entry was added
         self.assertGreater(Entry.objects.all().count(), last_total)
 
-        # Check is our post is the new one
+        # Check if our post is the new one
         self.assertEqual(Entry.objects.last().title, post_data['title'])
 
         # Check is right user was associated with blog
@@ -328,3 +358,28 @@ class EntryCreateViewTestCase(TestCase):
 
         # Check the Entry with title exists.
         self.assertEqual(form_errors['body'][0]['code'], "required")
+
+    def test_post_with_poster(self):
+        """Test to see normal with poster upload."""
+        url = reverse('entry_create')
+        post_data = {'title': u'AM a test post',
+                     'body': 'This is a test post'}
+
+        self.client.login(username='iamatest', password='123456')
+
+        # set up image data
+        temp_file = tempfile.NamedTemporaryFile()
+        poster = create_image(None, temp_file)
+        poster_file = SimpleUploadedFile('poster.png', poster.getvalue())
+        post_data['poster'] = poster_file
+
+        # Post data
+        response = self.client.post(url, data=post_data, format='multipart')
+        entry = Entry.objects.get(title=post_data['title'])
+        self.assertIsNotNone(entry.poster)
+
+        # Check there was redirect
+        self.assertTrue(response.status_code == 302)
+
+        # Check redirected to expected view
+        self.assertRedirects(response, reverse('entry_list'))
