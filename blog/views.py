@@ -31,7 +31,7 @@ class EntryCreateView(CreateView):
         return super(EntryCreateView, self).form_valid(form)
 
 
-@method_decorator(ajax_required, name='post')
+@method_decorator(ajax_required, name='dispatch')
 @method_decorator(login_required(), name='dispatch')
 class EntryUpdateView(UpdateView):
     model = Entry
@@ -85,7 +85,7 @@ class ImageDetailView(DetailView):
 
 
 @method_decorator(login_required(), name='dispatch')
-@method_decorator(ajax_required, name='post')
+@method_decorator(ajax_required, name='dispatch')
 class ImageCreateView(CreateView):
     model = Image
     fields = ['caption', 'photo', 'entry']
