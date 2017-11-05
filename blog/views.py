@@ -57,6 +57,32 @@ class EntryListView(ListView):
         return context
 
 
+@method_decorator(ajax_required, name='dispatch')
+class ImageDetailView(DetailView):
+    template_name = 'entry_detail.html'
+    context_object_name = 'image'
+    model = Image
+
+    def get(self, request, *args, **kwargs):
+        image = self.get_object()
+        return JsonResponse(image.as_json())
+
+
+@method_decorator(login_required(), name='dispatch')
+@method_decorator(ajax_required, name='post')
+class ImageCreateView(CreateView):
+    model = Image
+    fields = ['caption', 'photo', 'entry']
+
+    def form_invalid(self, form):
+        super(ImageCreateView, self).form_invalid(form)
+        return JsonResponse(form.errors, status=400)
+
+    def form_valid(self, form):
+        super(ImageCreateView, self).form_valid(form)
+        return JsonResponse(self.object.as_json(), status=201)
+
+
 class JsonSearchView(SearchView):
     @method_decorator(ajax_required)
     def dispatch(self, *args, **kwargs):
@@ -110,29 +136,3 @@ class JsonSearchView(SearchView):
         return JsonResponse(context)
 
     render_json_response = create_response
-
-
-@method_decorator(ajax_required, name='dispatch')
-class ImageDetailView(DetailView):
-    template_name = 'entry_detail.html'
-    context_object_name = 'image'
-    model = Image
-
-    def get(self, request, *args, **kwargs):
-        image = self.get_object()
-        return JsonResponse(image.as_json())
-
-
-@method_decorator(login_required(), name='dispatch')
-@method_decorator(ajax_required, name='post')
-class ImageCreateView(CreateView):
-    model = Image
-    fields = ['caption', 'photo', 'entry']
-
-    def form_invalid(self, form):
-        super(ImageCreateView, self).form_invalid(form)
-        return JsonResponse(form.errors, status=400)
-
-    def form_valid(self, form):
-        super(ImageCreateView, self).form_valid(form)
-        return JsonResponse(self.object.as_json(), status=201)
