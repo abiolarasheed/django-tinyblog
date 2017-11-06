@@ -141,3 +141,8 @@ HAYSTACK_CONNECTIONS = {
 
 #  return empty on next and previous page is page is 1
 EMPTY_ON_1 = True
+
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
