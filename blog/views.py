@@ -152,3 +152,4 @@ class JsonSearchView(SearchView):
         return JsonResponse(context)
 
     render_json_response = create_response
+
