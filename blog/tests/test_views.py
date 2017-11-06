@@ -386,6 +386,54 @@ class EntryCreateViewTestCase(TestCase):
         self.assertRedirects(response, reverse('entry_list'))
 
 
+@override_settings(LOGIN_URL=TEST_LOGIN_URL)
+class EntryUpdateViewTestCase(TestCase):
+    def setUp(self):
+        self.author = get_user_model()(email="iamatest@gmail.com", username="iamatest")
+        self.author.set_password('123456')
+        self.author.save()
+
+        self.blog_title = "Test blog Title"
+        self.blog_body = "This is my test blog"
+
+        self.entry = Entry.objects.get_or_create(title=self.blog_title,
+                                                 body=self.blog_body,
+                                                 author=self.author,
+                                                 is_published=True)[0]
+
+    def test_post_update_data(self):
+        url = reverse('entry_update', args=(self.entry.pk,))
+        post_data = {'body': 'A new post'}
+
+        self.client.login(username='iamatest', password='123456')
+
+        # Post data
+        response = self.client.post(url, data=post_data,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        # Check there was redirect
+        self.assertTrue(response.status_code == 200)
+
+        # Check is right user was associated with blog
+        self.assertNotEqual(Entry.objects.get(pk=self.entry.pk).body, self.entry.body)
+
+    def test_post_update_empty_data(self):
+        url = reverse('entry_update', args=(self.entry.pk,))
+        post_data = {}
+
+        self.client.login(username='iamatest', password='123456')
+
+        # Post data
+        response = self.client.post(url, data=post_data,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        # Check there was redirect
+        self.assertTrue(response.status_code == 400)
+
+        # Check is right user was associated with blog
+        self.assertEqual(response.json(), {'body': ['This field is required.']})
+
+
 @override_settings(LOGIN_URL=TEST_LOGIN_URL,
                    MEDIA_ROOT=tempfile.gettempdir())
 class ImageDetailViewTestCase(TestCase):
