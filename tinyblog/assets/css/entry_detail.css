@@ -1,0 +1,10 @@
+.container .post-meta li {
+  list-style: none;
+  display: inline;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+img.entry-poster {
+  max-width: 100%;
+}
