@@ -4,6 +4,7 @@ from urllib.parse import urlencode
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.db.models import F
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls.base import reverse_lazy
@@ -55,6 +56,8 @@ class EntryDetail(DetailView):
         return get_object_or_404(self.model.published, slug__iexact=self.kwargs['slug'])
 
     def get_context_data(self, **kwargs):
+        entry = self.get_object()
+        entry.__class__.objects.select_related().filter(pk=entry.pk).update(views=F('views') + 1)
         context = super(EntryDetail, self).get_context_data(**kwargs)
         context['title'] = context['entry'].title
         return context
