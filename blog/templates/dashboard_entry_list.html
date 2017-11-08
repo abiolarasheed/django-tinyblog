@@ -1,10 +1,13 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="container">
-     <div class="row">
-    {% if entries.exists %}
-    {% for entry in entries %}
-    <div class="card mb-3" style="max-width: 20rem; margin-left: 40px;">
+<br><br>
+<form class="bd-search d-flex align-items-center">
+    <span style="position: relative; display: inline-block; direction: ltr;">
+        <input type="search" class="form-control ds-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-labelledby="search-input" dir="auto" style="position: relative; vertical-align: top;">
+    </span>
+</form>
+<br><hr>
+<div class="row">
+{% for entry in entries %}
+    <div class="card mb-3" style="max-width: 20rem; margin-left: 80px;">
         <img class="card-img-top" style="min-height: 224px; max-height: 224px;" src="{{entry.get_poster}}" alt="{{entry.title|truncatechars:12}}">
         <div class="card-body">
             <h5 class="card-title">{{entry.title|truncatechars:30 }}</h5>
@@ -15,16 +18,16 @@
             <small class="text-muted">{{entry.modified_at | date}}</small>
         </div>
     </div>
-    {%endfor%}
-    {%endif%}
-    </div>
+{%endfor%}
+</div>
 <br>
 {% if is_paginated %}
+<hr>
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
         {% if page_obj.has_previous %}
           <li class="page-item">
-              <a class="page-link" href="{% url 'entry_list' %}?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
+              <a class="page-link" href="{% url 'dashboard-entries' %}?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
           </li>
         {% else %}
         <li class="page-item disabled">
@@ -32,11 +35,11 @@
         </li>
         {% endif %}
         {% for _ in page_obj.paginator.page_range %}
-         <li class="page-item"><a class="page-link" href="{% url 'entry_list' %}?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+         <li class="page-item"><a class="page-link" href="{% url 'dashboard-entries' %}?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
         {% endfor %}
         {% if page_obj.has_next %}
           <li class="page-item">
-              <a class="page-link" href="{% url 'entry_list' %}?page={{ page_obj.next_page_number }}">Next</a>
+              <a class="page-link" href="{% url 'dashboard-entries' %}?page={{ page_obj.next_page_number }}">Next</a>
           </li>
         {% else %}
         <li class="page-item disabled">
@@ -46,5 +49,4 @@
     </ul>
 </nav>
 {% endif %}
-</div>
-{% endblock %}
+<hr>

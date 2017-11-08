@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+<div class="row">
+  <div class="col-12 col-md-3 p-3 p-md-5 bg-light border border-white"><!-- sidebar starts-->
+      <p>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+          Create New Post <i class="fa fa-plus" aria-hidden="true"></i>
+         </button>
+      </p>
+      <br>
+       <ul>
+           <li style="display: block;">
+               <i class="fa fa-list-ul" aria-hidden="true"></i>
+                <a href="{% url 'dashboard-entries' %}"> Posts</a>
+           </li>
+           <li style="display: block;">
+               <i class="fa fa-user" aria-hidden="true"></i>
+                <a href="{% url 'update-profile' request.user.pk %}"> Profile</a>
+           </li>
+           <li style="display: block;">
+               <i class="fa fa-cogs" aria-hidden="true"></i>
+                <a href="#"> Setting</a>
+           </li>
+       </ul>
+  </div><!-- sidebar ends -->
+  <div class="col-9 bg-light border border-white">
+      {% if entries.exists %}
+      {% include "dashboard_entry_list.html" %}
+      {%endif%}
+  </div>
+</div>
+</div>
+{% include "start_new_entry.html" %}
+{% endblock %}
