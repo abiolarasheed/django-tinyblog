@@ -3,7 +3,6 @@ from django.conf.urls import url
 
 from django.urls import reverse_lazy
 from django.contrib.auth.views import(
-    LoginView,
     LogoutView,
     PasswordResetView,
     PasswordResetDoneView,
@@ -13,8 +12,16 @@ from django.contrib.auth.views import(
     PasswordResetCompleteView
 )
 
+from accounts.views import (DashBoard, DashBoardEntryListView,
+                            EditProfileView, UserLogin)
+
+
 urlpatterns = [
-    url(r'^login/$', LoginView.as_view(template_name='login.html'), name='login'),
+    url(r'^dashboard/$', DashBoard.as_view(), name='dashboard'),
+    url(r'^dashboard/my-posts/$', DashBoardEntryListView.as_view(), name='dashboard-entries'),
+    url(r'^dashboard/update-profile/(?P<pk>[0-9]+)/$', EditProfileView.as_view(), name='update-profile'),
+
+    url(r'^login/$', UserLogin.as_view(template_name='login.html'), name='login'),
     url(r'^logout/$', LogoutView.as_view(next_page=reverse_lazy('login')), name='logout'),
 
     url(r'^password_change/$',
