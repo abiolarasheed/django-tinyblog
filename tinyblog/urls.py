@@ -27,7 +27,6 @@ urlpatterns = [
     url(r'^', include('accounts.urls')),
     url(r'^about/$', TemplateView.as_view(template_name="about.html"), name='about'),
     url(r'^feedback/$', TemplateView.as_view(template_name="feedback.html"), name='feedback'),
-    url(r'^blog/$', TemplateView.as_view(template_name="blog.html"), name='blog'),
     url(r'^blog/', include(blog.urls)),
     url(r'^admin/', admin.site.urls),
 ]
