@@ -33,3 +33,22 @@
 </div>
 {% include "start_new_entry.html" %}
 {% endblock %}
+{% block js%}
+<script>
+    $(document).ready(function() {
+      window.autocomplete = new Autocomplete({
+        form_selector: '.bd-search'
+      });
+      window.autocomplete.setup();
+
+      window.navbarautocomplete = new Autocomplete({
+        form_selector: '#navBarSearchForm'
+      });
+      window.navbarautocomplete.setup();
+
+
+
+
+});
+</script>
+{%endblock%}

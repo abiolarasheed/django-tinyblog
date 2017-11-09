@@ -48,3 +48,13 @@
 {% endif %}
 </div>
 {% endblock %}
+{% block js%}
+<script>
+    $(document).ready(function() {
+      window.autocomplete = new Autocomplete({
+        form_selector: '#navBarSearchForm'
+      })
+      window.autocomplete.setup()
+});
+</script>
+{%endblock%}
