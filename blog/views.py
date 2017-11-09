@@ -29,22 +29,28 @@ class EntryCreateView(CreateView):
         entry = form.save(commit=False)
         entry.author = self.request.user
         entry.save()
-        return super(EntryCreateView, self).form_valid(form)
+        super(EntryCreateView, self).form_valid(form)
+        return JsonResponse(self.object.as_json())
+
+    def form_invalid(self, form):
+        super(EntryCreateView, self).form_invalid(form)
+        return JsonResponse(form.errors, status=400)
 
 
-@method_decorator(ajax_required, name='dispatch')
 @method_decorator(login_required(), name='dispatch')
 class EntryUpdateView(UpdateView):
     model = Entry
-    fields = ['body']
+    fields = ('title', 'tags', 'poster',
+              'body', 'is_published')
+    template_name = "entry_create.html"
 
-    def form_invalid(self, form):
-        super(EntryUpdateView, self).form_invalid(form)
-        return JsonResponse(form.errors, status=400)
-
-    def form_valid(self, form):
-        super(EntryUpdateView, self).form_valid(form)
-        return JsonResponse(self.object.as_json())
+    def get_context_data(self, **kwargs):
+        context = super(EntryUpdateView, self).get_context_data(**kwargs)
+        form = context['form']
+        del form.fields['is_published']
+        context['form'] = form
+        context['title'] = "Dashboard"
+        return context
 
 
 class EntryDetail(DetailView):
@@ -53,7 +59,12 @@ class EntryDetail(DetailView):
     model = Entry
 
     def get_object(self, queryset=None):
-        return get_object_or_404(self.model.published, slug__iexact=self.kwargs['slug'])
+        try:
+            return self.model.objects.get(author=self.request.user,
+                                          slug=self.kwargs['slug'])
+        except (self.model.DoesNotExist, TypeError):
+            return get_object_or_404(self.model.published,
+                                     slug=self.kwargs['slug'])
 
     def get_context_data(self, **kwargs):
         entry = self.get_object()
@@ -155,4 +166,3 @@ class JsonSearchView(SearchView):
         return JsonResponse(context)
 
     render_json_response = create_response
-
