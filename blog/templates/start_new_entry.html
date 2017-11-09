@@ -8,7 +8,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form method="post" action="{% url 'entry_create' %}">{% csrf_token %}
+        <form method="post" action="{% url 'entry_create' %}" enctype="multipart/form-data" >{% csrf_token %}
             <div class="form-group">
                 <input placeholder="Title" type="text" name="title" maxlength="500" id="id_title" class="form-control" required>
                 <small id="tagsHelpBlock" class="form-text text-muted">

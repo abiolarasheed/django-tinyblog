@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.html" %}{% load pygmentify %}
 {% block content %}
 <div class="container">
      <div class="row">
@@ -8,7 +8,7 @@
         <img class="card-img-top" style="min-height: 224px; max-height: 224px;" src="{{entry.get_poster}}" alt="{{entry.title|truncatechars:12}}">
         <div class="card-body">
             <h5 class="card-title">{{entry.title|truncatechars:30 }}</h5>
-            <p class="card-text">{{entry.body|truncatechars:128 }}</p>
+            <p class="card-text">{{entry.body|truncatechars:128| pygmentify_inline }}</p>
             <a href="{{entry.get_absolute_url}}" class="btn btn-primary"> View </a>
         </div>
         <div class="card-footer">
