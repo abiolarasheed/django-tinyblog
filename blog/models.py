@@ -56,7 +56,8 @@ class Entry(models.Model):
 
     def as_json(self):
         return {"title": self.title,
-                "url": self.get_absolute_url()}
+                "url": self.get_absolute_url(),
+                'id':self.id}
 
     def get_poster(self):
         try:
