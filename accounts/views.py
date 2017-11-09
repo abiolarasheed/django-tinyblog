@@ -48,19 +48,8 @@ class DashBoardEntryListView(ListView):
 @method_decorator(login_required, name='dispatch')
 class EditProfileView(UpdateView):
     model = get_user_model()
-    fields = ("first_name", "last_name")
+    fields = ('first_name', 'last_name')
     template_name = 'edit_profile.html'
 
     def get_success_url(self):
         return resolve_url('dashboard')
-
-
-@method_decorator(login_required, name='dispatch')
-class EditProfileView(UpdateView):
-    model = get_user_model()
-    fields = ("first_name", "last_name")
-    template_name = 'edit_profile.html'
-
-    def get_success_url(self):
-        return resolve_url('dashboard')
-
