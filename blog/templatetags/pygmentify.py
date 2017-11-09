@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
 from django import template
 from django.template.defaultfilters import stringfilter
-from django_pygments.utils import pygmentify_html
 from django.utils.safestring import mark_safe
+
+from ..utils import pygmentify_html
 
 register = template.Library()
 
