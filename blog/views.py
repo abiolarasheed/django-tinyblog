@@ -22,19 +22,22 @@ from .models import Entry, Image
 class EntryCreateView(CreateView):
     model = Entry
     success_url = reverse_lazy('entry_list')
-    fields = ['title', 'poster', 'body']
+    fields = ['title', 'poster', 'body', 'tags']
     template_name = "entry_create.html"
 
     def form_valid(self, form):
         entry = form.save(commit=False)
         entry.author = self.request.user
         entry.save()
-        super(EntryCreateView, self).form_valid(form)
-        return JsonResponse(self.object.as_json())
+        return super(EntryCreateView, self).form_valid(form)
 
     def form_invalid(self, form):
         super(EntryCreateView, self).form_invalid(form)
         return JsonResponse(form.errors, status=400)
+
+    def get_success_url(self):
+        return reverse_lazy('entry_update',
+                            kwargs={'pk': self.object.pk})
 
 
 @method_decorator(login_required(), name='dispatch')
