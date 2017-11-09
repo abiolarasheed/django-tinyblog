@@ -57,7 +57,9 @@ class Entry(models.Model):
     def as_json(self):
         return {"title": self.title,
                 "url": self.get_absolute_url(),
-                'id':self.id}
+                'id':self.id,
+                'update_url': reverse('entry_update', kwargs={'pk':self.pk})
+                }
 
     def get_poster(self):
         try:
