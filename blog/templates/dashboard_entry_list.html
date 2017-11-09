@@ -1,6 +1,6 @@
-<br><br>
+<br><br>{% load pygmentify %}
 <form class="bd-search d-flex align-items-center">
-    <span style="position: relative; display: inline-block; direction: ltr;">
+    <span class="col" style="position: relative; display: inline-block; direction: ltr;">
         <input type="search" class="form-control ds-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-labelledby="search-input" dir="auto" style="position: relative; vertical-align: top;">
     </span>
 </form>
@@ -11,8 +11,9 @@
         <img class="card-img-top" style="min-height: 224px; max-height: 224px;" src="{{entry.get_poster}}" alt="{{entry.title|truncatechars:12}}">
         <div class="card-body">
             <h5 class="card-title">{{entry.title|truncatechars:30 }}</h5>
-            <p class="card-text">{{entry.body|truncatechars:128 }}</p>
+            <p class="card-text">{{entry.body|truncatechars:128| pygmentify_inline }}</p>
             <a href="{{entry.get_absolute_url}}" class="btn btn-primary"> View </a>
+            <a href="{% url 'entry_update' entry.pk %}" class="btn btn-primary"> Update </a>
         </div>
         <div class="card-footer">
             <small class="text-muted">{{entry.modified_at | date}}</small>

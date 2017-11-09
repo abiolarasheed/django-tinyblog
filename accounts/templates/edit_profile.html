@@ -27,7 +27,7 @@
   <div class="col-9 bg-light border border-white">
 
       <br>
-      <form action="{% url 'update-profile' request.user.pk %}" method="post">{% csrf_token %}
+      <form name="profile_form" action="{% url 'update-profile' request.user.pk %}" method="post">{% csrf_token %}
           {{ form.as_p }}
           <input type="submit" value="Update Profile" class="btn btn-primary"/>
       </form>
@@ -35,4 +35,9 @@
 </div>
 </div>
 {% include "start_new_entry.html" %}
+{% block js%}
+<script>
+    $("#id_first_name, #id_last_name").addClass("form-control");
+</script>
+{%endblock%}
 {% endblock %}

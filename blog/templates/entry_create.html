@@ -1,28 +1,53 @@
 {% extends "base.html" %} {%load static%} {% block content %}
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/entry_detail.css' %}"/>
-{% endblock%}
+{%endblock%}
+{%block js%}
+<script>
+$(function() {
+    var published_value = {{object.is_published|yesno:"true,false" }};
+    $("#id_title, #id_body, #id_tags").addClass("form-control");
+    if (published_value) {
+       $('#id_is_published').attr('checked', published_value);
+       }
+
+    // Get current body text and display
+    var body_txt = $('#id_body').val();
+    $('#target').html(body_txt);
+
+    // Add Event Listener to text input
+    $('#id_body').keyup(function() {
+    var body_txt = $(this).val();
+    $('#target').html(body_txt);
+    });
+
+    // Add Event Listener to title input
+    $('#id_title').keyup(function() {
+    var title_txt = $(this).val();
+    $('#title').html(title_txt);
+    });
+});
+</script>
+{%endblock%}
 <div class="container">
     <div class="row justify-content-md-center">
         <div class="col-9 bg-light border border-white">
-            <br><br>
+            <br>
+            <h1 id="title" class="text-center">{{object.title}}</h1>
+            <hr>
             <div id="target"></div>
             <hr>
             <form action="" method="post">{% csrf_token %}
-                <div class="form-group">
-                    <textarea id='article' class="form-control" rows="3" placeholder="Type in here"></textarea>
-                </div>
-                <input type="submit" value="Send message" class="btn btn-primary btn-lg btn-block"/>
+                {{ form.as_p }}
+                <label class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" name="is_published" id="id_is_published">
+                    <span class="custom-control-indicator"></span>
+                    <span class="custom-control-description">Publish Post Now</span>
+                </label>
+                <input type="submit" value="Update Post" class="btn btn-primary btn-lg btn-block"/>
             </form>
         </div>
     </div>
 </div>
 <br><br>
-{%block js%}
-<script>
-    $('#article').keyup(function() {
-    $('#target').html($(this).val());
-});
-</script>
-{%endblock%}
 {% endblock %}

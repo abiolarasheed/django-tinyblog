@@ -8,7 +8,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form method="post" action="{% url 'entry_create' %}">
+        <form method="post" action="{% url 'entry_create' %}">{% csrf_token %}
             <div class="form-group">
                 <input placeholder="Title" type="text" name="title" maxlength="500" id="id_title" class="form-control" required>
                 <small id="tagsHelpBlock" class="form-text text-muted">
@@ -30,11 +30,11 @@
                     Image that will be used to market your post
                 </small>
             </div>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <input type="submit" value="Save changes" class="btn btn-primary">
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>
