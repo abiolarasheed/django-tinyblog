@@ -31,12 +31,7 @@ $(function() {
 {%endblock%}
 <div class="container">
     <div class="row justify-content-md-center">
-        <div class="col-9 bg-light border border-white">
-            <br>
-            <h1 id="title" class="text-center">{{object.title}}</h1>
-            <hr>
-            <div id="target"></div>
-            <hr>
+        <div class="col-6 bg-light border border-white">
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
@@ -47,6 +42,12 @@ $(function() {
                 </label>
                 <input type="submit" value="Update Post" class="btn btn-primary btn-lg btn-block"/>
             </form>
+        </div>
+        <div class="col-6 bg-light border border-white">
+            <br>
+            <h1 id="title" class="text-center">{{object.title}}</h1>
+            <hr>
+            <div id="target"></div>
         </div>
     </div>
 </div>
