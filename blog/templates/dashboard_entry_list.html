@@ -15,8 +15,9 @@
             <a href="{{entry.get_absolute_url}}" class="btn btn-primary"> View </a>
             {% if request.user == entry.author and not entry.is_published%}
             <a href="{% url 'entry_update' entry.pk %}" class="btn btn-success"> Update </a>
+            <a href="{% url 'publish_entry' entry.pk %}" class="btn btn-warning"> Publish </a>
             {%else%}
-            <a href="{% url 'unpublish_entry' entry.pk %}" class="btn btn-warning"> Unpublish </a>
+            <a href="{% url 'unpublish_entry' entry.pk %}" class="btn btn-danger"> Unpublish </a>
             {% endif %}
         </div>
         <div class="card-footer">
