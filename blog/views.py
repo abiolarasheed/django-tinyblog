@@ -3,12 +3,14 @@ from collections import OrderedDict
 from urllib.parse import urlencode
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
 from django.http.response import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls.base import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.views import View
 from django.views.generic import DetailView, ListView, CreateView
 from django.views.generic.edit import UpdateView
 
@@ -54,6 +56,34 @@ class EntryUpdateView(UpdateView):
         context['form'] = form
         context['title'] = "Dashboard"
         return context
+
+
+@method_decorator(login_required, name='dispatch')
+class UnPublishEntryView(View):
+    def get(self, request, pk):
+        try:
+            entry = Entry.published.get(author=request.user, pk=pk)
+            entry.is_published=False
+            entry.save()
+            messages.success(request, 'Unpublished Successfully.')
+        except Entry.DoesNotExist:
+            messages.error(request, 'Unpublish Error!')
+        finally:
+            return redirect(reverse_lazy('dashboard-entries'))
+
+
+@method_decorator(login_required, name='dispatch')
+class PublishEntryView(View):
+    def get(self, request, pk):
+        try:
+            entry = Entry.objects.get(author=request.user, pk=pk)
+            entry.is_published=True
+            entry.save()
+            messages.success(request, 'Article Successfully Published.')
+        except Entry.DoesNotExist:
+            messages.error(request, 'An error occurred while publishing article!')
+        finally:
+            return redirect(reverse_lazy('dashboard-entries'))
 
 
 class EntryDetail(DetailView):

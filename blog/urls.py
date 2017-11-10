@@ -10,6 +10,8 @@ urlpatterns = [
     url(r'^image/create/$', views.ImageCreateView.as_view(), name='image_create'),
     url(r'^create/$', views.EntryCreateView.as_view(), name='entry_create'),
     url(r'^update/(?P<pk>[0-9]+)/$', views.EntryUpdateView.as_view(), name='entry_update'),
+    url(r'^publish/(?P<pk>[0-9]+)/$', views.PublishEntryView.as_view(), name='publish_entry'),
+    url(r'^unpublish/(?P<pk>[0-9]+)/$', views.UnPublishEntryView.as_view(), name='unpublish_entry'),
     url(r'^search/$', ajax_required(views.JsonSearchView()), name='navbar_search'),
     url(r'^(?P<slug>[-\w]+)/$', views.EntryDetail.as_view(), name='entry_detail'),
 ]
