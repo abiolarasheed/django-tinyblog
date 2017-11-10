@@ -3,13 +3,14 @@ import os
 from django.db import models
 from django.utils import timezone
 from django.urls.base import reverse
+from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
 from taggit.managers import TaggableManager
 
 from blog.managers import PublishedEntryQuerySet
-from blog.utils import FileUploader
+from blog.utils import FileUploader, pygmentify_html
 
 
 class Entry(models.Model):
@@ -80,6 +81,15 @@ class Entry(models.Model):
         words_per_min = 200  # Word per min
         total_words = self.count_words_in_text()
         return round(total_words / words_per_min)
+
+    def headline(self):
+        try:
+            res = self.body[:80]
+            res = pygmentify_html(res, noclasses=True)
+        except Exception as e:
+            res = res[:80]
+        finally:
+            return mark_safe(res)
 
     def save(self, *args, **kwargs):
         if self.is_published and self.published_date is None:
