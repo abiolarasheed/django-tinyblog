@@ -32,7 +32,7 @@ $(function() {
 <div class="container">
     <div class="row justify-content-md-center">
         <div class="col-6 bg-light border border-white">
-            <form action="" method="post" enctype="multipart/form-data">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <label class="custom-control custom-checkbox">
@@ -40,6 +40,35 @@ $(function() {
                     <span class="custom-control-indicator"></span>
                     <span class="custom-control-description">Publish Post Now</span>
                 </label>
+                <div class="pull-right">
+                    <small class="text-muted">Insert</small>
+                    <label class="custom-control custom-checkbox">
+                        <button class="btn btn-link" data-toggle="modal" data-target="#linkModal">
+                            <span class="custom-control-description">
+                                <small class="text-muted"></small>
+                                <i class="fa fa-link" aria-hidden="true"></i>
+                            </span>
+                        </button>
+                    </label>
+
+                    <label class="custom-control custom-checkbox">
+                        <button type="button" data-target="#pictureModal" data-toggle="modal" class="btn btn-link">
+                            <span class="custom-control-description">
+                                <small class="text-muted"></small>
+                                <i class="fa fa-picture-o" aria-hidden="true"></i>
+                            </span>
+                        </button>
+                    </label>
+
+                    <label class="custom-control custom-checkbox">
+                        <button data-target="#videoModal" data-toggle="modal" class="btn btn-link">
+                            <span class="custom-control-description">
+                                <small class="text-muted"></small>
+                                <i class="fa fa-file-video-o" aria-hidden="true"></i>
+                            </span>
+                        </button>
+                    </label>
+                </div>
                 <input type="submit" value="Update Post" class="btn btn-primary btn-lg btn-block"/>
             </form>
         </div>
@@ -52,4 +81,7 @@ $(function() {
     </div>
 </div>
 <br><br>
+{% include 'link_modal.html' %}
+{% include 'picture_modal.html' %}
+{% include 'video_modal.html' %}
 {% endblock %}
