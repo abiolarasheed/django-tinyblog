@@ -34,6 +34,7 @@
             <hr>
             {% with entry.tags.all as tags %}
             {% if tags.exists %}
+            <span class="text-muted">Tags</span>
             <ul class="post-meta">
                 {% for tag in entry.tags.all %}
                 <li><i class="fa fa-tags"></i> {{ tag }}</li>
@@ -68,13 +69,3 @@
     <hr><br>
 </div><!-- container ends here-->
 {% endblock %}
-{% block js%}
-<script>
-    $(document).ready(function() {
-      window.autocomplete = new Autocomplete({
-        form_selector: '#navBarSearchForm'
-      })
-      window.autocomplete.setup()
-});
-</script>
-{%endblock%}
