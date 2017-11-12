@@ -1,0 +1,15 @@
+.admin-breadcrumb {
+    position: relative;
+    margin-top: -60px;
+    text-decoration:none;
+}
+
+a.breadcrumb-item {
+    text-decoration: none;
+}
+
+.ac-results {
+    margin-top: 1px;
+    width: 770px;
+    position: initial;
+}
