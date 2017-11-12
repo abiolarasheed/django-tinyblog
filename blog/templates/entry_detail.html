@@ -23,7 +23,9 @@
                     <span class="ga-page-views" data-ga-identifier="">{{entry.views}}</span> views
                 </li>
             </ul>
-            <p><img class="entry-poster" src="{{entry.get_poster}}"></p>
+            <p>
+                <img class="entry-poster" src="{{entry.get_poster}}">
+            </p>
             {{entry.body | pygmentify_inline }}
             <hr>
             {% with entry.tags.all as tags%}
