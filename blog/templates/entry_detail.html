@@ -1,73 +1,72 @@
-{% extends "base.html" %} {%load static pygmentify %}{% block content %}
+{% extends "base.html" %} {% load static pygmentify %}{% block content %}
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/vs.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/entry_detail.css' %}"/>
-{% endblock%}
-<div class="container">
-    <div class="row justify-content-md-center">
+{% endblock %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-3 bg-light border border-white">
+            <p>
+                <h5 class="text-muted text-center"> Categories </h5>
+            </p>
+            <hr>
+        </div>
         <div class="col-9 bg-light border border-white">
-            <h1 class="text-center">{{entry.title}}</h1>
+            <h1 class="text-center">{{ entry.title }}</h1>
             <ul class="post-meta">
                 <li>
-                    <i class="fa fa-calendar"></i> {{entry.modified_at | date}}
+                    <i class="fa fa-calendar"></i> {{ entry.modified_at | date }}
                 </li>
                 <li>
-                    <i class="fa fa-clock-o"></i> {{entry.estimate_reading_time}} minutes read
+                    <i class="fa fa-clock-o"></i> {{ entry.estimate_reading_time }} minutes read
                 </li>
                 <li>
                     <i class="fa fa-comments"></i>
-                    <a href="#disqus_thread" data-disqus-identifier="">{{entry.count_comments}} comments</a>
+                    <a href="#"> {{ entry.count_comments }} comments </a>
                 </li>
                 <li>
                     <i class="fa fa-eye"></i>
-                    <span class="ga-page-views" data-ga-identifier="">{{entry.views}}</span> views
+                    <span>{{ entry.views }}</span> views
                 </li>
             </ul>
-            <p>
-                <img class="entry-poster" src="{{entry.get_poster}}">
-            </p>
-            {{entry.body | pygmentify_inline }}
+            <p><img class="entry-poster" src="{{ entry.get_poster }}"></p>
+            {{ entry.body | pygmentify_inline }}
             <hr>
-            {% with entry.tags.all as tags%}
-    {%if tags.exists%}
-    <ul class="post-meta">
-        {% for tag in entry.tags.all %}
-        <li>
-            <i class="fa fa-tags"></i> {{tag}}
-        </li>
-        {%endfor%}
-    </ul>
-    {%endif%}
-    {%endwith%}
+            {% with entry.tags.all as tags %}
+            {% if tags.exists %}
+            <ul class="post-meta">
+                {% for tag in entry.tags.all %}
+                <li><i class="fa fa-tags"></i> {{ tag }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
         </div>
     </div>
-</div>
-<br><hr><br>
-      {% with entry.get_similar_post as entries %}
-      {% if entries.exists %}
-       <h3 class="text-center">Related Posts</h3>
-       <div class="row">
-       {% for entry in entries %}
-           {% if forloop.counter < 4 %}
-           <div class="card mb-3" style="max-width: 20rem; margin-left: 80px;">
-               <img class="card-img-top" style="min-height: 224px; max-height: 224px;" src="{{entry.get_poster}}" alt="{{entry.title|truncatechars:12}}">
-               <div class="card-body">
-                   <h5 class="card-title">{{entry.title|truncatechars:30 }}</h5>
-                   <p class="card-text">{{entry.body|truncatechars:128| pygmentify_inline }}</p>
-                   <a href="{{entry.get_absolute_url}}" class="btn btn-primary">
-                       View
-                   </a>
-               </div>
-               <div class="card-footer">
-                   <small class="text-muted">{{entry.modified_at | date}}</small>
-               </div>
-           </div>
-           {%endif%}
-      {%endfor%}
-       </div>
-      {% endif %}
-      {% endwith %}
-<br><br>
+    {% with entry.get_similar_post as entries %}
+    {% if entries.exists %}
+    <h3 class="text-center">Related Posts</h3>
+    <div class="row">
+        {% for entry in entries %}
+        {% if forloop.counter < 4 %}
+        <div class="card mb-3" style="max-width: 20rem; margin-left:30px;">
+            <img class="card-img-top" style="min-height: 224px; max-height: 224px;" src="{{entry.get_poster}}" alt="{{entry.title|truncatechars:12}}">
+            <div class="card-body">
+                <h5 class="card-title">{{entry.title|truncatechars:30 }}</h5>
+                <p class="card-text">{{entry.body|truncatechars:128| pygmentify_inline }}</p>
+                <a href="{{entry.get_absolute_url}}" class="btn btn-primary"> View </a>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">{{entry.modified_at | date}}</small>
+            </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <hr><br>
+</div><!-- container ends here-->
 {% endblock %}
 {% block js%}
 <script>
