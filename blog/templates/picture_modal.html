@@ -8,16 +8,18 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form name="picture-form">
+                <form name="picture-form" action="{%url 'image_create' %}">
+                    {% csrf_token %}
                     <div class="input-group">
-                        <input type="text" class="form-control" id="image-caption" placeholder="Image Caption">
+                        <input name="caption" type="text" class="form-control" id="image-caption" placeholder="Image Caption" required>
                     </div>
                     <br>
                     <div class="input-group">
-                        <input type="file" class="form-control" id="image-file" aria-label="Insert Image">
+                        <input name="photo" type="file" class="form-control" id="image-file" aria-label="Insert Image" required>
                         <span class="input-group-btn">
-                            <button class="btn btn-primary" type="button">Upload!</button>
+                            <button class="btn btn-primary" type="submit">Upload!</button>
                         </span>
+                        <input name="entry" value="{{entry.pk}}" hidden required>
                     </div>
                 </form>
             </div>

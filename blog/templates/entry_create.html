@@ -5,26 +5,136 @@
 {%block js%}
 <script>
 $(function() {
-    var published_value = {{object.is_published|yesno:"true,false" }};
-    $("#id_title, #id_body, #id_tags").addClass("form-control");
-    if (published_value) {
-       $('#id_is_published').attr('checked', published_value);
-       }
+  var published_value = {{object.is_published|yesno:"true,false" }};
+  $("#id_title, #id_body, #id_tags").addClass("form-control");
 
-    // Get current body text and display
-    var body_txt = $('#id_body').val();
-    $('#target').html(body_txt);
+  if (published_value) {
+    $('#id_is_published').attr('checked', published_value);
+  }
 
-    // Add Event Listener to text input
-    $('#id_body').keyup(function() {
+  // set spell checker
+  $('#id_body').attr('spellcheck', "true");
+
+  // Get current body text and display
+  var body_txt = $('#id_body').val();
+  $('#target').html(body_txt);
+
+  // Add Event Listener to text input
+  $('#id_body').keyup(function() {
     var body_txt = $(this).val();
     $('#target').html(body_txt);
-    });
+  });
 
-    // Add Event Listener to title input
-    $('#id_title').keyup(function() {
+  // Add Event Listener to title input
+  $('#id_title').keyup(function() {
     var title_txt = $(this).val();
     $('#title').html(title_txt);
+  });
+
+  // Link Form
+  $('form[name="link-form"]').submit(function(e) {
+    e.preventDefault();
+    var data = $(this).serialize();
+    let link = '';
+    switch (data) {
+      case "picture":
+        link = '<img class="" src="' + data.url + '"><small class="text-muted">' + data.text + '</small>';
+        break;
+        case "video":
+          link = '\n<video controls>\
+                  \n<source src="' + data.url + '">\
+                  \nYour browser does not support the video tag.\
+                  </video>\n<small class="text-muted">' + data.text + '</small>';
+          break;
+      default:
+        link = '<a class="" href="' + data.url + '">' + data.text + '</a>';
+    }
+
+    // Append Uploaded Video URL and Caption
+    $( "#id_body").val( $( "#id_body").val() + link);
+
+    // Update Display
+    var body_txt = $( "#id_body").val();
+    $('#target').html(body_txt);
+
+    // Close Modal
+    $("#linkModal").modal("hide");
+    });
+
+   // Video Form
+   $('form[name="video-form"]').submit(function(e) {
+     e.preventDefault();
+     let video_form = $(this);
+     let target = video_form.attr('action');
+     let data = new FormData(this); // image_form.serialize();
+     var current_url = window.location.protocol + '//' + window.location.host;
+     $.ajax({
+       url: target,
+       data: data,
+       type: 'POST',
+       enctype:"multipart/form-data",
+       processData: false,  // Important!
+       contentType: false,
+       dataType: 'json',
+       cache: false,
+       }).done(function(results_data) {
+         let video_url = current_url + results_data.video;
+         let video = '\n<video controls>\
+                      \n<source src="' + video_url + '">\
+                      \nYour browser does not support the video tag.\
+                      </video>\n';
+
+         let caption = '<small class="text-muted">' + results_data.caption + '</small>';
+         let video_containter = '\n<div class="">' + video + caption + '</div>\n';
+
+         // Append Uploaded Video URL and Caption
+         $( "#id_body").val( $( "#id_body").val() + video_containter);
+
+         // Update Display
+         var body_txt = $( "#id_body").val();
+         $('#target').html(body_txt);
+
+         // Close Modal
+         $("#videoModal").modal("hide");
+       }).fail(function() {
+         alert( "error" );
+       });
+     });
+
+  // Image Form
+  $('form[name="picture-form"]').submit(function(e) {
+    e.preventDefault();
+    let image_form = $(this);
+    let target = image_form.attr('action');
+    let data = new FormData(this); // image_form.serialize();
+    var current_url = window.location.protocol + '//' + window.location.host;
+    $.ajax({
+      url: target,
+      data: data,
+      type: 'POST',
+      enctype:"multipart/form-data",
+      processData: false,  // Important!
+      contentType: false,
+      dataType: 'json',
+      cache: false,
+      }).done(function(results_data) {
+        let img_url = current_url + results_data.photo;
+        let img = '<img src="' + img_url + '">';
+        let caption = '<small class="text-muted">' + results_data.caption + '</small>';
+        let image_containter = '\n<div class="">' + img + caption + '</div>\n';
+
+        // Append Uploaded Image URL and Caption
+        $( "#id_body").val( $( "#id_body").val() + image_containter);
+
+        // Update Display
+        var body_txt = $( "#id_body").val();
+        $('#target').html(body_txt);
+
+        // Close Modal
+        $("#pictureModal").modal("hide");
+      }).fail(function() {
+        alert( "error" );
+      });
     });
 });
 </script>
@@ -32,7 +142,7 @@ $(function() {
 <div class="container">
     <div class="row justify-content-md-center">
         <div class="col-6 bg-light border border-white">
-            <form method="post" enctype="multipart/form-data">
+            <form method="post" enctype="multipart/form-data" name="post-form">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <label class="custom-control custom-checkbox">
