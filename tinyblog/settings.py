@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'haystack',
     'taggit',
     'accounts',
+    'analytics',
     'blog',
 ]
 
