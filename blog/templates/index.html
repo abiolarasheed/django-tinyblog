@@ -7,31 +7,38 @@
     </div>
 </main>
 <!-- /.container -->
-<div class="masthead-followup row m-0 border border-white">
-
-    <div class="col-12 col-md-3 p-3 p-md-5 bg-light border border-white">
-        <img class="post-imag" src="{% static 'image/tux.png'  %}">
-        <h3>Linux</h3>
-        <p>Linux is a name which broadly denotes a family of free and open-source software operating system distributions built around the Linux kernel. The defining component of a Linux distribution is the Linux kernel, an operating system kernel first released on September 17, 1991 by Linus Torvalds</p>
-    </div>
-    <div class="col-12 col-md-3 p-3 p-md-5 bg-light border border-white">
-        <img class="post-imag" src="{% static 'image/py.png' %}">
-        <h3>Python</h3>
-        <p>Python is a programming language that lets you work quickly
-and integrate systems more effectivel</p>
+<div class="row">
+    <div class="card mb-3" style="max-width: 17rem; margin-left: 10px;">
+        <img class="card-img-top" style="min-height: 224px; max-height: 224px;" src="{% static 'image/django.png' %}" alt="Django">
+        <div class="card-body">
+            <h5 class="card-title text-center">Django</h5>
+         <p class="card-text">Django is a high-level Python Web framework that encourages rapid development and clean, pragmatic design.</p>
+        </div>
     </div>
 
-    <div class="col-12 col-md-3 p-3 p-md-5 bg-light border border-white">
-        <img class="post-imag" src="{% static 'image/django.png' %}">
-        <h3>Django</h3>
-        <p>Django is a high-level Python Web framework that encourages rapid development and clean, pragmatic design. Built by experienced developers, it takes care of much of the hassle of Web development, so you can focus on writing your app without needing to reinvent the wheel. It’s free and open source.</p>
+    <div class="card mb-3" style="max-width: 17rem; margin-left: 10px;">
+        <img class="card-img-top" style="min-height: 224px; max-height: 224px;" src="{% static 'image/flask.png' %}" alt="Flask">
+        <div class="card-body">
+            <h5 class="card-title text-center">Flask</h5>
+            <p class="card-text">Python is a programming language that lets you work quickly and integrate systems more effectivel</p>
+        </div>
     </div>
 
-    <div class="col-12 col-md-3 p-3 p-md-5 bg-light border border-white">
-        <img class="post-imag" src="{% static 'image/flask.png'%}">
-        <h3>Flask</h3>
-        <p>Flask is a microframework for Python based on Werkzeug, Jinja 2 and good intentions.</p>
+    <div class="card mb-3" style="max-width: 17rem; margin-left: 10px;">
+        <img class="card-img-top" style="min-height: 224px; max-height: 224px;" src="{% static 'image/tux.png'  %}" alt="Linux">
+        <div class="card-body">
+            <h5 class="card-title text-center">Linux</h5>
+            <p class="card-text">Linux is a name which broadly denotes a family of free and open-source software operating system</p>
+        </div>
     </div>
 
+    <div class="card mb-3" style="max-width: 17rem; margin-left: 10px;">
+        <img class="card-img-top" style="min-height: 224px; max-height: 224px;" src="{% static 'image/python.jpg'  %}" alt="Python">
+        <div class="card-body">
+            <h5 class="card-title text-center">Python</h5>
+            <p class="card-text">Python is a programming language that lets you work quickly and integrate systems more effectivel</p>
+        </div>
+    </div>
 </div>
+<br><hr><br>
 {% endblock content %}
