@@ -6,7 +6,10 @@
 }
 
 img.entry-poster {
-  max-width: 100% !important;
+    max-width: 800px;
+    min-width: 800px;
+    min-height: 400px;
+    max-height: 400px;
 }
 
 div.highlight{
