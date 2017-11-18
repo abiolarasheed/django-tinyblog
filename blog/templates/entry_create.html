@@ -1,6 +1,14 @@
 {% extends "admin_base.html" %} {%load static%} {% block content %}
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/entry_detail.css' %}"/>
+    <style>
+    img.entry-poster {
+    max-width: 510px;
+    max-height: 400px;
+    min-width: 510px;
+    min-height: 400px;
+    }
+    </style>
 {%endblock%}
 {%block js%}
 <script>
