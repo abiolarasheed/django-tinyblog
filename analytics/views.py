@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from datetime import date, datetime
+from datetime import datetime
 import re
 from django.http.response import JsonResponse
 from django.views import View
@@ -42,7 +42,7 @@ class AnalyticsView(View):
                         referrer=request.GET.get('ref', ''),
                         ip=request.META['REMOTE_ADDR'],
                         timestamp=now)
-            save_page_analytics(data)
+            save_page_analytics.delay(data)
             return JsonResponse({'message': 'Ok'}, status=200)
         except Exception as e:
             return JsonResponse({'Error': e}, status=400)
