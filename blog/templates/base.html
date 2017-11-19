@@ -74,6 +74,15 @@
             })
             window.autocomplete.setup()
         });
+
+        (function() {
+        var img = new Image,
+        domain = encodeURIComponent(window.location.protocol + "//" + window.location.host),
+        url = encodeURIComponent(window.location.pathname),
+        title = encodeURIComponent(document.title),
+        ref = encodeURIComponent(document.referrer);
+        img.src = '/analytics/analytics.gif?domain=' + domain + '&url=' + url + '&title=' + title + '&ref=' + ref;
+        })();
     </script>
     {% block js %}{%endblock%}
 </body>
