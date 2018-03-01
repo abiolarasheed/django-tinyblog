@@ -14,6 +14,7 @@ from blog.models import Entry
 
 
 class UserLogin(LoginView):
+    redirect_authenticated_user = True
     def get_success_url(self):
         return resolve_url('dashboard')
 
