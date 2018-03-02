@@ -1,17 +1,19 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 from .utils import ajax_required
 
 
 urlpatterns = [
-    url(r'^$', views.EntryListView.as_view(), name='entry_list'),
-    url(r'^image/(?P<pk>[0-9]+)/$', views.ImageDetailView.as_view(), name='image_detail'),
-    url(r'^image/create/$', views.ImageCreateView.as_view(), name='image_create'),
-    url(r'^create/$', views.EntryCreateView.as_view(), name='entry_create'),
-    url(r'^update/(?P<pk>[0-9]+)/$', views.EntryUpdateView.as_view(), name='entry_update'),
-    url(r'^publish/(?P<pk>[0-9]+)/$', views.PublishEntryView.as_view(), name='publish_entry'),
-    url(r'^unpublish/(?P<pk>[0-9]+)/$', views.UnPublishEntryView.as_view(), name='unpublish_entry'),
-    url(r'^search/$', ajax_required(views.JsonSearchView()), name='navbar_search'),
-    url(r'^(?P<slug>[-\w]+)/$', views.EntryDetail.as_view(), name='entry_detail'),
+    path('', views.EntryListView.as_view(), name='index'),
+    path('blog/', views.EntryListView.as_view(), name='entry_list'),
+    path('image/<int:pk>/', views.ImageDetailView.as_view(), name='image_detail'),
+    path('image/create/', views.ImageCreateView.as_view(), name='image_create'),
+    path('create/', views.EntryCreateView.as_view(), name='entry_create'),
+    path('update/<int:pk>/', views.EntryUpdateView.as_view(), name='entry_update'),
+    path('publish/<int:pk>/', views.PublishEntryView.as_view(), name='publish_entry'),
+    path('unpublish/<int:pk>/', views.UnPublishEntryView.as_view(), name='unpublish_entry'),
+    path('search/', ajax_required(views.JsonSearchView()), name='navbar_search'),
+    path('<slug:slug>/', views.EntryDetail.as_view(), name='entry_detail'),
 ]
+
