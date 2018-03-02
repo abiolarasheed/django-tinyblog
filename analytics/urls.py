@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
 
 urlpatterns = [
-    url(r'^analytics.gif$', views.AnalyticsView.as_view(), name='analytics'),
+    path('analytics.gif', views.AnalyticsView.as_view(), name='analytics'),
 ]

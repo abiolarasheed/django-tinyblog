@@ -7,6 +7,7 @@ from django.conf.urls.static import static
 from django.views.generic import TemplateView
 
 import blog.urls
+import blog.views as blog_views
 import analytics.urls
 
 
@@ -15,14 +16,16 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('analytics/',include(analytics.urls)),
     path('feedback/', TemplateView.as_view(template_name="feedback.html"), name='feedback'),
-    re_path('', include('accounts.urls')),
-    re_path('', include(blog.urls)),
+    re_path('analytics/', include('accounts.urls')),
+    re_path('blog/', include(blog.urls)),
 ]
 
 
 if settings.HAS_INDEX_PAGE:
     index_template = getattr(settings, 'INDEX_TEMPLATE', 'index.html')
-    urlpatterns = [path('', TemplateView.as_view(template_name=index_template), name='index'),] + urlpatterns
+    urlpatterns = [path('', TemplateView.as_view(template_name=index_template), name='index')] + urlpatterns
+else:
+    urlpatterns = [path('', blog_views.EntryListView.as_view(), name='index')] + urlpatterns
 
 
 if settings.DEBUG:
