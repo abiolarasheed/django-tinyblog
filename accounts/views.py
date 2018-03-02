@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.conf import settings
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import resolve_url
@@ -15,6 +15,7 @@ from blog.models import Entry
 
 class UserLogin(LoginView):
     redirect_authenticated_user = True
+
     def get_success_url(self):
         return resolve_url('dashboard')
 
