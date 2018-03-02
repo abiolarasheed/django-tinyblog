@@ -2,7 +2,7 @@
 import os
 from django.db import models
 from django.utils import timezone
-from django.urls.base import reverse
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
@@ -58,7 +58,7 @@ class Entry(models.Model):
     def as_json(self):
         return {"title": self.title,
                 "url": self.get_absolute_url(),
-                'id':self.id,
+                'id': self.pk,
                 'update_url': reverse('entry_update', kwargs={'pk':self.pk})
                 }
 
