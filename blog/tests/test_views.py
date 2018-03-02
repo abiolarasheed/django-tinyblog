@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.paginator import Paginator
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.template.loader import get_template
 from django.test import RequestFactory
 from django.test import TestCase
@@ -24,6 +24,7 @@ from blog.views import EntryListView, JsonSearchView
 
 TEST_LOGIN_URL = "/admin/login/"
 
+
 TEST_INDEX = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
@@ -32,7 +33,8 @@ TEST_INDEX = {
 }
 
 
-def create_image(storage, filename, size=(100, 100), image_mode='RGB', image_format='PNG'):
+def create_image(storage, filename, size=(100, 100),
+                 image_mode='RGB', image_format='PNG'):
     """
     Generate a test image, returning the filename that it was saved as.
 
@@ -67,7 +69,7 @@ class BlogViewTestCase(TestCase):
         self.generic_template_view_tester("/about/", 'about', "about.html")
 
     def test_feedback_blog(self):
-        self.generic_template_view_tester('/blog/', 'blog', 'blog.html')
+        self.generic_template_view_tester('/blog/', 'entry_list', 'entry_list.html')
 
     def test_feedback(self):
         self.generic_template_view_tester("/feedback/", "feedback", "feedback.html")
@@ -122,7 +124,8 @@ class EntryListViewTestCase(TestCase):
     def test_results_not_found(self):
         url = reverse('entry_list')
         response = self.client.get(url)
-        self.assertContains(response, 'Results Not Found.')
+        content = str(response.content)
+        self.assertInHTML('No Post Found', content)
 
     def test_single_entry(self):
         entry, __ = Entry.objects.get_or_create(title=self.blog_title,
@@ -261,7 +264,8 @@ class EntryCreateViewTestCase(TestCase):
         """Test to see normal post."""
         url = reverse('entry_create')
         post_data = {'title': u'AM a test post',
-                     'body': 'This is a test post'}
+                     'body': 'This is a test post',
+                     'tags': 'tags, tester'}
 
         last_total = Entry.objects.all().count()
 
@@ -274,7 +278,7 @@ class EntryCreateViewTestCase(TestCase):
         self.assertTrue(response.status_code == 302)
 
         # Check redirected to expected view
-        self.assertRedirects(response, reverse('entry_list'))
+        self.assertRedirects(response, reverse('entry_update', args=(last_total + 1 ,)))
 
         # Check new entry was added
         self.assertGreater(Entry.objects.all().count(), last_total)
@@ -305,13 +309,10 @@ class EntryCreateViewTestCase(TestCase):
         response = self.client.post(url, data=post_data)
 
         # Get the form errors if any and convert to dict.
-        form_errors = json.loads(response.context['form'].errors.as_json())
+        form_errors = json.loads(response.content)
 
         # Check there was no redirect.
-        self.assertTrue(response.status_code == 200)
-
-        # Check the right template was rendered.
-        self.assertTemplateUsed(response, "entry_create.html")
+        self.assertTrue(response.status_code == 400)
 
         # Check no new Entry was created.
         self.assertEqual(Entry.objects.all().count(), last_total)
@@ -320,7 +321,7 @@ class EntryCreateViewTestCase(TestCase):
         self.assertIn('title', form_errors.keys())
 
         # Check the Entry with title exists.
-        self.assertEqual(form_errors['title'][0]['code'], "unique")
+        self.assertEqual(form_errors['title'][0], "Entry with this Title already exists.")
 
     def test_post_empty_data(self):
         """Test to see effects of an empty post data."""
@@ -337,13 +338,10 @@ class EntryCreateViewTestCase(TestCase):
         response = self.client.post(url, data=post_data)
 
         # Get the form errors if any and convert to dict.
-        form_errors = json.loads(response.context['form'].errors.as_json())
+        form_errors = json.loads(response.content)
 
         # Check there was no redirect.
-        self.assertTrue(response.status_code == 200)
-
-        # Check the right template was rendered.
-        self.assertTemplateUsed(response, "entry_create.html")
+        self.assertTrue(response.status_code == 400)
 
         # Check no new Entry was created.
         self.assertEqual(Entry.objects.all().count(), last_total)
@@ -354,36 +352,35 @@ class EntryCreateViewTestCase(TestCase):
         # Check the body is the/one of the issues.
         self.assertIn('body', form_errors.keys())
 
-        # Check the Entry with title exists.
-        self.assertEqual(form_errors['title'][0]['code'], "required")
-
-        # Check the Entry with title exists.
-        self.assertEqual(form_errors['body'][0]['code'], "required")
-
     def test_post_with_poster(self):
         """Test to see normal with poster upload."""
         url = reverse('entry_create')
         post_data = {'title': u'AM a test post',
-                     'body': 'This is a test post'}
+                     'body': 'This is a test post',
+                     'tags': 'test tags, real test tags'}
 
         self.client.login(username='iamatest', password='123456')
 
         # set up image data
         temp_file = tempfile.NamedTemporaryFile()
         poster = create_image(None, temp_file)
-        poster_file = SimpleUploadedFile('poster.png', poster.getvalue())
+        poster_file = SimpleUploadedFile('poster.png',
+                                         poster.getvalue())
         post_data['poster'] = poster_file
 
         # Post data
-        response = self.client.post(url, data=post_data, format='multipart')
+        response = self.client.post(url, data=post_data,
+                                    format='multipart')
+
         entry = Entry.objects.get(title=post_data['title'])
+
         self.assertIsNotNone(entry.poster)
 
         # Check there was redirect
         self.assertTrue(response.status_code == 302)
 
         # Check redirected to expected view
-        self.assertRedirects(response, reverse('entry_list'))
+        self.assertRedirects(response, reverse('entry_update', args=(1,)))
 
 
 @override_settings(LOGIN_URL=TEST_LOGIN_URL)
@@ -403,7 +400,8 @@ class EntryUpdateViewTestCase(TestCase):
 
     def test_post_update_data(self):
         url = reverse('entry_update', args=(self.entry.pk,))
-        post_data = {'body': 'A new post'}
+        post_data = {'body': 'A new post', 'title': self.entry.title,
+                     'tags': 'tags, food', 'is_published': self.entry.is_published}
 
         self.client.login(username='iamatest', password='123456')
 
@@ -412,14 +410,15 @@ class EntryUpdateViewTestCase(TestCase):
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
         # Check there was redirect
-        self.assertTrue(response.status_code == 200)
+        self.assertTrue(response.status_code == 302)
 
-        # Check is right user was associated with blog
-        self.assertNotEqual(Entry.objects.get(pk=self.entry.pk).body, self.entry.body)
+        new_entry = Entry.objects.get(pk=self.entry.id)
+        self.assertNotEqual(new_entry.body, self.blog_body)
 
     def test_post_update_empty_data(self):
         url = reverse('entry_update', args=(self.entry.pk,))
         post_data = {}
+        body = self.entry.body
 
         self.client.login(username='iamatest', password='123456')
 
@@ -427,11 +426,11 @@ class EntryUpdateViewTestCase(TestCase):
         response = self.client.post(url, data=post_data,
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
-        # Check there was redirect
-        self.assertTrue(response.status_code == 400)
+        # empty did not override data
+        self.assertEqual(Entry.objects.get(pk=self.entry.pk).body, body)
 
-        # Check is right user was associated with blog
-        self.assertEqual(response.json(), {'body': ['This field is required.']})
+        # Check there was redirect
+        self.assertTrue(response.status_code == 200)
 
 
 @override_settings(LOGIN_URL=TEST_LOGIN_URL,
