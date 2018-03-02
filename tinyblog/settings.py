@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-
+import ast
 import os
 from django.contrib.messages import constants as messages
 
@@ -155,6 +155,11 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+# template
+# set to true if you want you index page to be different from you list of blogs page
+HAS_INDEX_PAGE = ast.literal_eval(os.environ.get('HAS_INDEX_PAGE', "False").title())
+INDEX_TEMPLATE = os.environ.get('INDEX_TEMPLATE', "index.html")  # Path to your index template
 
 CELERY_BROKER_URL = os.environ.get('BROKER_URL','redis://localhost:6379')
 CELERY_RESULT_BACKEND = os.environ.get('RESULT_BACKEND','redis://localhost:6379')
