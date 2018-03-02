@@ -44,13 +44,14 @@ class EntryCreateView(CreateView):
 
 @method_decorator(login_required(), name='dispatch')
 class EntryUpdateView(UpdateView):
+    template_name = "entry_create.html"
     model = Entry
     fields = ('title', 'tags', 'poster',
               'body', 'is_published')
-    template_name = "entry_create.html"
 
     def get_context_data(self, **kwargs):
-        context = super(EntryUpdateView, self).get_context_data(**kwargs)
+        context = super(EntryUpdateView,
+                        self).get_context_data(**kwargs)
         form = context['form']
         del form.fields['is_published']
         context['form'] = form
@@ -115,7 +116,8 @@ class EntryListView(ListView):
     queryset = model.published.all().order_by('-modified_at')
 
     def get_context_data(self, **kwargs):
-        context = super(EntryListView, self).get_context_data(**kwargs)
+        context = super(EntryListView, self
+                        ).get_context_data(**kwargs)
         context['title'] = "My Blog list"
         return context
 
