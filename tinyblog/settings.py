@@ -74,6 +74,15 @@ TEMPLATES = [
     },
 ]
 
+
+# Set the path where you will place your custom templates.
+# Please use same name so that you don't need to change anything when upgrading
+CUSTOM_TEMPLATES = os.path.join(os.path.dirname(BASE_DIR), 'custom_templates')
+
+# Insert into the template list if CUSTOM_TEMPLATES exists
+if os.path.exists(CUSTOM_TEMPLATES):
+    TEMPLATES[0]['DIRS'].append(CUSTOM_TEMPLATES)
+
 WSGI_APPLICATION = 'tinyblog.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
@@ -162,8 +171,8 @@ MESSAGE_TAGS = {
 HAS_INDEX_PAGE = ast.literal_eval(os.environ.get('HAS_INDEX_PAGE', "False").title())
 INDEX_TEMPLATE = os.environ.get('INDEX_TEMPLATE', "index.html")  # Path to your index template
 
-CELERY_BROKER_URL = os.environ.get('BROKER_URL','redis://localhost:6379')
-CELERY_RESULT_BACKEND = os.environ.get('RESULT_BACKEND','redis://localhost:6379')
+CELERY_BROKER_URL = os.environ.get('BROKER_URL', 'redis://localhost:6379')
+CELERY_RESULT_BACKEND = os.environ.get('RESULT_BACKEND', 'redis://localhost:6379')
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
