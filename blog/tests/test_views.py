@@ -278,7 +278,8 @@ class EntryCreateViewTestCase(TestCase):
         self.assertTrue(response.status_code == 302)
 
         # Check redirected to expected view
-        self.assertRedirects(response, reverse('entry_update', args=(last_total + 1 ,)))
+        entry = Entry.objects.get(title=post_data['title'])
+        self.assertRedirects(response, reverse('entry_update', args=(entry.pk,)))
 
         # Check new entry was added
         self.assertGreater(Entry.objects.all().count(), last_total)
@@ -380,7 +381,7 @@ class EntryCreateViewTestCase(TestCase):
         self.assertTrue(response.status_code == 302)
 
         # Check redirected to expected view
-        self.assertRedirects(response, reverse('entry_update', args=(1,)))
+        self.assertRedirects(response, reverse('entry_update', args=(entry.pk,)))
 
 
 @override_settings(LOGIN_URL=TEST_LOGIN_URL)
