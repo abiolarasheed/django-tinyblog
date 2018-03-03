@@ -77,11 +77,12 @@ TEMPLATES = [
 
 # Set the path where you will place your custom templates.
 # Please use same name so that you don't need to change anything when upgrading
-CUSTOM_TEMPLATES = os.path.join(os.path.dirname(BASE_DIR), 'custom_templates')
+CUSTOM_TEMPLATES = os.path.join(os.path.dirname(BASE_DIR), 'custom_dir/templates')
 
 # Insert into the template list if CUSTOM_TEMPLATES exists
 if os.path.exists(CUSTOM_TEMPLATES):
     TEMPLATES[0]['DIRS'].append(CUSTOM_TEMPLATES)
+
 
 WSGI_APPLICATION = 'tinyblog.wsgi.application'
 # Database
@@ -135,13 +136,26 @@ STATICFILES_DIRS = [
     os.path.join(DIR, 'assets/'),
 ]
 
+# Set the path where you will place your custom static.
+# Please use same name so that you don't need to change anything when upgrading
+CUSTOM_STATIC = os.path.join(os.path.dirname(BASE_DIR),
+                             'custom_dir/static')
+
+if os.path.exists(CUSTOM_STATIC):
+    # Insert into the STATICFILES_DIR list if CUSTOM_STATIC exists
+    STATICFILES_DIRS.append(("custom", CUSTOM_STATIC))
+
+
+# https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(DIR, 'static')
 MEDIA_ROOT = os.path.join(DIR, 'media')
 
+
 #  django-taggit settings
 TAGGIT_CASE_INSENSITIVE = True
+
 
 HAYSTACK_CONNECTIONS = {
     'default': {
@@ -149,6 +163,7 @@ HAYSTACK_CONNECTIONS = {
         'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
     },
 }
+
 
 #  return empty on next and previous page is page is 1
 EMPTY_ON_1 = True
