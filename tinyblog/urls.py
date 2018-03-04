@@ -31,6 +31,7 @@ urlpatterns = [
     path('feedback/', TemplateView.as_view(template_name="feedback.html"),
          name='feedback'),
     re_path('', include(accounts.urls)),
+    re_path('robots\.txt', include('robots.urls')),
 ]
 
 
