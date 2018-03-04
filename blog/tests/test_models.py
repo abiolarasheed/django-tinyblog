@@ -12,6 +12,25 @@ from django.test.utils import override_settings
 from ..models import Entry, Image
 
 
+class CategoryModelTestCase(TestCase):
+    def setUp(self):
+        self.blog_category_name = "DevOpt"
+
+    def get_entry(self):
+        return Category.objects.get_or_create(name=self.blog_category_name)
+
+
+    def test_create(self):
+        category, created = self.get_entry()
+        self.assertTrue(created)
+        self.assertIsInstance(category, Category)
+
+    def test_get_absolute_url(self):
+        category = self.category()[0]
+        self.assertIsNotNone(category.get_absolute_url())
+
+
+
 class BlogModelTestCase(TestCase):
     def setUp(self):
         self.author, auth_created = get_user_model().\
