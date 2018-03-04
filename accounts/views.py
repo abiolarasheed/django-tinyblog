@@ -43,8 +43,8 @@ class DashBoardEntryListView(ListView):
     model = Entry
 
     def get_queryset(self):
-        return self.model.objects.filter(author=self.request.user
-                                         ).order_by('-modified_at')
+        return self.model.objects.select_related("author")\
+            .filter(author=self.request.user).order_by('-modified_at')
 
 
 @method_decorator(login_required, name='dispatch')
