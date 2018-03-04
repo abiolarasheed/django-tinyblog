@@ -29,7 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+SITE_ID = 1
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,11 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sitemaps',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'haystack',
     'taggit',
     'accounts',
     'analytics',
     'blog',
+    'robots',
 ]
 
 MIDDLEWARE = [
@@ -63,7 +65,6 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
-        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -71,6 +72,10 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'loaders': [('django.template.loaders.cached.Loader',
+                         ('django.template.loaders.filesystem.Loader',
+                          'django.template.loaders.app_directories.Loader',)),
+                        ],
         },
     },
 ]
