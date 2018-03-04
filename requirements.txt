@@ -9,6 +9,7 @@ decorator==4.2.1
 Django==2.0.2
 django-extensions==2.0.0
 django-haystack==2.7.0
+-e git://github.com/jazzband/django-robots.git@f484c2a6abcae6244f860ad077af28d4be62037e#egg=django_robots
 django-taggit==0.22.2
 docopt==0.6.2
 idna==2.6
