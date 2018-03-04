@@ -10,18 +10,19 @@ django-tinyblog
    :alt: Build Status
    :target: https://coveralls.io/github/abiolarasheed/django-tinyblog
 
-Django Tiny Blog is a minimal configurable Django blogging app that allows you to focus your blog without the need of rolling out and maintaining your own. You can customize the look and feel of the app without needing to modify the source of the app so that updates are painless and easy.
+Django Tiny Blog is a minimal configurable Django blogging app that allows you to focus your blog without the need of rolling out and maintaining your own.
+You can customize the look and feel of the app without needing to modify the source of the app so that updates are painless and easy.
 
 Features:
 
 - Syntax highlighter
 - Full-text Search.
 - Pluggable configuration
-- Simple admin inteface.
+- Simple admin interface.
 
 
 Installation and usage
--------
+===================
 
 Start by cloning ``django-tinyblog`` :
 
@@ -29,7 +30,7 @@ Start by cloning ``django-tinyblog`` :
 
         git clone git@github.com:abiolarasheed/django-tinyblog.git
 
-Customizing is as simple as creating a folder `custom_dir` on the same level as your `django-tinyblog` download:
+Customizing is as simple as creating a folder ``custom_dir`` on the same level as your ``django-tinyblog`` download:
 
 .. code:: bash
 
