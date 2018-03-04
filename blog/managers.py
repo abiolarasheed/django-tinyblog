@@ -10,7 +10,8 @@ class PublishedEntryQuerySet(models.QuerySet):
     def as_manager(cls):
 
         def get_queryset(self):
-            return PublishedEntryQuerySet(self.model, using=self._db).filter(is_published=True)
+            return PublishedEntryQuerySet(self.model, using=self._db).\
+                select_related('author').filter(is_published=True)
 
         #  Get the manger form the QuerySet class as_manager()
         manager = super(PublishedEntryQuerySet, cls).as_manager()

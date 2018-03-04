@@ -77,8 +77,9 @@ class UnPublishEntryView(View):
 class PublishEntryView(View):
     def get(self, request, pk):
         try:
-            entry = Entry.objects.get(author=request.user, pk=pk)
-            entry.is_published=True
+            entry = Entry.objects.select_related("author")\
+                .get(author=request.user, pk=pk)
+            entry.is_published = True
             entry.save()
             messages.success(request, 'Article Successfully Published.')
         except Entry.DoesNotExist:
@@ -94,15 +95,17 @@ class EntryDetail(DetailView):
 
     def get_object(self, queryset=None):
         try:
-            return self.model.objects.get(author=self.request.user,
-                                          slug=self.kwargs['slug'])
+            return self.model.objects.select_related('author')\
+                .get(author=self.request.user,
+                     slug=self.kwargs['slug'])
         except (self.model.DoesNotExist, TypeError):
             return get_object_or_404(self.model.published,
                                      slug=self.kwargs['slug'])
 
     def get_context_data(self, **kwargs):
         entry = self.get_object()
-        entry.__class__.objects.select_related().filter(pk=entry.pk).update(views=F('views') + 1)
+        entry.__class__.objects.select_related('author').\
+            filter(pk=entry.pk).update(views=F('views') + 1)
         context = super(EntryDetail, self).get_context_data(**kwargs)
         context['title'] = context['entry'].title
         return context

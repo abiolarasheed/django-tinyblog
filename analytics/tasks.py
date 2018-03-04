@@ -5,7 +5,8 @@ from tinyblog import celery_app
 from .models import PageView
 
 
-@celery_app.task(ignore_result=True, name="page_analytics")
+@celery_app.task(ignore_result=True,
+                 name="page_analytics")
 def save_page_analytics(data):
     today = date.today()
 

@@ -15,7 +15,7 @@ setup(
     license='MIT License',
     author='Abiola Rasheed',
     author_email='rasheed.abiola3@gmail.com',
-    description='A mini django blogging app written in python3.6+ ',
+    description='A mini django blogging app written in python3.6+.',
     long_description=open('README.rst').read(),
     keywords=['blog', 'django', 'tinyblog', 'tiny'],
     install_requires=required,

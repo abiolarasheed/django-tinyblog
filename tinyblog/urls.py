@@ -16,7 +16,7 @@ import blog.sitemaps as blog_sitemaps
 
 sitemaps = {
     'static': blog_sitemaps.StaticViewSitemap,
-    "blogs": blog_sitemaps.BlogSitemap,
+    "blog": blog_sitemaps.BlogSitemap,
 }
 
 
@@ -27,7 +27,7 @@ urlpatterns = [
     path('analytics/', include(analytics.urls)),
     re_path('blog/', include(blog.urls)),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps},
-     name='django.contrib.sitemaps.views.sitemap'),
+         name='django.contrib.sitemaps.views.sitemap'),
     path('feedback/', TemplateView.as_view(template_name="feedback.html"),
          name='feedback'),
     re_path('', include(accounts.urls)),

@@ -83,8 +83,9 @@ class Entry(models.Model):
         return round(total_words / words_per_min)
 
     def headline(self):
+        res = self.body[:80]
+
         try:
-            res = self.body[:80]
             res = pygmentify_html(res, noclasses=True)
         except Exception as e:
             res = res[:80]
