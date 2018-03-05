@@ -13,6 +13,21 @@ from blog.managers import PublishedEntryQuerySet
 from blog.utils import FileUploader, pygmentify_html
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=150, unique=True,
+                            db_index=True, null=False,
+                            blank=False)
+
+    class Meta:
+        verbose_name = _("Category")
+        verbose_name_plural = _("Categories")
+        db_table = 'category'
+        default_related_name = 'categoryies'
+
+    def __str__(self):
+        return self.name
+
+
 class Entry(models.Model):
     title = models.CharField(max_length=500, unique=True, db_index=True, null=False, blank=False)
     slug = models.SlugField(max_length=140, unique=True, db_index=True, null=False,
