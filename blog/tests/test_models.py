@@ -35,7 +35,8 @@ class CategoryModelTestCase(TestCase):
 class BlogModelTestCase(TestCase):
     def setUp(self):
         self.author, auth_created = get_user_model().\
-            objects.get_or_create(email="iamatest@gmail.com", username="iamatest")
+            objects.get_or_create(email="iamatest@gmail.com",
+                                  username="iamatest")
         self.blog_title = "Test blog Title"
         self.blog_body = "This is my test blog"
         self.blog_category_name = "DevOps"
