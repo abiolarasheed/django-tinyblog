@@ -3,32 +3,25 @@ import os
 import shutil
 import tempfile
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.test.utils import override_settings
 
-from ..models import Entry, Image
+from ..models import Category, Entry, Image
 
 
 class CategoryModelTestCase(TestCase):
     def setUp(self):
-        self.blog_category_name = "DevOpt"
+        self.blog_category_name = "DevOps"
 
     def get_entry(self):
         return Category.objects.get_or_create(name=self.blog_category_name)
-
 
     def test_create(self):
         category, created = self.get_entry()
         self.assertTrue(created)
         self.assertIsInstance(category, Category)
-
-    def test_get_absolute_url(self):
-        category = self.category()[0]
-        self.assertIsNotNone(category.get_absolute_url())
-
 
 
 class BlogModelTestCase(TestCase):
