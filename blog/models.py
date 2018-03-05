@@ -30,6 +30,7 @@ class Category(models.Model):
 
 class Entry(models.Model):
     title = models.CharField(max_length=500, unique=True, db_index=True, null=False, blank=False)
+    category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.CASCADE)
     slug = models.SlugField(max_length=140, unique=True, db_index=True, null=False,
                             blank=False, editable=False)
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
@@ -41,6 +42,7 @@ class Entry(models.Model):
                                FileUploader(os.path.join('entry', 'poster')))
     is_published = models.BooleanField(default=False)
     views = models.PositiveIntegerField(default=1)  # we will change this later and write a better one later
+
     tags = TaggableManager()
     objects = models.Manager()
     published = PublishedEntryQuerySet.as_manager()
