@@ -5,6 +5,7 @@ import tempfile
 
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db import IntegrityError
 from django.test import TestCase
 from django.test.utils import override_settings
 
@@ -23,6 +24,13 @@ class CategoryModelTestCase(TestCase):
         self.assertTrue(created)
         self.assertIsInstance(category, Category)
 
+    def test_name_uniqueness(self):
+        category, created = self.get_entry()
+        self.assertTrue(created)
+        with self.assertRaises(Exception) as raised:
+            Category(name=self.blog_category_name).save()
+        self.assertEqual(IntegrityError, type(raised.exception))
+
 
 class BlogModelTestCase(TestCase):
     def setUp(self):
@@ -30,11 +38,19 @@ class BlogModelTestCase(TestCase):
             objects.get_or_create(email="iamatest@gmail.com", username="iamatest")
         self.blog_title = "Test blog Title"
         self.blog_body = "This is my test blog"
+        self.blog_category_name = "DevOps"
 
-    def get_entry(self):
-        return Entry.objects.get_or_create(title=self.blog_title,
-                                           body=self.blog_body,
-                                           author=self.author)
+    def get_entry(self, category=False):
+        data = dict(title=self.blog_title,
+                    body=self.blog_body,
+                    author=self.author)
+
+        if category:
+            category, created = Category.objects.\
+                get_or_create(name=self.blog_category_name)
+            data.update({"category": category})
+
+        return Entry.objects.get_or_create(**data)
 
     def test_create(self):
         entry, created = self.get_entry()
@@ -43,6 +59,11 @@ class BlogModelTestCase(TestCase):
         self.assertEqual(entry.modified_at.date(), entry.created_at.date())
         self.assertIsNone(entry.published_date)
         self.assertFalse(entry.is_published)
+
+    def test_create_category(self):
+        entry, created = self.get_entry(category=True)
+        self.assertTrue(created)
+        self.assertIsInstance(entry.category, Category)
 
     def test_get_absolute_url(self):
         entry = self.get_entry()[0]
