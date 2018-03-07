@@ -10,7 +10,7 @@ from django.contrib.auth.views import LoginView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 
-from blog.models import Entry
+from blog.models import Entry, Category
 
 
 class UserLogin(LoginView):
@@ -32,6 +32,7 @@ class DashBoard(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DashBoard, self).get_context_data(**kwargs)
         context['title'] = "Dashboard"
+        context['categories'] = Category.objects.all().order_by("name")
         return context
 
 
