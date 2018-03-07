@@ -16,16 +16,16 @@ class CategoryModelTestCase(TestCase):
     def setUp(self):
         self.blog_category_name = "DevOps"
 
-    def get_entry(self):
+    def get_category(self):
         return Category.objects.get_or_create(name=self.blog_category_name)
 
     def test_create(self):
-        category, created = self.get_entry()
+        category, created = self.get_category()
         self.assertTrue(created)
         self.assertIsInstance(category, Category)
 
     def test_name_uniqueness(self):
-        category, created = self.get_entry()
+        category, created = self.get_category()
         self.assertTrue(created)
         with self.assertRaises(Exception) as raised:
             Category(name=self.blog_category_name).save()
