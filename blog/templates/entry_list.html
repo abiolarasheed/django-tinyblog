@@ -10,6 +10,9 @@
             <h5 class="card-title">{{entry.title|truncatechars:30 }}</h5>
             <p class="card-text">{{entry.body|truncatechars:128| pygmentify_inline }}</p>
             <a href="{{entry.get_absolute_url}}" class="btn btn-primary"> View </a>
+            {% if entry.category %}
+            <a href="{% url 'post-in-category' entry.category.pk %}" class="pull-right"><small class="text-muted">{{entry.category|truncatechars:12}}</small></a>
+            {% endif %}
         </div>
         <div class="card-footer">
             <small class="text-muted">{{entry.modified_at | date}}</small>
@@ -31,7 +34,7 @@
     <ul class="pagination justify-content-center">
         {% if page_obj.has_previous %}
           <li class="page-item">
-              <a class="page-link" href="{% url 'entry_list' %}?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
+              <a class="page-link" href="{{request.path}}?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
           </li>
         {% else %}
         <li class="page-item disabled">
@@ -39,11 +42,11 @@
         </li>
         {% endif %}
         {% for _ in page_obj.paginator.page_range %}
-         <li class="page-item"><a class="page-link" href="{% url 'entry_list' %}?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+         <li class="page-item"><a class="page-link" href="{{request.path}}?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
         {% endfor %}
         {% if page_obj.has_next %}
           <li class="page-item">
-              <a class="page-link" href="{% url 'entry_list' %}?page={{ page_obj.next_page_number }}">Next</a>
+              <a class="page-link" href="{{request.path}}?page={{ page_obj.next_page_number }}">Next</a>
           </li>
         {% else %}
         <li class="page-item disabled">
