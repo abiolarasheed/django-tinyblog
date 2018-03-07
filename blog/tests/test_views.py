@@ -18,7 +18,7 @@ from django.test.utils import override_settings
 from django.utils.safestring import SafeText
 from django.utils.six import BytesIO
 
-from blog.models import Entry, Image as ImageModel
+from blog.models import Entry, Image as ImageModel, Category
 from blog.views import EntryListView, JsonSearchView
 
 
@@ -48,6 +48,112 @@ def create_image(storage, filename, size=(100, 100),
         return data
     image_file = ContentFile(data.read())
     return storage.save(filename, image_file)
+
+
+@override_settings(LOGIN_URL=TEST_LOGIN_URL)
+class CategoryListViewTestCase(TestCase):
+    def setUp(self):
+        self.user, __ = get_user_model().objects.get_or_create(email="iamatest@test.com",
+                                                               username="iamatest")
+        self.user.set_password('123456')
+        self.user.save()
+        self.client.login(username='iamatest', password='123456')
+
+        self.url = reverse("category-list")
+        self.blog_category_names = ["DevOps", "Sales", "Marketing"]
+
+    def bulk_create_category(self):
+        __ = Category.objects.bulk_create(
+            [Category(name=name) for name in self.blog_category_names]
+            )
+
+    def test_category_list(self):
+        self.assertEqual(Category.objects.all().count(), 0)
+        self.bulk_create_category()
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+        self.assertIn('categories', response.context)
+
+        self.assertEqual(Category.objects.all().count(), 3)
+
+
+@override_settings(LOGIN_URL=TEST_LOGIN_URL)
+class CategoryDeleteViewTestCase(TestCase):
+    def setUp(self):
+        self.user, __ = get_user_model().objects.get_or_create(email="iamatest@test.com",
+                                                               username="iamatest")
+        self.user.set_password('123456')
+        self.user.save()
+        self.client.login(username='iamatest', password='123456')
+
+        self.category = Category.objects.\
+            get_or_create(name='Test')[0]
+
+    def test_delete(self):
+        category_pk = self.category.pk
+        url = reverse("delete-category",
+                      args=(self.category.pk,))
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+
+        with self.assertRaises(Exception) as raised:
+            Category.objects.get(pk=category_pk)
+        self.assertEqual(Category.DoesNotExist,
+                         type(raised.exception))
+
+
+@override_settings(LOGIN_URL=TEST_LOGIN_URL)
+class EntryByCategoryListViewTestCase(TestCase):
+    def setUp(self):
+        self.url = reverse("category-list")
+        self.blog_category_names = ["DevOps", "Sales", "Marketing"]
+        self.user, __ = get_user_model().objects.\
+            get_or_create(email="iamatest@test.com", username="iamatest")
+        self.user.set_password('123456')
+        self.user.save()
+        self.bulk_create_category()
+
+        __ = Entry.objects.get_or_create(title='AM a test post',
+                                         body='This is a test post',
+                                         author=self.user)
+
+        entries = [Entry(title='AM a test post ' + str(index + 1),
+                         body='This is a test post',
+                         author=self.user, is_published=True,
+                         category=Category.objects.last()
+                         ) for index in range(4)]
+
+        [entry.save() for entry in entries]
+
+    def bulk_create_category(self):
+        __ = Category.objects.bulk_create(
+            [Category(name=name) for name in self.blog_category_names]
+            )
+
+    def test_with_no_category(self):
+        pk = Category.objects.first().pk
+        url = reverse("post-in-category", args=(pk,))
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        self.assertIn('entries', response.context)
+
+        self.assertEquals(response.context['entries'].count(), 0)
+
+    def test_post_in_category(self):
+        pk = Category.objects.last().pk
+        url = reverse("post-in-category", args=(pk,))
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('entries', response.context)
+        self.assertEquals(response.context['entries'].count(),
+                          Entry.objects.select_related("category").\
+                          filter(category__pk=pk).order_by('pk').count())
 
 
 class BlogViewTestCase(TestCase):
