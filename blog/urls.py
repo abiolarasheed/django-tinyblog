@@ -8,6 +8,10 @@ from .utils import ajax_required
 
 urlpatterns = [
     path('', views.EntryListView.as_view(), name='entry_list'),
+    path('post-in-category/<int:pk>/', views.EntryByCategoryListView.as_view(),
+         name='post-in-category'),
+    path('category-list', views.CategoryListView.as_view(), name="category-list"),
+    path('delete-category/<int:pk>/', views.CategoryDeleteView.as_view(), name="delete-category"),
     path('image/<int:pk>/', views.ImageDetailView.as_view(), name='image_detail'),
     path('image/create/', views.ImageCreateView.as_view(), name='image_create'),
     path('create/', views.EntryCreateView.as_view(), name='entry_create'),

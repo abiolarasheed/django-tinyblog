@@ -11,11 +11,12 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls.base import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.generic import DetailView, ListView, CreateView
+from django.views.generic import DetailView, ListView, CreateView, DeleteView
 from django.views.generic.edit import UpdateView
 
 from haystack.views import SearchView
 
+from blog.models import Category
 from blog.utils import ajax_required
 from .models import Entry, Image
 
@@ -24,14 +25,13 @@ from .models import Entry, Image
 class EntryCreateView(CreateView):
     model = Entry
     success_url = reverse_lazy('entry_list')
-    fields = ['title', 'poster', 'body', 'tags']
+    fields = ["category", 'title', 'poster', 'body', 'tags']
     template_name = "entry_create.html"
 
     def form_valid(self, form):
-        entry = form.save(commit=False)
-        entry.author = self.request.user
-        entry.save()
-        return super(EntryCreateView, self).form_valid(form)
+        form.instance.author = self.request.user
+        return super(EntryCreateView,
+                     self).form_valid(form)
 
     def form_invalid(self, form):
         super(EntryCreateView, self).form_invalid(form)
@@ -116,7 +116,8 @@ class EntryListView(ListView):
     context_object_name = 'entries'
     paginate_by = 12
     model = Entry
-    queryset = model.published.all().order_by('-modified_at')
+    queryset = model.published.select_related('category')\
+        .all().order_by('-modified_at')
 
     def get_context_data(self, **kwargs):
         context = super(EntryListView, self
@@ -204,3 +205,38 @@ class JsonSearchView(SearchView):
         return JsonResponse(context)
 
     render_json_response = create_response
+
+
+@method_decorator(login_required(), name='dispatch')
+class CategoryListView(CreateView, ListView):
+    template_name = 'category_list.html'
+    context_object_name = 'categories'
+    paginate_by = 30
+    model = Category
+    success_url = reverse_lazy('category-list')
+    fields = ['name']
+    queryset = model.objects.all().order_by('name')
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoryListView, self
+                        ).get_context_data(**kwargs)
+        context['title'] = "Category List"
+        return context
+
+
+@method_decorator(login_required(), name='dispatch')
+class CategoryDeleteView(DeleteView):
+    model = Category
+    template_name = 'category_list.html'
+    success_url = reverse_lazy('category-list')
+    success_message = 'The Category has been deleted successfully.'
+
+    def get(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+
+
+class EntryByCategoryListView(EntryListView):
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        return self.model.published.select_related("category").\
+            filter(category__pk=pk).order_by("-modified_at")
