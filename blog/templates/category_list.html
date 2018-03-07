@@ -1,0 +1,44 @@
+{% extends "admin_base.html" %} {%load static i18n %} {% block content %}
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-12 bg-light border border-white">
+            <form class="form-inline pull-right" method="post" action="{% url 'category-list' %}">
+                {% csrf_token %}
+                <div class="form-group mx-sm-3">
+                    <label for="id_name" class="sr-only">{% trans "Category" %}</label>
+                    <input type="text" name="name" class="form-control" id="id_name" placeholder="{% trans 'Category' %}">
+                </div>
+                <button type="submit" class="btn btn-primary">{% trans "Add Category" %}</button>
+            </form>
+            <br><br>
+            {% if categories.exists %}
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>{% trans "Category" %}</th>
+                    <th>{% trans "Delete" %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for category in categories %}
+                <tr>
+                    <th scope="row">
+                        <input type="checkbox" name="category" value="{{category.pk}}" class="form-control"
+                               id="id_checkbox_name" placeholder="{% trans 'Category' %}">
+                    </th>
+                    <td>{{category.name}}</td>
+                    <td><a href="{% url 'delete-category' category.pk %}" class="btn btn-danger">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<br><br>
+{% endblock %}
