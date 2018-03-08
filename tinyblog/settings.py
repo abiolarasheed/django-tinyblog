@@ -196,10 +196,18 @@ MESSAGE_TAGS = {
 HAS_INDEX_PAGE = ast.literal_eval(os.environ.get('HAS_INDEX_PAGE', "False").title())
 INDEX_TEMPLATE = os.environ.get('INDEX_TEMPLATE', "index.html")  # Path to your index template
 
-CELERY_BROKER_URL = os.environ.get('BROKER_URL', 'redis://localhost:6379')
-CELERY_RESULT_BACKEND = os.environ.get('RESULT_BACKEND', 'redis://localhost:6379')
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_TIMEZONE = TIME_ZONE
-CELERY_BEAT_SCHEDULE = {}
+if ast.literal_eval(os.environ.get('ENABLE_CELERY', "false").title()):
+    CELERY_BROKER_URL = os.environ.get('BROKER_URL', 'redis://localhost:6379')
+    CELERY_RESULT_BACKEND = os.environ.get('RESULT_BACKEND', 'redis://localhost:6379')
+    CELERY_ACCEPT_CONTENT = ['application/json']
+    CELERY_RESULT_SERIALIZER = 'json'
+    CELERY_TASK_SERIALIZER = 'json'
+    CELERY_TIMEZONE = TIME_ZONE
+    CELERY_BEAT_SCHEDULE = {}
+
+# Do not place any settings bellow this setting.
+# Define all your custom settings in the custom_settings.py
+# file next to the settings.py file.
+CUSTOM_SETTINGS = os.path.join(DIR, 'custom_settings.py')
+if os.path.exists(CUSTOM_SETTINGS):
+    from .custom_settings import *
