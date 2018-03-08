@@ -172,6 +172,7 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 #  return empty on next and previous page is page is 1
 EMPTY_ON_1 = True
