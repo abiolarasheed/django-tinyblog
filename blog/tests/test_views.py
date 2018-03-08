@@ -33,6 +33,14 @@ TEST_INDEX = {
 }
 
 
+ELASTIC_SEARCH_TEST_INDEX = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://127.0.0.1:9200/',
+        'INDEX_NAME': 'haystack',
+    },
+}
+
 def create_image(storage, filename, size=(100, 100),
                  image_mode='RGB', image_format='PNG'):
     """
@@ -251,6 +259,94 @@ class EntryListViewTestCase(TestCase):
 
 @override_settings(HAYSTACK_CONNECTIONS=TEST_INDEX)
 class JsonSearchViewTestCase(TestCase):
+    def update_entries(self):
+        self.blog_title = "Test blog Title"
+        self.blog_body = "This is my test blog"
+        self.author, auth_created = get_user_model().\
+            objects.get_or_create(email="iamatest@test.com", username="iamatest")
+
+        [Entry.objects.get_or_create(title=self.blog_title + str(index),
+                                     body=self.blog_body + str(index),
+                                     author=self.author, is_published=True)
+         for index in range(30)]
+        self.entries = Entry.objects.all()
+
+    def test_build_absolute_uri(self):
+        url = reverse('navbar_search')
+        query_string = {'q': 'django tips 6 get_or_create'}
+
+        request = RequestFactory().get(url, query_string)
+        json_search_view = JsonSearchView()
+        json_search_view.request = request
+
+        """ Test for when we have just a single page."""
+        # Test if we want "" to be returned if only one page exist.
+        self.assertEqual(len(json_search_view.build_absolute_uri(1, empty_on_1=True)), 0)
+
+        # Test if we don't want "" to be returned if only one page exist.
+        self.assertGreater(len(json_search_view.build_absolute_uri(1, empty_on_1=False)), 1)
+
+        # Test runner always use domain name as "testserver", so checking if "http://" in string is sufficient
+        self.assertIn('http://', json_search_view.build_absolute_uri(1, empty_on_1=False))
+
+        # Check if URI contains query string
+        self.assertIn('?', json_search_view.build_absolute_uri(1, empty_on_1=False))
+
+        # Check is "q" in URL query string
+        self.assertIn('q=', json_search_view.build_absolute_uri(1, empty_on_1=False))
+
+        # Check is page in URL query string
+        self.assertIn('page=', json_search_view.build_absolute_uri(1, empty_on_1=False))
+
+        """ Test for multiple pages will always return full url even if
+            empty_on_1 set to True or False.
+        """
+        self.assertGreater(len(json_search_view.build_absolute_uri(2, empty_on_1=True)), 0)
+        self.assertGreater(len(json_search_view.build_absolute_uri(2, empty_on_1=False)), 0)
+
+    def test_build_pager(self):
+        url = reverse('navbar_search')
+        query_string = {'q': 'django tips 6 get_or_create'}
+
+        self.update_entries()
+        results = Entry.objects.all().order_by('id')
+        results_per_page = results.count() / 2
+
+        paginator = Paginator(results, results_per_page)
+        page = paginator.page(1)
+
+        request = RequestFactory().get(url, query_string,
+                                       HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        json_search_view = JsonSearchView()
+        json_search_view.request = request
+
+        self.assertIsInstance(json_search_view.build_pager(page, paginator), dict)
+
+    def test_create_response(self):
+        url = reverse('navbar_search')
+        query_string = {'q': 'django tips 6 get_or_create'}
+
+        # Make request via ajax.
+        response = self.client.get(url, query_string,
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertTrue(response.status_code == 200)
+        self.assertIsInstance(json.loads(response.content), dict)
+
+    def test_render_json_response(self):
+        url = reverse('navbar_search')
+        query_string = {'q': 'django tips 6 get_or_create'}
+
+        request = RequestFactory().get(url, query_string,
+                                       HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        json_search_view = JsonSearchView()
+        json_search_view.request = request
+        response = json_search_view.render_json_response()
+        self.assertTrue(response.status_code == 200)
+        self.assertIsInstance(json.loads(response.content), dict)
+
+
+@override_settings(HAYSTACK_CONNECTIONS=ELASTIC_SEARCH_TEST_INDEX)
+class ElasticJsonSearchViewTestCase(TestCase):
     def update_entries(self):
         self.blog_title = "Test blog Title"
         self.blog_body = "This is my test blog"
