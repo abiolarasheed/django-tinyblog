@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'analytics',
     'blog',
     'robots',
+    'gunicorn',
 ]
 
 MIDDLEWARE = [

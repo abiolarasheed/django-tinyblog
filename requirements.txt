@@ -6,12 +6,13 @@ chardet==3.0.4
 coverage==4.5.1
 coveralls==1.2.0
 decorator==4.2.1
-Django==2.0.2
+Django==2.0.3
 django-extensions==2.0.0
 django-haystack==2.7.0
 -e git://github.com/jazzband/django-robots.git@f484c2a6abcae6244f860ad077af28d4be62037e#egg=django_robots
 django-taggit==0.22.2
 docopt==0.6.2
+gunicorn==19.7.1
 idna==2.6
 ipython==6.2.1
 ipython-genutils==0.2.0
