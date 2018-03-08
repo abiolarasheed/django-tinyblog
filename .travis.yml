@@ -16,7 +16,6 @@ install:
   - pip install -q Django==$DJANGO_VERSION
 
 services:
-  - elasticsearch
   - postgresql
 
 addons:
@@ -24,12 +23,10 @@ addons:
 
 before_script:
   - psql -c 'create database test_db;' -U postgres
-  - sleep 10
 
 script:
   - python manage.py makemigrations --noinput
   - python manage.py migrate --noinput
-  - python manage.py rebuild_index
   - coverage run manage.py test --noinput
 
 after_success:
