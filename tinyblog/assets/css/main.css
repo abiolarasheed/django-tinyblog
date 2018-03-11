@@ -25,10 +25,58 @@ body {
 
 .ac-results {
     position: absolute;
-    margin-top: 100px;
     background: #fff;
-    width: 930px;
-    border: 1px solid rgba(0,0,0,.125);
     border-radius: .25rem;
     padding: 5px;
 }
+.card_1{
+  flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+
+.row{
+  margin-bottom: 20px;
+}
+
+.card-text{
+  min-height: 96px;
+}
+
+@media (max-width: 1024px) and (min-width: 769px){
+  .card-title{
+    min-height: 56px;
+  }
+  .card-text{
+    min-height: 120px;
+  }
+}
+@media (max-width: 768px) and (min-width: 415px){
+  .card-title{
+    min-height: 56px;
+  }
+  .card-text{
+    min-height: 182px;
+  }
+}
+@media (max-width: 414px) {
+  .col-md-4{
+    margin-bottom: 20px;
+  }
+  .text-muted{
+  text-align: center;
+  }
+  .card-title{
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+}
+.navbar-collapse {
+  margin-top: 10px;
+}
+
+

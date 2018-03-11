@@ -5,12 +5,7 @@
   margin-bottom: 1rem;
 }
 
-img.entry-poster {
-    max-width: 800px;
-    min-width: 800px;
-    min-height: 400px;
-    max-height: 400px;
-}
+
 
 div.highlight{
   padding-top: 20px;
@@ -20,4 +15,11 @@ div.highlight{
   border: 1px solid rgba(0,0,0,.125);
   line-height: 1.5;
   border-radius: .25rem;
+}
+
+img.entry-poster {
+    width: 100%;
+    width: 100%;
+    min-height: 100%;
+    max-height: 100%;
 }

@@ -4,7 +4,8 @@
      <div class="row">
     {% if entries.exists %}
     {% for entry in entries %}
-    <div class="card mb-3" style="max-width: 20rem; margin-left: 40px;">
+    <div class="col-md-4">
+      <div class="card">
         <img class="card-img-top" style="min-height: 224px; max-height: 224px;" src="{{entry.get_poster}}" alt="{{entry.title|truncatechars:12}}">
         <div class="card-body">
             <h5 class="card-title">{{entry.title|truncatechars:30 }}</h5>
@@ -17,6 +18,7 @@
         <div class="card-footer">
             <small class="text-muted">{{entry.modified_at | date}}</small>
         </div>
+      </div>
     </div>
     {%endfor%}
     {%else%}

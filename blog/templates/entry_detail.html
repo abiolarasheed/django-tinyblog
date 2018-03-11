@@ -5,31 +5,37 @@
 {% endblock %}
 <div class="container-fluid">
     <div class="row">
-        <div class="col-3 bg-light border border-white">
+        <div class="col-md-3 bg-light border border-white">
             <p>
                 <h5 class="text-muted text-center"> Categories </h5>
             </p>
             <hr>
         </div>
-        <div class="col-9 bg-light border border-white">
-            <h1 class="text-center">{{ entry.title }}</h1>
-            <ul class="post-meta">
-                <li>
-                    <i class="fa fa-calendar"></i> {{ entry.modified_at | date }}
-                </li>
-                <li>
-                    <i class="fa fa-clock-o"></i> {{ entry.estimate_reading_time }} minutes read
-                </li>
-                <li>
-                    <i class="fa fa-comments"></i>
-                    <a href="#"> {{ entry.count_comments }} comments </a>
-                </li>
-                <li>
-                    <i class="fa fa-eye"></i>
-                    <span>{{ entry.views }}</span> views
-                </li>
-            </ul>
-            <p><img class="entry-poster" src="{{ entry.get_poster }}"></p>
+        <div class="col-md-9 bg-light border border-white">
+            <div class="row">
+                <h1 class="text-center">{{ entry.title }}</h1>
+            </div>
+            <div class="row">
+                <ul class="post-meta">
+                    <li>
+                        <i class="fa fa-calendar"></i> {{ entry.modified_at | date }}
+                    </li>
+                    <li>
+                        <i class="fa fa-clock-o"></i> {{ entry.estimate_reading_time }} minutes read
+                    </li>
+                    <li>
+                        <i class="fa fa-comments"></i>
+                        <a href="#"> {{ entry.count_comments }} comments </a>
+                    </li>
+                    <li>
+                        <i class="fa fa-eye"></i>
+                        <span>{{ entry.views }}</span> views
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <p><img class="entry-poster" src="{{ entry.get_poster }}"></p>
+            </div>
             {{ entry.body | pygmentify_inline }}
             <hr>
             {% with entry.tags.all as tags %}
