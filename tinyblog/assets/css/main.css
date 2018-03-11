@@ -42,6 +42,9 @@ body {
 .row{
   margin-bottom: 20px;
 }
+.row{
+  margin-bottom: 20px;
+}
 
 .card-text{
   min-height: 96px;
@@ -55,6 +58,9 @@ body {
     min-height: 120px;
   }
 }
+.col-md-4{
+    margin-bottom: 20px;
+}
 @media (max-width: 768px) and (min-width: 415px){
   .card-title{
     min-height: 56px;
@@ -63,10 +69,9 @@ body {
     min-height: 182px;
   }
 }
+
 @media (max-width: 414px) {
-  .col-md-4{
-    margin-bottom: 20px;
-  }
+  
   .text-muted{
   text-align: center;
   }

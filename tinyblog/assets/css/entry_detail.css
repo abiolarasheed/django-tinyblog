@@ -23,3 +23,17 @@ img.entry-poster {
     min-height: 100%;
     max-height: 100%;
 }
+.detail_header{
+  margin-top: 20px;
+}
+.category_ul_bottom{
+  display: none;
+}
+@media (max-width: 414px) {
+  .category_ul_bottom{
+    display: block;
+  }
+  .category_ul{
+    display: none;
+  }
+}

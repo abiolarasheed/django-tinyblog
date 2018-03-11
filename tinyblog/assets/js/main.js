@@ -62,7 +62,7 @@
           let elem = base_elem.clone();
           elem.find('.ac-result').text(results[res_offset].title).attr("href", results[res_offset].url);
           if (results.length == 1 && this.admin == false) {
-             results_wrapper.css({"margin-top":"40px"});          
+             // results_wrapper.css({"margin-top":"40px"});          
           }
           results_wrapper.append(elem);
         }
@@ -71,7 +71,7 @@
         let elem = base_elem.clone();
         elem.text("No results found.");
         if (this.admin == false) {
-           results_wrapper.css({"margin-top":"40px"});
+           // results_wrapper.css({"margin-top":"40px"});
         }
         results_wrapper.append(elem);
       }
