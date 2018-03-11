@@ -7,6 +7,7 @@ from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
+from meta.models import ModelMeta
 from taggit.managers import TaggableManager
 
 from blog.managers import PublishedEntryQuerySet
@@ -28,7 +29,7 @@ class Category(models.Model):
         return self.name
 
 
-class Entry(models.Model):
+class Entry(ModelMeta, models.Model):
     title = models.CharField(max_length=500, unique=True, db_index=True, null=False, blank=False)
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.CASCADE)
     slug = models.SlugField(max_length=140, unique=True, db_index=True, null=False,
@@ -52,6 +53,20 @@ class Entry(models.Model):
         verbose_name_plural = _("Entries")
         db_table = 'entries'
         default_related_name = 'entries'
+
+    _metadata = {
+        'title': 'title',
+        'description': 'headline',
+        'image': 'get_meta_image',
+        'keywords': 'get_meta_tags',
+        'url': 'get_absolute_url'
+    }
+
+    def get_meta_image(self):
+        return self.get_poster()
+
+    def get_meta_tags(self):
+        return self.tags.all()
 
     def __str__(self):
         return self.title
