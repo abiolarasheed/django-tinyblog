@@ -146,6 +146,10 @@ STATICFILES_DIRS = [
     os.path.join(DIR, 'assets/'),
 ]
 
+CATEGORIES_IN_DETAIL = ast.literal_eval(
+    os.environ.get("CATEGORIES_IN_DETAIL", "true").title()
+)
+
 # Set the path where you will place your custom static.
 # Please use same name so that you don't need to change anything when upgrading
 CUSTOM_STATIC = os.path.join(os.path.dirname(BASE_DIR),
@@ -197,6 +201,19 @@ MESSAGE_TAGS = {
 HAS_INDEX_PAGE = ast.literal_eval(os.environ.get('HAS_INDEX_PAGE', "False").title())
 INDEX_TEMPLATE = os.environ.get('INDEX_TEMPLATE', "index.html")  # Path to your index template
 
+
+# Django Meta
+META_SITE_PROTOCOL = os.environ.get("META_SITE_PROTOCOL", "http")
+META_SITE_DOMAIN = os.environ.get("META_SITE_DOMAIN")
+META_SITE_NAME = os.environ.get("META_SITE_NAME")
+META_USE_OG_PROPERTIES = ast.literal_eval(os.environ.get("META_USE_OG_PROPERTIES",
+                                                         "False").title())
+META_USE_TWITTER_PROPERTIES = ast.literal_eval(os.environ.get("META_USE_TWITTER_PROPERTIES",
+                                                              "False").title())
+META_USE_GOOGLEPLUS_PROPERTIES = ast.literal_eval(os.environ.get("META_USE_GOOGLEPLUS_PROPERTIES",
+                                                                 "False").title())
+
+
 if ast.literal_eval(os.environ.get('ENABLE_CELERY', "false").title()):
     CELERY_BROKER_URL = os.environ.get('BROKER_URL', 'redis://localhost:6379')
     CELERY_RESULT_BACKEND = os.environ.get('RESULT_BACKEND', 'redis://localhost:6379')
@@ -205,6 +222,7 @@ if ast.literal_eval(os.environ.get('ENABLE_CELERY', "false").title()):
     CELERY_TASK_SERIALIZER = 'json'
     CELERY_TIMEZONE = TIME_ZONE
     CELERY_BEAT_SCHEDULE = {}
+
 
 # Do not place any settings bellow this setting.
 # Define all your custom settings in the custom_settings.py
