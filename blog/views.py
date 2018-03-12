@@ -108,7 +108,9 @@ class EntryDetail(DetailView):
             filter(pk=entry.pk).update(views=F('views') + 1)
         context = super(EntryDetail, self).get_context_data(**kwargs)
         context['title'] = context['entry'].title
-        context['categories'] = Category.objects.all().order_by("name")
+        context['meta'] = entry.as_meta()
+        if settings.CATEGORIES_IN_DETAIL:
+            context['categories'] = Category.objects.all().order_by("name")
         return context
 
 
