@@ -66,7 +66,8 @@ class Entry(ModelMeta, models.Model):
         return self.get_poster()
 
     def get_meta_tags(self):
-        return self.tags.all()
+        tags = self.tags.all()
+        return [tag.name.title() for tag in tags]
 
     def __str__(self):
         return self.title
