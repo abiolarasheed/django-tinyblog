@@ -1,9 +1,36 @@
-{% extends "base.html" %}
-{% block content %}
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="login" /><br />
-    <a href="{% url "password_reset" %}">Can't Remember Password</a>
-</form>
-{% endblock %}
+<!DOCTYPE html>{% load staticfiles %}
+<html lang="en">
+<head>
+    <title>{{title}}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="msapplication-TileColor" content="#113228">
+    <meta name="msapplication-TileImage" content="{% static 'image/py.png'%}">
+    <link rel="apple-touch-icon" href="{% static 'image/py.png'%}">
+    <link rel="icon" sizes="192x192" href="{% static 'image/py.png'%}">
+    <link rel="shortcut icon" href="{% static 'image/py.png'%}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'css/signin.css'' %}" /> {% block css %}{% endblock %}
+</head>
+  <body>
+  <div class="wrapper">
+  <div class="text-center form-signin">
+    <form action="{% url 'login' %}" method="POST">
+        {% csrf_token %}
+        <a href="{% url 'index' %}"><img class="mb-4 img-fluid" src="{% static 'image/py.png' %}" alt=""></a>
+      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+      <label for="id_username" class="sr-only">Username</label>
+      <input name="username" type="text" id="id_username" class="form-control" placeholder="Username" required autofocus>
+      <label for="id_password" class="sr-only">Password</label>
+      <input  name="password" type="password" id="id_password" class="form-control" placeholder="Password" required>
+      <button class="btn btn-lg btn-primary btn-block mt-4" type="submit">Login</button>
+        <p class="mt-2 text-muted"><a href="{% url 'password_reset' %}">Can't Remember Password</a></p>
+         {% now "Y" as current_year %}
+      <p class="mt-5 mb-3 text-muted"><a href="{% url 'index' %}">Your Company.</a> ©{{ current_year }}.</p>
+    </form>
+  </div>
+  </div>
+  </body>
+</html>
