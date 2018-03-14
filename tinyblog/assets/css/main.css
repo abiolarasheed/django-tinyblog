@@ -9,19 +9,6 @@ body {
   height:32px;
   width:32px; 
   }
-@media screen 
-  and (min-device-width: 1200px) 
-  and (max-device-width: 1600px) 
-  and (-webkit-min-device-pixel-ratio: 1) {
-  #navBarSearchForm input[type=text]{width:930px !important;}
-}
-@media screen 
-  and (min-device-width: 1200px) 
-  and (max-device-width: 1600px) 
-  and (-webkit-min-device-pixel-ratio: 2)
-  and (min-resolution: 192dpi) { 
-  #navBarSearchForm input[type=text]{width:930px !important;}
-}
 
 .ac-results {
     position: absolute;
@@ -78,10 +65,261 @@ body {
   .card-title{
   font-size: 1.5rem;
   font-weight: 700;
-}
+  }
+  
 }
 .navbar-collapse {
   margin-top: 10px;
 }
 
+.home .hentry {
+    margin-bottom: 0;
+}
+.hentry {
+    background-color: white;
+    margin: 0 auto 1.5em;
+    padding-top: 20px;
+}
 
+.hentry header {
+    padding: 1.5em;
+    padding-bottom: 0;
+    padding-top: 0;
+}
+.article-header h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    line-height: 54px;
+    text-align: center;
+    margin: 0 auto;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.article-header h1 a:visited {
+    color: #403e3c!important;
+    
+}
+.entry-content a.view-more:hover {
+    color: #fd7200;
+    border-color: #fd7200;
+}
+
+a {
+    color: #fd7200 ;
+}
+.page-link{
+  color:#fd7200;
+}
+.article-header h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    line-height: 54px;
+    text-align: center;
+    margin: 0 auto;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.hentry footer p, .hentry .article-header .vcard {
+    margin: 0;
+    
+    text-align: center;
+    font-size: 16px;
+    color: #74716f;
+    font-weight: 400;
+    
+}
+.feat-img-box {
+    max-width: 700px;
+    margin: 30px auto 15px;
+    overflow: hidden;
+    
+    border-radius: 4px;
+}
+.feat-img-box img {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+    margin: auto;
+    object-fit: cover;
+    max-height: 300px;
+}
+
+.home .entry-content {
+    padding-bottom: 50px;
+}
+.entry-content {
+    padding: 1em 1.5em 20px;
+    border-bottom: 1px solid #e5e3de;
+}
+.clearfix, .cf, .comment-respond {
+    zoom: 1;
+}
+.hentry header .center {
+    line-height: 1;
+}
+
+.home .entry-content {
+    padding-bottom: 50px;
+}
+.entry-content {
+    padding: 1em 1.5em 20px;
+    border-bottom: 1px solid #e5e3de;
+}
+.clearfix, .cf, .comment-respond {
+    zoom: 1;
+}
+.entry-content a.view-more {
+    font-size: 12px;
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    color: #9e9b99;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    padding: 0 24px;
+    border-radius: 4px;
+    border: 1px solid #9e9b99;
+    width: 108px;
+    margin-top: 28px;
+}
+.home .hentry footer {
+    padding-bottom: 1em;
+}
+
+.home{
+  font-family: "Whitney A", "Whitney B", "Whitney", "Whitney", Helvetica, Arial, sans-serif;
+    font-size: 20px;
+    line-height: 31px;
+    color: #4d4b4a;
+    -webkit-font-smoothing: antialiased;
+}
+
+.footer_mute{
+  
+  float: right;
+}
+p#back-to-top-text {
+    display: none;
+}
+
+
+.navbar-collapse {
+  margin-top: 0px;
+}
+@media (min-width: 1024px){
+  .hentry{
+    width: 72%;
+  }
+}
+@media (max-width: 767px){
+	.h1, h1 {
+    font-size: 1.8rem;
+}
+}
+@media (max-width: 414px){
+  .entry-content{
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  #back-to-top-button {
+    display: block!important;
+  }
+  #back-to-top-text{
+    display: none;
+  }
+  .post-meta{
+    font-size: 14px;
+  }
+}
+#back-to-top-button:hover{
+  color:white!important;
+}
+#back-to-top-button {
+    margin-top: -3px;
+    margin-right: 5px;
+    cursor: pointer;
+    display: block;
+    border-radius: 50px;
+    border: none;
+    background: #fd7200;
+    z-index: 9999;
+}
+.fade.in {
+    opacity: 1;
+}
+.custom-toggler .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#fd7200' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+}
+.center{
+  text-align: center;
+}
+
+.article-header a:hover{
+  color:#fd7200!important;
+	    text-decoration: none;
+}
+.article-header small:hover{
+  color:#fd7200!important;
+}
+#navbarsExampleDefault{
+  overflow: auto;
+}
+.float-left{
+  float: left!important;
+}
+a.btn.btn-primary {
+    font-size: 12px;
+    position: relative;
+    display: block;
+    text-align: center;
+    color: #9e9b99;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    padding: 0 24px;
+    border-radius: 4px;
+    border: 1px solid #9e9b99;
+    width: 108px;
+    margin-top: 28px;
+    line-height: 31px;
+    background-color: transparent;
+}
+.btn-primary:not([disabled]):not(.disabled).active, .btn-primary:not([disabled]):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+    box-shadow: none;
+    color: #fd7200 !important;
+    border-color: #fd7200 !important;
+}
+a.btn.btn-primary:hover {
+    color: #fd7200 !important;
+    border-color: #fd7200 !important;
+}
+.container.detail_form h3.text-center {
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+@media (min-width: 1901px){
+   #navBarSearchForm input[type=text]{width:1300px !important;}
+}
+@media (max-width: 1900px) and (min-width: 1651px){
+   #navBarSearchForm input[type=text]{width:1100px !important;}
+}
+@media (max-width: 1650px) and (min-width: 1600px){
+   #navBarSearchForm input[type=text]{width:930px !important;}
+}
+@media (max-width: 1599px) and (min-width: 1200px){
+   #navBarSearchForm input[type=text]{width:700px !important;}
+}
+@media (max-width: 1199px) and (min-width: 1024px){
+   #navBarSearchForm input[type=text]{width:450px !important;}
+}
+@media (max-width: 1023px) and (min-width: 768px){
+   #navBarSearchForm input[type=text]{width:250px !important;}
+}
