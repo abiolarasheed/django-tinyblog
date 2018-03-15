@@ -13,6 +13,10 @@ from ..models import Category, Entry, Image
 
 
 class CategoryModelTestCase(TestCase):
+    def tearDown(self):
+        from django_redis import get_redis_connection
+        get_redis_connection("default").flushall()
+
     def setUp(self):
         self.blog_category_name = "DevOps"
 
@@ -33,6 +37,10 @@ class CategoryModelTestCase(TestCase):
 
 
 class BlogModelTestCase(TestCase):
+    def tearDown(self):
+        from django_redis import get_redis_connection
+        get_redis_connection("default").flushall()
+
     def setUp(self):
         self.author, auth_created = get_user_model().\
             objects.get_or_create(email="iamatest@gmail.com",
@@ -95,6 +103,10 @@ class BlogModelTestCase(TestCase):
 
 @override_settings(MEDIA_ROOT=tempfile.gettempdir())
 class ImageModelTestCase(TestCase):
+    def tearDown(self):
+        from django_redis import get_redis_connection
+        get_redis_connection("default").flushall()
+
     def setUp(self):
         self.author, auth_created = get_user_model().\
             objects.get_or_create(email="iamatest@gmail.com", username="iamatest")

@@ -7,6 +7,10 @@ from ..models import Entry
 
 
 class PublishedEntryQuerySetTestCase(TestCase):
+    def tearDown(self):
+        from django_redis import get_redis_connection
+        get_redis_connection("default").flushall()
+
     def setUp(self):
         blog_title = "Test blog Title"
         blog_body = "This is my test blog"

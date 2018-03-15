@@ -52,6 +52,10 @@ def create_image(storage, filename, size=(100, 100),
 
 @override_settings(LOGIN_URL=TEST_LOGIN_URL)
 class CategoryListViewTestCase(TestCase):
+    def tearDown(self):
+        from django_redis import get_redis_connection
+        get_redis_connection("default").flushall()
+
     def setUp(self):
         self.user, __ = get_user_model().objects.get_or_create(email="iamatest@test.com",
                                                                username="iamatest")
@@ -81,6 +85,10 @@ class CategoryListViewTestCase(TestCase):
 
 @override_settings(LOGIN_URL=TEST_LOGIN_URL)
 class CategoryDeleteViewTestCase(TestCase):
+    def tearDown(self):
+        from django_redis import get_redis_connection
+        get_redis_connection("default").flushall()
+
     def setUp(self):
         self.user, __ = get_user_model().objects.get_or_create(email="iamatest@test.com",
                                                                username="iamatest")
@@ -107,6 +115,10 @@ class CategoryDeleteViewTestCase(TestCase):
 
 @override_settings(LOGIN_URL=TEST_LOGIN_URL)
 class EntryByCategoryListViewTestCase(TestCase):
+    def tearDown(self):
+        from django_redis import get_redis_connection
+        get_redis_connection("default").flushall()
+
     def setUp(self):
         self.url = reverse("category-list")
         self.blog_category_names = ["DevOps", "Sales", "Marketing"]
@@ -157,6 +169,10 @@ class EntryByCategoryListViewTestCase(TestCase):
 
 
 class BlogViewTestCase(TestCase):
+    def tearDown(self):
+        from django_redis import get_redis_connection
+        get_redis_connection("default").flushall()
+
     def generic_template_view_tester(self, path, path_name, template_name):
         # set variables.
         path = path
@@ -182,6 +198,10 @@ class BlogViewTestCase(TestCase):
 
 
 class EntryViewTestCase(TestCase):
+    def tearDown(self):
+        from django_redis import get_redis_connection
+        get_redis_connection("default").flushall()
+
     def setUp(self):
         self.author, auth_created = get_user_model().\
             objects.get_or_create(email="iamatest@test.com", username="iamatest")
@@ -214,6 +234,10 @@ class EntryViewTestCase(TestCase):
 
 
 class EntryListViewTestCase(TestCase):
+    def tearDown(self):
+        from django_redis import get_redis_connection
+        get_redis_connection("default").flushall()
+
     def setUp(self):
         self.author, auth_created = get_user_model().\
             objects.get_or_create(email="iamatest@test.com", username="iamatest")
@@ -251,6 +275,10 @@ class EntryListViewTestCase(TestCase):
 
 @override_settings(HAYSTACK_CONNECTIONS=TEST_INDEX)
 class JsonSearchViewTestCase(TestCase):
+    def tearDown(self):
+        from django_redis import get_redis_connection
+        get_redis_connection("default").flushall()
+
     def update_entries(self):
         self.blog_title = "Test blog Title"
         self.blog_body = "This is my test blog"
@@ -340,6 +368,10 @@ class JsonSearchViewTestCase(TestCase):
 @override_settings(LOGIN_URL=TEST_LOGIN_URL,
                    MEDIA_ROOT=tempfile.gettempdir())
 class EntryCreateViewTestCase(TestCase):
+    def tearDown(self):
+        from django_redis import get_redis_connection
+        get_redis_connection("default").flushall()
+
     def setUp(self):
         self.user, __ = get_user_model().objects.get_or_create(email="iamatest@test.com",
                                                                username="iamatest")
@@ -492,6 +524,10 @@ class EntryCreateViewTestCase(TestCase):
 
 @override_settings(LOGIN_URL=TEST_LOGIN_URL)
 class EntryUpdateViewTestCase(TestCase):
+    def tearDown(self):
+        from django_redis import get_redis_connection
+        get_redis_connection("default").flushall()
+
     def setUp(self):
         self.author = get_user_model()(email="iamatest@gmail.com", username="iamatest")
         self.author.set_password('123456')
@@ -543,6 +579,10 @@ class EntryUpdateViewTestCase(TestCase):
 @override_settings(LOGIN_URL=TEST_LOGIN_URL,
                    MEDIA_ROOT=tempfile.gettempdir())
 class ImageDetailViewTestCase(TestCase):
+    def tearDown(self):
+        from django_redis import get_redis_connection
+        get_redis_connection("default").flushall()
+
     def setUp(self):
         self.author = get_user_model()(email="iamatest@gmail.com", username="iamatest")
         self.author.set_password('123456')
@@ -581,6 +621,10 @@ class ImageDetailViewTestCase(TestCase):
 @override_settings(LOGIN_URL=TEST_LOGIN_URL,
                    MEDIA_ROOT=tempfile.gettempdir())
 class ImageCreateViewTestCase(TestCase):
+    def tearDown(self):
+        from django_redis import get_redis_connection
+        get_redis_connection("default").flushall()
+
     def setUp(self):
         self.author = get_user_model()(email="iamatest@gmail.com", username="iamatest")
         self.author.set_password('123456')

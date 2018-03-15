@@ -9,6 +9,10 @@ from blog.utils import ajax_required, FileUploader
 
 
 class AjaxRequiredTestCase(TestCase):
+    def tearDown(self):
+        from django_redis import get_redis_connection
+        get_redis_connection("default").flushall()
+
     def setUp(self):
         # Create the http request object.
         self.ajax_request = Mock()
@@ -94,6 +98,10 @@ class AjaxRequiredTestCase(TestCase):
 
 
 class FileUploaderTestCase(TestCase):
+    def tearDown(self):
+        from django_redis import get_redis_connection
+        get_redis_connection("default").flushall()
+
     def test_file_uploader(self):
         self.assertIsInstance(FileUploader(), FileUploader)
 
