@@ -120,7 +120,7 @@ CACHES = {
             "COMPRESSOR": "django_redis.compressors.zlib.ZlibCompressor",
             "IGNORE_EXCEPTIONS": True,
         },
-        "KEY_PREFIX": "example"
+        "KEY_PREFIX": "blog"
     }
 }
 
