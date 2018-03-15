@@ -10,15 +10,31 @@ from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls.base import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
 from django.views import View
 from django.views.generic import DetailView, ListView, CreateView, DeleteView
 from django.views.generic.edit import UpdateView
 
 from haystack.views import SearchView
+from meta.views import Meta
 
 from blog.models import Category
 from blog.utils import ajax_required
 from .models import Entry, Image
+
+
+class PageMetaData:
+    def get_meta(self, context=None):
+        if context is not None and hasattr(context, "title"):
+            _title = context["title"]
+
+        else:
+            _title = settings.DEFAULT_META_TITLE
+
+        return Meta(title=_title, url=self.request.path,
+                    description=settings.DEFAULT_META_DESCRIPTION,
+                    image=settings.DEFAULT_META_IMAGE,
+                    keywords=settings.DEFAULT_META_KEYWORDS)
 
 
 @method_decorator(login_required(), name='dispatch')
@@ -66,9 +82,9 @@ class UnPublishEntryView(View):
             entry = Entry.published.get(author=request.user, pk=pk)
             entry.is_published=False
             entry.save()
-            messages.success(request, 'Unpublished Successfully.')
+            messages.success(request, _('Unpublished Successfully.'))
         except Entry.DoesNotExist:
-            messages.error(request, 'Unpublish Error!')
+            messages.error(request, _('Unpublish Error!'))
         finally:
             return redirect(reverse_lazy('dashboard-entries'))
 
@@ -81,9 +97,9 @@ class PublishEntryView(View):
                 .get(author=request.user, pk=pk)
             entry.is_published = True
             entry.save()
-            messages.success(request, 'Article Successfully Published.')
+            messages.success(request, _('Article Successfully Published.'))
         except Entry.DoesNotExist:
-            messages.error(request, 'An error occurred while publishing article!')
+            messages.error(request, _('An error occurred while publishing article!'))
         finally:
             return redirect(reverse_lazy('dashboard-entries'))
 
@@ -114,7 +130,7 @@ class EntryDetail(DetailView):
         return context
 
 
-class EntryListView(ListView):
+class EntryListView(PageMetaData, ListView):
     template_name = 'entry_list.html'
     context_object_name = 'entries'
     paginate_by = 12
@@ -125,7 +141,8 @@ class EntryListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(EntryListView, self
                         ).get_context_data(**kwargs)
-        context['title'] = "My Blog list"
+        context['title'] = _("Latest Posts")
+        context["meta"] = self.get_meta(context=context)
         return context
 
 
@@ -223,7 +240,7 @@ class CategoryListView(CreateView, ListView):
     def get_context_data(self, **kwargs):
         context = super(CategoryListView, self
                         ).get_context_data(**kwargs)
-        context['title'] = "Category List"
+        context['title'] = _("Categories")
         return context
 
 
@@ -232,14 +249,27 @@ class CategoryDeleteView(DeleteView):
     model = Category
     template_name = 'category_list.html'
     success_url = reverse_lazy('category-list')
-    success_message = 'The Category has been deleted successfully.'
+    success_message = _('The Category has been deleted successfully.')
 
     def get(self, request, *args, **kwargs):
         return self.delete(request, *args, **kwargs)
 
 
-class EntryByCategoryListView(EntryListView):
+class EntryByCategoryListView(EntryListView, PageMetaData):
     def get_queryset(self):
         pk = self.kwargs['pk']
         return self.model.published.select_related("category").\
             filter(category__pk=pk).order_by("-modified_at")
+
+    def get_context_data(self, **kwargs):
+        context = super(EntryByCategoryListView, self
+                        ).get_context_data(**kwargs)
+
+        try:
+            category = "Category({0})".format(Category.objects.get(pk=self.kwargs["pk"]).name)
+            context["title"] = category
+        except Category.DoesNotExist:
+            pass
+
+        context["meta"] = self.get_meta(context=context)
+        return context
