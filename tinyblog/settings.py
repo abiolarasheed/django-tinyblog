@@ -27,8 +27,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = b_eval(os.environ.get("DEBUG", "False").title())
-if not DEBUG:
-    ALLOWED_HOSTS = [os.environ.get("META_SITE_DOMAIN",)]
+ALLOWED_HOSTS = []
 
 SITE_ID = 1
 # Application definition
@@ -235,3 +234,5 @@ if os.path.exists(CUSTOM_SETTINGS):
     from .custom_settings import *
 
 DEFAULT_META_IMAGE = os.path.join(STATIC_URL, SITE_LOGO)
+if not DEBUG:
+    ALLOWED_HOSTS = [META_SITE_DOMAIN]
