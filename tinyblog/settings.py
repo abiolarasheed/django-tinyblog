@@ -10,7 +10,7 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-import ast
+from ast import literal_eval as b_eval
 import os
 from django.contrib.messages import constants as messages
 
@@ -26,9 +26,9 @@ DIR = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+DEBUG = b_eval(os.environ.get("DEBUG", "False").title())
+if not DEBUG:
+    ALLOWED_HOSTS = [os.environ.get("META_SITE_DOMAIN",)]
 
 SITE_ID = 1
 # Application definition
@@ -146,9 +146,15 @@ STATICFILES_DIRS = [
     os.path.join(DIR, 'assets/'),
 ]
 
-CATEGORIES_IN_DETAIL = ast.literal_eval(
+CATEGORIES_IN_DETAIL = b_eval(
     os.environ.get("CATEGORIES_IN_DETAIL", "true").title()
 )
+
+# https://docs.djangoproject.com/en/1.11/ref/settings/#databases
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+STATIC_ROOT = os.path.join(DIR, 'static')
+MEDIA_ROOT = os.path.join(DIR, 'media')
 
 # Set the path where you will place your custom static.
 # Please use same name so that you don't need to change anything when upgrading
@@ -159,13 +165,7 @@ if os.path.exists(CUSTOM_STATIC):
     # Insert into the STATICFILES_DIR list if CUSTOM_STATIC exists
     STATICFILES_DIRS.append(("custom", CUSTOM_STATIC))
 
-
-# https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
-STATIC_ROOT = os.path.join(DIR, 'static')
-MEDIA_ROOT = os.path.join(DIR, 'media')
-
+SITE_LOGO = os.environ.get("SITE_LOGO", "image/py.png")
 
 #  django-taggit settings
 TAGGIT_CASE_INSENSITIVE = True
@@ -198,23 +198,26 @@ MESSAGE_TAGS = {
 
 # template
 # set to true if you want you index page to be different from you list of blogs page
-HAS_INDEX_PAGE = ast.literal_eval(os.environ.get('HAS_INDEX_PAGE', "False").title())
+HAS_INDEX_PAGE = b_eval(os.environ.get('HAS_INDEX_PAGE', "False").title())
 INDEX_TEMPLATE = os.environ.get('INDEX_TEMPLATE', "index.html")  # Path to your index template
 
 
 # Django Meta
 META_SITE_PROTOCOL = os.environ.get("META_SITE_PROTOCOL", "http")
-META_SITE_DOMAIN = os.environ.get("META_SITE_DOMAIN")
+META_SITE_DOMAIN = os.environ.get("META_SITE_DOMAIN", "blog.example.com")
 META_SITE_NAME = os.environ.get("META_SITE_NAME")
-META_USE_OG_PROPERTIES = ast.literal_eval(os.environ.get("META_USE_OG_PROPERTIES",
-                                                         "False").title())
-META_USE_TWITTER_PROPERTIES = ast.literal_eval(os.environ.get("META_USE_TWITTER_PROPERTIES",
-                                                              "False").title())
-META_USE_GOOGLEPLUS_PROPERTIES = ast.literal_eval(os.environ.get("META_USE_GOOGLEPLUS_PROPERTIES",
-                                                                 "False").title())
+META_USE_OG_PROPERTIES = b_eval(os.environ.get("META_USE_OG_PROPERTIES", "False").title())
+META_USE_TWITTER_PROPERTIES = b_eval(os.environ.get("META_USE_TWITTER_PROPERTIES",
+                                                    "False").title())
+META_USE_GOOGLEPLUS_PROPERTIES = b_eval(os.environ.get("META_USE_GOOGLEPLUS_PROPERTIES",
+                                                       "False").title())
+
+DEFAULT_META_DESCRIPTION = os.environ.get("DEFAULT_META_DESCRIPTION", "")
+DEFAULT_META_KEYWORDS = os.environ.get("DEFAULT_META_KEYWORDS", "")
+DEFAULT_META_TITLE = os.environ.get("DEFAULT_META_TITLE", "")
 
 
-if ast.literal_eval(os.environ.get('ENABLE_CELERY', "false").title()):
+if b_eval(os.environ.get('ENABLE_CELERY', "false").title()):
     CELERY_BROKER_URL = os.environ.get('BROKER_URL', 'redis://localhost:6379')
     CELERY_RESULT_BACKEND = os.environ.get('RESULT_BACKEND', 'redis://localhost:6379')
     CELERY_ACCEPT_CONTENT = ['application/json']
@@ -230,3 +233,5 @@ if ast.literal_eval(os.environ.get('ENABLE_CELERY', "false").title()):
 CUSTOM_SETTINGS = os.path.join(DIR, 'custom_settings.py')
 if os.path.exists(CUSTOM_SETTINGS):
     from .custom_settings import *
+
+DEFAULT_META_IMAGE = os.path.join(STATIC_URL, SITE_LOGO)
