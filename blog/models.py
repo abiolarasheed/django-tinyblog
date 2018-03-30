@@ -79,6 +79,7 @@ class Entry(ModelMeta, models.Model):
         slug = slugify(self.title)
         unique_slug = slug
         num = 1
+
         while self.__class__.objects.filter(slug=unique_slug).exists():
             unique_slug = '{}-{}'.format(slug, num)
             num += 1
@@ -137,7 +138,7 @@ class Entry(ModelMeta, models.Model):
         if self.is_published and self.published_date is None:
             self.published_date = timezone.now()
 
-        if not self.slug:
+        if self.slug in [None, ""]:
             self.slug = self.__get_unique_slug()
 
         super(Entry, self).save(*args, **kwargs)
