@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+
 import os
+import re
+
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
@@ -115,8 +118,13 @@ class Entry(ModelMeta, models.Model):
         total_words = self.count_words_in_text()
         return round(total_words / words_per_min)
 
+    def cleanhtml(self, raw_html):
+        cleaner = re.compile("<.*?>")
+        cleaned_string = re.sub(cleaner, "", raw_html)
+        return cleaned_string
+
     def headline(self):
-        res = self.body[:80]
+        res = self.cleanhtml(self.body)[:80]
 
         try:
             res = pygmentify_html(res, noclasses=True)
@@ -154,3 +162,4 @@ class Image(models.Model):
         return dict(caption=self.caption,
                     photo=self.photo.url,
                     entry=self.entry.slug)
+
