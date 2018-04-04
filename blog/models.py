@@ -125,12 +125,12 @@ class Entry(ModelMeta, models.Model):
         return cleaned_string
 
     def headline(self):
-        res = self.cleanhtml(self.body)[:80]
+        res = self.cleanhtml(self.body)[:128]
 
         try:
             res = pygmentify_html(res, noclasses=True)
         except Exception as e:
-            res = res[:80]
+            res = res[:128]
         finally:
             return mark_safe(res)
 
