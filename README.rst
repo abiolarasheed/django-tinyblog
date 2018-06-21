@@ -10,8 +10,8 @@ django-tinyblog
    :alt: Build Status
    :target: https://coveralls.io/github/abiolarasheed/django-tinyblog
 
-Django Tiny Blog is a minimal configurable Django blogging app that allows you to focus your blog without the need of rolling out and maintaining your own.
-You can customize the look and feel of the app without needing to modify the source of the app so that updates are painless and easy.
+Django Tiny Blog is a minimal configurable Django blogging app that allows you to focus on your blog content without the need of rolling out and maintaining your own.
+You can customize the look and feel of the app without needing to modify the source code of the app, so that updates are painless and easy.
 
 Features:
 
