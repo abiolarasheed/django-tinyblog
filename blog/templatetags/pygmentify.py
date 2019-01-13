@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
@@ -15,7 +17,7 @@ def pygmentify(value):
         res = pygmentify_html(value)
     except Exception as e:
         print(e)
-        print(u'value="%s"' % value)
+        print('value="%s"' % value)
         res = value
     return mark_safe(res)
 
@@ -27,7 +29,7 @@ def pygmentify_inline(value):
         res = pygmentify_html(value, noclasses=True)
     except Exception as e:
         print(e)
-        print(u'value="%s"' % value)
+        print('value="%s"' % value)
         res = value
     return mark_safe(res)
 
@@ -43,7 +45,7 @@ class PygmentifyNode(template.Node):
             res = pygmentify_html(output, **self.kwargs)
         except Exception as e:
             print(e)
-            print(u'value="%s"' % output)
+            print('value="%s"' % output)
             res = output
         return mark_safe(res)
 

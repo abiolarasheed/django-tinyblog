@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from functools import reduce
 import os
 import re
@@ -100,16 +102,16 @@ def pygmentify_html(text, **kwargs):
                 lang = default_lang
         lexer = get_lexer_by_name(lang, stripall=True)
         work_area = (
-            work_area.replace(u"&nbsp;", u" ")
-            .replace(u"&amp;", u"&")
-            .replace(u"&lt;", u"<")
-            .replace(u"&gt;", u">")
-            .replace(u"&quot;", u'"')
-            .replace(u"&#39;", u"'")
+            work_area.replace("&nbsp;", " ")
+            .replace("&amp;", "&")
+            .replace("&lt;", "<")
+            .replace("&gt;", ">")
+            .replace("&quot;", '"')
+            .replace("&#39;", "'")
         )
         work_area = p_re.sub("", work_area)
         work_area = highlight(work_area, lexer, formatter)
-        subs.append([u"".join(pre_match), smart_text(work_area)])
+        subs.append(["".join(pre_match), smart_text(work_area)])
     for sub in subs:
         text = text.replace(sub[0], sub[1], 1)
     return text

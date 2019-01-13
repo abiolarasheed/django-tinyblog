@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.urls import path, re_path
 
 from django.urls import reverse_lazy

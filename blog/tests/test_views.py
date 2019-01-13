@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import os
 import json
 import shutil
@@ -455,7 +457,7 @@ class EntryCreateViewTestCase(TestCase):
         """Test to see normal post."""
         url = reverse("entry_create")
         post_data = {
-            "title": u"AM a test post",
+            "title": "AM a test post",
             "body": "This is a test post",
             "tags": "tags, tester",
         }
@@ -486,7 +488,7 @@ class EntryCreateViewTestCase(TestCase):
     def test_post_existing_entry(self):
         """Test to see effect of creating an existing entry."""
         url = reverse("entry_create")
-        post_data = {"title": u"AM a test post", "body": "This is a test post"}
+        post_data = {"title": "AM a test post", "body": "This is a test post"}
 
         # Create the entry we will try to recreate again via a post.
         entry = Entry(**post_data)
@@ -551,7 +553,7 @@ class EntryCreateViewTestCase(TestCase):
         """Test to see normal with poster upload."""
         url = reverse("entry_create")
         post_data = {
-            "title": u"AM a test post",
+            "title": "AM a test post",
             "body": "This is a test post",
             "tags": "test tags, real test tags",
         }

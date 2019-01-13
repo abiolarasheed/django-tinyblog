@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
 import os
 import re
@@ -148,7 +149,7 @@ class Entry(ModelMeta, models.Model):
 
         try:
             res = pygmentify_html(res, noclasses=True)
-        except Exception:
+        except (AttributeError, TypeError):
             res = res[:128]
         finally:
             return mark_safe(res)

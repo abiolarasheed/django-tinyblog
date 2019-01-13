@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import os
-import shutil
+from __future__ import unicode_literals
+
 import tempfile
 
 from django.contrib.auth import get_user_model
