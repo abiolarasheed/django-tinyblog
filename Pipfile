@@ -48,6 +48,7 @@ Pillow = "==5.0.0"
 prompt_toolkit = "==1.0.15"
 Pygments = "==2.2.0"
 Whoosh = "==2.7.4"
+pipenv = "*"
 
 [requires]
 python_version = "3.7"
