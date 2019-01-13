@@ -6,14 +6,18 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('blog', '0008_category'),
-    ]
+    dependencies = [("blog", "0008_category")]
 
     operations = [
         migrations.AddField(
-            model_name='entry',
-            name='category',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='entries', to='blog.Category'),
-        ),
+            model_name="entry",
+            name="category",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="entries",
+                to="blog.Category",
+            ),
+        )
     ]

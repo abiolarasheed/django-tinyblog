@@ -31,125 +31,123 @@ class PageMetaData:
         else:
             _title = settings.DEFAULT_META_TITLE
 
-        return Meta(title=_title, url=self.request.path,
-                    description=settings.DEFAULT_META_DESCRIPTION,
-                    image=settings.DEFAULT_META_IMAGE,
-                    keywords=settings.DEFAULT_META_KEYWORDS)
+        return Meta(
+            title=_title,
+            url=self.request.path,
+            description=settings.DEFAULT_META_DESCRIPTION,
+            image=settings.DEFAULT_META_IMAGE,
+            keywords=settings.DEFAULT_META_KEYWORDS,
+        )
 
 
-@method_decorator(login_required(), name='dispatch')
+@method_decorator(login_required(), name="dispatch")
 class EntryCreateView(CreateView):
     model = Entry
-    success_url = reverse_lazy('entry_list')
-    fields = ["category", 'title', 'poster', 'body', 'tags']
+    success_url = reverse_lazy("entry_list")
+    fields = ["category", "title", "poster", "body", "tags"]
     template_name = "entry_create.html"
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super(EntryCreateView,
-                     self).form_valid(form)
+        return super(EntryCreateView, self).form_valid(form)
 
     def form_invalid(self, form):
         super(EntryCreateView, self).form_invalid(form)
         return JsonResponse(form.errors, status=400)
 
     def get_success_url(self):
-        return reverse_lazy('entry_update',
-                            kwargs={'pk': self.object.pk})
+        return reverse_lazy("entry_update", kwargs={"pk": self.object.pk})
 
 
-@method_decorator(login_required(), name='dispatch')
+@method_decorator(login_required(), name="dispatch")
 class EntryUpdateView(UpdateView):
     template_name = "entry_create.html"
     model = Entry
-    fields = ('title', 'tags', 'poster',
-              'body', 'is_published')
+    fields = ("title", "tags", "poster", "body", "is_published")
 
     def get_context_data(self, **kwargs):
-        context = super(EntryUpdateView,
-                        self).get_context_data(**kwargs)
-        form = context['form']
-        del form.fields['is_published']
-        context['form'] = form
-        context['title'] = "Dashboard"
+        context = super(EntryUpdateView, self).get_context_data(**kwargs)
+        form = context["form"]
+        del form.fields["is_published"]
+        context["form"] = form
+        context["title"] = "Dashboard"
         return context
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class UnPublishEntryView(View):
     def get(self, request, pk):
         try:
             entry = Entry.published.get(author=request.user, pk=pk)
-            entry.is_published=False
+            entry.is_published = False
             entry.save()
-            messages.success(request, _('Unpublished Successfully.'))
+            messages.success(request, _("Unpublished Successfully."))
         except Entry.DoesNotExist:
-            messages.error(request, _('Unpublish Error!'))
+            messages.error(request, _("Unpublish Error!"))
         finally:
-            return redirect(reverse_lazy('dashboard-entries'))
+            return redirect(reverse_lazy("dashboard-entries"))
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class PublishEntryView(View):
     def get(self, request, pk):
         try:
-            entry = Entry.objects.select_related("author")\
-                .get(author=request.user, pk=pk)
+            entry = Entry.objects.select_related("author").get(
+                author=request.user, pk=pk
+            )
             entry.is_published = True
             entry.save()
-            messages.success(request, _('Article Successfully Published.'))
+            messages.success(request, _("Article Successfully Published."))
         except Entry.DoesNotExist:
-            messages.error(request, _('An error occurred while publishing article!'))
+            messages.error(request, _("An error occurred while publishing article!"))
         finally:
-            return redirect(reverse_lazy('dashboard-entries'))
+            return redirect(reverse_lazy("dashboard-entries"))
 
 
 class EntryDetail(DetailView):
-    template_name = 'entry_detail.html'
-    context_object_name = 'entry'
+    template_name = "entry_detail.html"
+    context_object_name = "entry"
     model = Entry
 
     def get_object(self, queryset=None):
         try:
-            return self.model.objects.select_related('author')\
-                .get(author=self.request.user,
-                     slug=self.kwargs['slug'])
+            return self.model.objects.select_related("author").get(
+                author=self.request.user, slug=self.kwargs["slug"]
+            )
         except (self.model.DoesNotExist, TypeError):
-            return get_object_or_404(self.model.published,
-                                     slug=self.kwargs['slug'])
+            return get_object_or_404(self.model.published, slug=self.kwargs["slug"])
 
     def get_context_data(self, **kwargs):
         entry = self.get_object()
-        entry.__class__.objects.select_related('author').\
-            filter(pk=entry.pk).update(views=F('views') + 1)
+        entry.__class__.objects.select_related("author").filter(pk=entry.pk).update(
+            views=F("views") + 1
+        )
         context = super(EntryDetail, self).get_context_data(**kwargs)
-        context['title'] = context['entry'].title
-        context['meta'] = entry.as_meta()
+        context["title"] = context["entry"].title
+        context["meta"] = entry.as_meta()
         if settings.CATEGORIES_IN_DETAIL:
-            context['categories'] = Category.objects.all().order_by("name")
+            context["categories"] = Category.objects.all().order_by("name")
         return context
 
 
 class EntryListView(PageMetaData, ListView):
-    template_name = 'entry_list.html'
-    context_object_name = 'entries'
+    template_name = "entry_list.html"
+    context_object_name = "entries"
     paginate_by = 12
     model = Entry
-    queryset = model.published.select_related('category')\
-        .all().order_by('-modified_at')
+    queryset = model.published.select_related("category").all().order_by("-modified_at")
 
     def get_context_data(self, **kwargs):
-        context = super(EntryListView, self
-                        ).get_context_data(**kwargs)
-        context['title'] = _("Latest Posts")
+        context = super(EntryListView, self).get_context_data(**kwargs)
+        context["title"] = _("Latest Posts")
         context["meta"] = self.get_meta(context=context)
         return context
 
 
-@method_decorator(ajax_required, name='dispatch')
+@method_decorator(ajax_required, name="dispatch")
 class ImageDetailView(DetailView):
-    template_name = 'entry_detail.html'
-    context_object_name = 'image'
+    template_name = "entry_detail.html"
+    context_object_name = "image"
     model = Image
 
     def get(self, request, *args, **kwargs):
@@ -157,11 +155,11 @@ class ImageDetailView(DetailView):
         return JsonResponse(image.as_json())
 
 
-@method_decorator(login_required(), name='dispatch')
-@method_decorator(ajax_required, name='dispatch')
+@method_decorator(login_required(), name="dispatch")
+@method_decorator(ajax_required, name="dispatch")
 class ImageCreateView(CreateView):
     model = Image
-    fields = ['caption', 'photo', 'entry']
+    fields = ["caption", "photo", "entry"]
 
     def form_invalid(self, form):
         super(ImageCreateView, self).form_invalid(form)
@@ -188,7 +186,7 @@ class JsonSearchView(SearchView):
             page_num = 1
 
         page = page_num
-        q = self.request.GET.get('q', '')
+        q = self.request.GET.get("q", "")
         url = "{}://{}{}?".format(scheme, host, path)
 
         params = urlencode(OrderedDict(q=q, page=page))
@@ -207,16 +205,19 @@ class JsonSearchView(SearchView):
         current = page.number
         total = paginator.count
 
-        return dict(total=total, current=self.build_absolute_uri(current),
-                    next=self.build_absolute_uri(next_, empty_on_1=settings.EMPTY_ON_1),
-                    previous=self.build_absolute_uri(previous, empty_on_1=settings.EMPTY_ON_1))
+        return dict(
+            total=total,
+            current=self.build_absolute_uri(current),
+            next=self.build_absolute_uri(next_, empty_on_1=settings.EMPTY_ON_1),
+            previous=self.build_absolute_uri(previous, empty_on_1=settings.EMPTY_ON_1),
+        )
 
     def create_response(self):
         context = self.get_context()
 
-        page = context.pop('page')
-        paginator = context.pop('paginator')
-        suggestion = context.pop('suggestion')
+        page = context.pop("page")
+        paginator = context.pop("paginator")
+        suggestion = context.pop("suggestion")
 
         results = [i.object.as_json() for i in page.object_list]
         context = dict(suggestion=suggestion, results=results)
@@ -227,29 +228,28 @@ class JsonSearchView(SearchView):
     render_json_response = create_response
 
 
-@method_decorator(login_required(), name='dispatch')
+@method_decorator(login_required(), name="dispatch")
 class CategoryListView(CreateView, ListView):
-    template_name = 'category_list.html'
-    context_object_name = 'categories'
+    template_name = "category_list.html"
+    context_object_name = "categories"
     paginate_by = 30
     model = Category
-    success_url = reverse_lazy('category-list')
-    fields = ['name']
-    queryset = model.objects.all().order_by('name')
+    success_url = reverse_lazy("category-list")
+    fields = ["name"]
+    queryset = model.objects.all().order_by("name")
 
     def get_context_data(self, **kwargs):
-        context = super(CategoryListView, self
-                        ).get_context_data(**kwargs)
-        context['title'] = _("Categories")
+        context = super(CategoryListView, self).get_context_data(**kwargs)
+        context["title"] = _("Categories")
         return context
 
 
-@method_decorator(login_required(), name='dispatch')
+@method_decorator(login_required(), name="dispatch")
 class CategoryDeleteView(DeleteView):
     model = Category
-    template_name = 'category_list.html'
-    success_url = reverse_lazy('category-list')
-    success_message = _('The Category has been deleted successfully.')
+    template_name = "category_list.html"
+    success_url = reverse_lazy("category-list")
+    success_message = _("The Category has been deleted successfully.")
 
     def get(self, request, *args, **kwargs):
         return self.delete(request, *args, **kwargs)
@@ -257,16 +257,20 @@ class CategoryDeleteView(DeleteView):
 
 class EntryByCategoryListView(EntryListView, PageMetaData):
     def get_queryset(self):
-        pk = self.kwargs['pk']
-        return self.model.published.select_related("category").\
-            filter(category__pk=pk).order_by("-modified_at")
+        pk = self.kwargs["pk"]
+        return (
+            self.model.published.select_related("category")
+            .filter(category__pk=pk)
+            .order_by("-modified_at")
+        )
 
     def get_context_data(self, **kwargs):
-        context = super(EntryByCategoryListView, self
-                        ).get_context_data(**kwargs)
+        context = super(EntryByCategoryListView, self).get_context_data(**kwargs)
 
         try:
-            category = "Category({0})".format(Category.objects.get(pk=self.kwargs["pk"]).name)
+            category = "Category({0})".format(
+                Category.objects.get(pk=self.kwargs["pk"]).name
+            )
             context["title"] = category
         except Category.DoesNotExist:
             pass

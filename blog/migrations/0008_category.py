@@ -5,22 +5,28 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('blog', '0007_entry_views'),
-    ]
+    dependencies = [("blog", "0007_entry_views")]
 
     operations = [
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(db_index=True, max_length=150, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(db_index=True, max_length=150, unique=True)),
             ],
             options={
-                'verbose_name': 'Category',
-                'verbose_name_plural': 'Categories',
-                'db_table': 'category',
-                'default_related_name': 'categoryies',
+                "verbose_name": "Category",
+                "verbose_name_plural": "Categories",
+                "db_table": "category",
+                "default_related_name": "categoryies",
             },
-        ),
+        )
     ]

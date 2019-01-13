@@ -7,14 +7,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('blog', '0006_auto_20171105_1538'),
-    ]
+    dependencies = [("blog", "0006_auto_20171105_1538")]
 
     operations = [
         migrations.AddField(
-            model_name='entry',
-            name='views',
+            model_name="entry",
+            name="views",
             field=models.PositiveIntegerField(default=1),
-        ),
+        )
     ]

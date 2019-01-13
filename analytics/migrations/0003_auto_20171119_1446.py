@@ -7,14 +7,10 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('analytics', '0002_auto_20171119_1413'),
-    ]
+    dependencies = [("analytics", "0002_auto_20171119_1413")]
 
     operations = [
         migrations.AlterField(
-            model_name='pageview',
-            name='timestamp',
-            field=models.DateTimeField(),
-        ),
+            model_name="pageview", name="timestamp", field=models.DateTimeField()
+        )
     ]

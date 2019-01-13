@@ -15,6 +15,7 @@ from ..models import Category, Entry, Image
 class CategoryModelTestCase(TestCase):
     def tearDown(self):
         from django_redis import get_redis_connection
+
         get_redis_connection("default").flushall()
 
     def setUp(self):
@@ -39,24 +40,24 @@ class CategoryModelTestCase(TestCase):
 class BlogModelTestCase(TestCase):
     def tearDown(self):
         from django_redis import get_redis_connection
+
         get_redis_connection("default").flushall()
 
     def setUp(self):
-        self.author, auth_created = get_user_model().\
-            objects.get_or_create(email="iamatest@gmail.com",
-                                  username="iamatest")
+        self.author, auth_created = get_user_model().objects.get_or_create(
+            email="iamatest@gmail.com", username="iamatest"
+        )
         self.blog_title = "Test blog Title"
         self.blog_body = "This is my test blog"
         self.blog_category_name = "DevOps"
 
     def get_entry(self, category=False):
-        data = dict(title=self.blog_title,
-                    body=self.blog_body,
-                    author=self.author)
+        data = dict(title=self.blog_title, body=self.blog_body, author=self.author)
 
         if category:
-            category, created = Category.objects.\
-                get_or_create(name=self.blog_category_name)
+            category, created = Category.objects.get_or_create(
+                name=self.blog_category_name
+            )
             data.update({"category": category})
 
         return Entry.objects.get_or_create(**data)
@@ -87,9 +88,7 @@ class BlogModelTestCase(TestCase):
         self.assertIsNotNone(entry.published_date)
 
     def test_get_unique_slug(self):
-        entry = Entry(title=self.blog_title,
-                      body=self.blog_body,
-                      author=self.author)
+        entry = Entry(title=self.blog_title, body=self.blog_body, author=self.author)
 
         slug = entry._Entry__get_unique_slug()
         self.assertFalse(" " in slug)
@@ -97,7 +96,7 @@ class BlogModelTestCase(TestCase):
 
     def test_as_json(self):
         entry = self.get_entry()[0]
-        self.assertTrue(hasattr(entry, 'as_json'))
+        self.assertTrue(hasattr(entry, "as_json"))
         self.assertIsInstance(entry.as_json(), dict)
 
 
@@ -105,33 +104,37 @@ class BlogModelTestCase(TestCase):
 class ImageModelTestCase(TestCase):
     def tearDown(self):
         from django_redis import get_redis_connection
+
         get_redis_connection("default").flushall()
 
     def setUp(self):
-        self.author, auth_created = get_user_model().\
-            objects.get_or_create(email="iamatest@gmail.com", username="iamatest")
+        self.author, auth_created = get_user_model().objects.get_or_create(
+            email="iamatest@gmail.com", username="iamatest"
+        )
         self.blog_title = "Test blog Title"
         self.blog_body = "This is my test blog"
 
     def get_entry(self):
-        return Entry.objects.get_or_create(title=self.blog_title,
-                                           body=self.blog_body,
-                                           author=self.author,
-                                           is_published=True)[0]
+        return Entry.objects.get_or_create(
+            title=self.blog_title,
+            body=self.blog_body,
+            author=self.author,
+            is_published=True,
+        )[0]
 
     def get_image(self):
         from .test_views import create_image
+
         temp_file = tempfile.NamedTemporaryFile()
         image = create_image(None, temp_file)
-        uploaded_image = SimpleUploadedFile('image.png', image.getvalue())
+        uploaded_image = SimpleUploadedFile("image.png", image.getvalue())
         return uploaded_image
 
     def create_image_obj(self):
         entry = self.get_entry()
         image_obj = self.get_image()
 
-        image = Image(caption='Am a test image',
-                      entry=entry, photo=image_obj.name)
+        image = Image(caption="Am a test image", entry=entry, photo=image_obj.name)
         image.save()
         return image
 

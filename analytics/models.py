@@ -16,15 +16,14 @@ class PageView(models.Model):
     class Meta:
         verbose_name = _("Page View")
         verbose_name_plural = _("Page Views")
-        db_table = 'page_view'
-        default_related_name = 'page_view'
+        db_table = "page_view"
+        default_related_name = "page_view"
 
     def __str__(self):
-        return "{0}{1}".format(self.domain,
-                               self.url)
+        return "{0}{1}".format(self.domain, self.url)
 
     def get_browser(self):
-        return ''
+        return ""
 
     def get_browser_icon(self):
-        return ''
+        return ""

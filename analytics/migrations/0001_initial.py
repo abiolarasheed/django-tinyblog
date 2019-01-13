@@ -9,28 +9,35 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='PageView',
+            name="PageView",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('domain', models.URLField()),
-                ('url', models.FilePathField()),
-                ('title', models.TextField()),
-                ('ip', models.GenericIPAddressField()),
-                ('referrer', models.TextField()),
-                ('timestamp', models.DateTimeField()),
-                ('headers', models.TextField()),
-                ('session_id', models.CharField(max_length=255)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("domain", models.URLField()),
+                ("url", models.FilePathField()),
+                ("title", models.TextField()),
+                ("ip", models.GenericIPAddressField()),
+                ("referrer", models.TextField()),
+                ("timestamp", models.DateTimeField()),
+                ("headers", models.TextField()),
+                ("session_id", models.CharField(max_length=255)),
             ],
             options={
-                'verbose_name': 'Page View',
-                'verbose_name_plural': 'Page Views',
-                'db_table': 'page_view',
-                'default_related_name': 'page_view',
+                "verbose_name": "Page View",
+                "verbose_name_plural": "Page Views",
+                "db_table": "page_view",
+                "default_related_name": "page_view",
             },
-        ),
+        )
     ]

@@ -3,21 +3,21 @@ from distutils.core import setup
 import tinyblog
 
 required = []
-with open('requirements.txt') as f:
+with open("requirements.txt") as f:
     required.extend(f.read().splitlines())
 
 
 setup(
-    name='django-tinyblog',
+    name="django-tinyblog",
     version=tinyblog.__version__,
-    packages=['blog', 'blog.tests', 'blog.migrations', 'tinyblog'],
-    url='https://github.com/orangedigitallab/django-tinyblog.git',
-    license='MIT License',
-    author='Abiola Rasheed',
-    author_email='rasheed.abiola3@gmail.com',
-    description='A mini django blogging app written in python3.6+.',
-    long_description=open('README.rst').read(),
-    keywords=['blog', 'django', 'tinyblog', 'tiny'],
+    packages=["blog", "blog.tests", "blog.migrations", "tinyblog"],
+    url="https://github.com/orangedigitallab/django-tinyblog.git",
+    license="MIT License",
+    author="Abiola Rasheed",
+    author_email="rasheed.abiola3@gmail.com",
+    description="A mini django blogging app written in python3.6+.",
+    long_description=open("README.rst").read(),
+    keywords=["blog", "django", "tinyblog", "tiny"],
     install_requires=required,
     include_package_data=True,
     zip_safe=False,

@@ -18,34 +18,47 @@ from blog.utils import FileUploader, pygmentify_html
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=150, unique=True,
-                            db_index=True, null=False,
-                            blank=False)
+    name = models.CharField(
+        max_length=150, unique=True, db_index=True, null=False, blank=False
+    )
 
     class Meta:
         verbose_name = _("Category")
         verbose_name_plural = _("Categories")
-        db_table = 'category'
-        default_related_name = 'categoryies'
+        db_table = "category"
+        default_related_name = "categoryies"
 
     def __str__(self):
         return self.name
 
 
 class Entry(ModelMeta, models.Model):
-    title = models.CharField(max_length=500, unique=True, db_index=True, null=False, blank=False)
-    category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.CASCADE)
-    slug = models.SlugField(max_length=140, unique=True, db_index=True, null=False,
-                            blank=False, editable=False)
-    author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    title = models.CharField(
+        max_length=500, unique=True, db_index=True, null=False, blank=False
+    )
+    category = models.ForeignKey(
+        Category, null=True, blank=True, on_delete=models.CASCADE
+    )
+    slug = models.SlugField(
+        max_length=140,
+        unique=True,
+        db_index=True,
+        null=False,
+        blank=False,
+        editable=False,
+    )
+    author = models.ForeignKey("auth.User", on_delete=models.CASCADE)
     body = models.TextField(null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     modified_at = models.DateTimeField(auto_now=True, editable=False)
     published_date = models.DateTimeField(null=True, blank=True, editable=False)
-    poster = models.ImageField(null=True, blank=True, upload_to=
-                               FileUploader(os.path.join('entry', 'poster')))
+    poster = models.ImageField(
+        null=True, blank=True, upload_to=FileUploader(os.path.join("entry", "poster"))
+    )
     is_published = models.BooleanField(default=False)
-    views = models.PositiveIntegerField(default=1)  # we will change this later and write a better one later
+    views = models.PositiveIntegerField(
+        default=1
+    )  # we will change this later and write a better one later
 
     tags = TaggableManager()
     objects = models.Manager()
@@ -54,15 +67,15 @@ class Entry(ModelMeta, models.Model):
     class Meta:
         verbose_name = _("Entry")
         verbose_name_plural = _("Entries")
-        db_table = 'entries'
-        default_related_name = 'entries'
+        db_table = "entries"
+        default_related_name = "entries"
 
     _metadata = {
-        'title': 'title',
-        'description': 'headline',
-        'image': 'get_meta_image',
-        'keywords': 'get_meta_tags',
-        'url': 'get_absolute_url'
+        "title": "title",
+        "description": "headline",
+        "image": "get_meta_image",
+        "keywords": "get_meta_tags",
+        "url": "get_absolute_url",
     }
 
     def get_meta_image(self):
@@ -81,23 +94,27 @@ class Entry(ModelMeta, models.Model):
         num = 1
 
         while self.__class__.objects.filter(slug=unique_slug).exists():
-            unique_slug = '{}-{}'.format(slug, num)
+            unique_slug = "{}-{}".format(slug, num)
             num += 1
         return unique_slug
 
     def get_similar_post(self):
-        return self.__class__.published.\
-            filter(tags__in=self.tags.all()).exclude(id=self.id).distinct()
+        return (
+            self.__class__.published.filter(tags__in=self.tags.all())
+            .exclude(id=self.id)
+            .distinct()
+        )
 
     def get_absolute_url(self):
-        return reverse('entry_detail', kwargs={'slug': self.slug})
+        return reverse("entry_detail", kwargs={"slug": self.slug})
 
     def as_json(self):
-        return {"title": self.title,
-                "url": self.get_absolute_url(),
-                'id': self.pk,
-                'update_url': reverse('entry_update', kwargs={'pk':self.pk})
-                }
+        return {
+            "title": self.title,
+            "url": self.get_absolute_url(),
+            "id": self.pk,
+            "update_url": reverse("entry_update", kwargs={"pk": self.pk}),
+        }
 
     def get_poster(self):
         try:
@@ -105,7 +122,8 @@ class Entry(ModelMeta, models.Model):
         except (AttributeError, ValueError):
             return "http://via.placeholder.com/318x224"
 
-    def count_comments(self):
+    @staticmethod
+    def count_comments():
         return 0
 
     def count_words_in_text(self, word_length=5):
@@ -119,7 +137,8 @@ class Entry(ModelMeta, models.Model):
         total_words = self.count_words_in_text()
         return round(total_words / words_per_min)
 
-    def cleanhtml(self, raw_html):
+    @staticmethod
+    def cleanhtml(raw_html):
         cleaner = re.compile("<.*?>")
         cleaned_string = re.sub(cleaner, "", raw_html)
         return cleaned_string
@@ -129,7 +148,7 @@ class Entry(ModelMeta, models.Model):
 
         try:
             res = pygmentify_html(res, noclasses=True)
-        except Exception as e:
+        except Exception:
             res = res[:128]
         finally:
             return mark_safe(res)
@@ -146,10 +165,12 @@ class Entry(ModelMeta, models.Model):
 
 class Image(models.Model):
     caption = models.CharField(max_length=255, blank=False, null=False)
-    photo = models.ImageField(blank=False, null=False, upload_to=
-                              FileUploader(path=os.path.join('entry', 'images')))
-    entry = models.ForeignKey(Entry, blank=False, null=False,
-                              on_delete=models.CASCADE)
+    photo = models.ImageField(
+        blank=False,
+        null=False,
+        upload_to=FileUploader(path=os.path.join("entry", "images")),
+    )
+    entry = models.ForeignKey(Entry, blank=False, null=False, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     modified_at = models.DateTimeField(auto_now=True, editable=False)
 
@@ -157,10 +178,7 @@ class Image(models.Model):
         return self.caption
 
     def get_absolute_url(self):
-        return reverse('image_detail', kwargs={'pk': self.pk})
+        return reverse("image_detail", kwargs={"pk": self.pk})
 
     def as_json(self):
-        return dict(caption=self.caption,
-                    photo=self.photo.url,
-                    entry=self.entry.slug)
-
+        return dict(caption=self.caption, photo=self.photo.url, entry=self.entry.slug)

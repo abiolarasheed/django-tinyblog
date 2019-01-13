@@ -15,31 +15,41 @@ import blog.sitemaps as blog_sitemaps
 
 
 sitemaps = {
-    'static': blog_sitemaps.StaticViewSitemap,
+    "static": blog_sitemaps.StaticViewSitemap,
     "blog": blog_sitemaps.BlogSitemap,
 }
 
 
 urlpatterns = [
-    path('about/', TemplateView.as_view(template_name="about.html"),
-         name='about'),
-    path('admin/', admin.site.urls),
-    path('analytics/', include(analytics.urls)),
-    re_path('blog/', include(blog.urls)),
-    path('sitemap.xml', sitemap, {'sitemaps': sitemaps},
-         name='django.contrib.sitemaps.views.sitemap'),
-    path('feedback/', TemplateView.as_view(template_name="feedback.html"),
-         name='feedback'),
-    re_path('', include(accounts.urls)),
-    re_path('robots\.txt', include('robots.urls')),
+    path("about/", TemplateView.as_view(template_name="about.html"), name="about"),
+    path("admin/", admin.site.urls),
+    path("analytics/", include(analytics.urls)),
+    re_path("blog/", include(blog.urls)),
+    path(
+        "sitemap.xml",
+        sitemap,
+        {"sitemaps": sitemaps},
+        name="django.contrib.sitemaps.views.sitemap",
+    ),
+    path(
+        "feedback/",
+        TemplateView.as_view(template_name="feedback.html"),
+        name="feedback",
+    ),
+    re_path("", include(accounts.urls)),
+    re_path("robots\.txt", include("robots.urls")),
 ]
 
 
 if settings.HAS_INDEX_PAGE:
-    index_template = getattr(settings, 'INDEX_TEMPLATE', 'index.html')
-    urlpatterns = [path('', TemplateView.as_view(template_name=index_template), name='index')] + urlpatterns
+    index_template = getattr(settings, "INDEX_TEMPLATE", "index.html")
+    urlpatterns = [
+        path("", TemplateView.as_view(template_name=index_template), name="index")
+    ] + urlpatterns
 else:
-    urlpatterns = [path('', blog_views.EntryListView.as_view(), name='index')] + urlpatterns
+    urlpatterns = [
+        path("", blog_views.EntryListView.as_view(), name="index")
+    ] + urlpatterns
 
 
 if settings.DEBUG:

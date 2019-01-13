@@ -11,6 +11,7 @@ from blog.utils import ajax_required, FileUploader
 class AjaxRequiredTestCase(TestCase):
     def tearDown(self):
         from django_redis import get_redis_connection
+
         get_redis_connection("default").flushall()
 
     def setUp(self):
@@ -27,13 +28,13 @@ class AjaxRequiredTestCase(TestCase):
 
         # Add the __name__ and __doc__ to view function.
         self.test_view.__doc__ = """Doc for my test view."""
-        self.test_view.__name__ = 'test_view'
+        self.test_view.__name__ = "test_view"
 
     def test_is_ajax_false(self):
         """ajax_required decorator called from none ajax client."""
 
         # Setup.
-        attributes = {'is_ajax.return_value': False}
+        attributes = {"is_ajax.return_value": False}
         self.ajax_request.configure_mock(**attributes)
 
         # Run.
@@ -49,13 +50,13 @@ class AjaxRequiredTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
 
         # Decorator response.content.
-        self.assertEqual(json.loads(response.content)['message'], "Bad Request")
+        self.assertEqual(json.loads(response.content)["message"], "Bad Request")
 
     def test_is_ajax_true(self):
         """ajax_required decorator called via ajax."""
 
         # Setup.
-        attributes = {'is_ajax.return_value': True}
+        attributes = {"is_ajax.return_value": True}
         self.ajax_request.configure_mock(**attributes)
 
         # Run.
@@ -78,8 +79,8 @@ class AjaxRequiredTestCase(TestCase):
         """
 
         # Setup.
-        delattr(self.test_view, '__name__')  # Del function __name__
-        attributes = {'is_ajax.return_value': True}
+        delattr(self.test_view, "__name__")  # Del function __name__
+        attributes = {"is_ajax.return_value": True}
         self.ajax_request.configure_mock(**attributes)
 
         # Run.
@@ -100,26 +101,31 @@ class AjaxRequiredTestCase(TestCase):
 class FileUploaderTestCase(TestCase):
     def tearDown(self):
         from django_redis import get_redis_connection
+
         get_redis_connection("default").flushall()
 
     def test_file_uploader(self):
         self.assertIsInstance(FileUploader(), FileUploader)
 
         # Assign path
-        file_path = FileUploader(path='cover')
+        file_path = FileUploader(path="cover")
 
         file_no_path = FileUploader()
 
         # File setup
-        filename = 'test.png'
+        filename = "test.png"
         obj = Mock()
         obj.id = 911
 
         # Check assigned path
-        self.assertEqual(file_path.path, 'cover')
-        self.assertEqual(file_path(obj, filename), os.path.join('cover', '911_test.png'))
+        self.assertEqual(file_path.path, "cover")
+        self.assertEqual(
+            file_path(obj, filename), os.path.join("cover", "911_test.png")
+        )
 
         # Check unassigned path
-        self.assertEqual(file_no_path.path, os.path.join('entry', 'poster'))
-        self.assertEqual(file_no_path(obj, filename),
-                         os.path.join(os.path.join('entry', 'poster'), '911_test.png'))
+        self.assertEqual(file_no_path.path, os.path.join("entry", "poster"))
+        self.assertEqual(
+            file_no_path(obj, filename),
+            os.path.join(os.path.join("entry", "poster"), "911_test.png"),
+        )
