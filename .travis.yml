@@ -19,8 +19,10 @@ before_install:
   - export PIP_USE_MIRRORS=true
 
 install:
-  - pip install -r requirements.txt
-  - pip install -q Django==$DJANGO_VERSION
+  - pip install pipenv
+  - pipenv sync
+  - pipenv install
+  - pipenv install Django==$DJANGO_VERSION
 
 services:
   - postgresql
