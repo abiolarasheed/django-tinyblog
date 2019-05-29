@@ -56,7 +56,6 @@ Customizing is as simple as creating a folder ``custom_dir`` on the same level a
     mkdir -p custom_dir/static/fonts
     touch  custom_dir/settings.py
 
-
 Setting environment variable will help you control and customize your installation which you can set in your bashrc file or from the command line:
 
 .. code:: bash
