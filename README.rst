@@ -30,6 +30,22 @@ Start by cloning ``django-tinyblog`` :
 
         git clone git@github.com:abiolarasheed/django-tinyblog.git
 
+
+Create a virtual environment with a python >= 3.6 as a your interpreter and install pipenv.
+
+.. code:: bash
+
+    pip install --user pipenv
+    pipenv install
+
+Run your migrations
+
+.. code:: bash
+
+    python manage.py migrate
+
+
+
 Customizing is as simple as creating a folder ``custom_dir`` on the same level as your ``django-tinyblog`` download:
 
 .. code:: bash
@@ -39,7 +55,6 @@ Customizing is as simple as creating a folder ``custom_dir`` on the same level a
     mkdir -p custom_dir/static/js
     mkdir -p custom_dir/static/fonts
     touch  custom_dir/settings.py
-
 
 Setting environment variable will help you control and customize your installation which you can set in your bashrc file or from the command line:
 
@@ -55,6 +70,13 @@ Setting environment variable will help you control and customize your installati
     export INDEX_TEMPLATE
     export BROKER_URL
     export RESULT_BACKEND
+
+
+After you've configured your environment variables, you can then runserver
+
+.. code:: bash
+
+    python manage.py runserver
 
 
 Requirements
