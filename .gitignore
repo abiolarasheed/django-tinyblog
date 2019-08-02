@@ -21,6 +21,7 @@ fixtures/*
 .~lock.*
 *.DS_Store
 
+
 # IDE files
 .project
 .pydevproject
@@ -48,6 +49,8 @@ celerybeat-schedule
 */__pycache__
 db.sqlite3
 
+# Env
+.env
 
 # Coverage
 .coverage
