@@ -42,106 +42,15 @@
                                {% endfor %}
                            {% endif %}
                        {% endwith %}
+                        <div class="social">
+                                <p class="text">Share on:</p>
+                                <object data="{% static 'image/facebook.svg' %}" class="icon facebook"></object>
+                                <object data="{% static 'image/twitter.svg' %}" class="icon twitter"></object>
+                            </div>
                     </div>
                 </div>
             </div>
         </div>
     </article>
 </div>
-
-{#<div class="container-fluid">#}
-{#    <div class="row">#}
-{#        <div class="col-md-3 bg-light border border-white category_ul">#}
-{#            {% if categories.exists %}#}
-{#            <p>#}
-{#                <h5 class="text-muted text-center"> Categories </h5>#}
-{#                <hr>#}
-{#                <ul>#}
-{#                    {% for category in categories %}#}
-{#                    <li><a href="{% url 'post-in-category' category.pk %}">{{category.name}}</a></li>#}
-{#                    {% endfor %}#}
-{#                </ul>#}
-{#            </p>#}
-{#            {%endif%}#}
-{#        </div>#}
-{#        <div class="col-md-9 bg-light border border-white">#}
-{#            <div class="detail_header">#}
-{#                <h1 class="text-center">{{ entry.title }}</h1>#}
-{#            </div>#}
-{#            <div class="row text-center" style="padding-left: 0px;">#}
-{#                <ul class="post-meta">#}
-{#                    <li>#}
-{#                        <i class="fa fa-calendar"></i> {{ entry.modified_at | date }}#}
-{#                    </li>#}
-{#                    <li>#}
-{#                        <i class="fa fa-clock-o"></i> {{ entry.estimate_reading_time }} minutes read#}
-{#                    </li>#}
-{#                    <li>#}
-{#                        <i class="fa fa-comments"></i>#}
-{#                        <a href="#"> {{ entry.count_comments }} comments </a>#}
-{#                    </li>#}
-{#                    <li>#}
-{#                        <i class="fa fa-eye"></i>#}
-{#                        <span>{{ entry.views }}</span> views#}
-{#                    </li>#}
-{#                </ul>#}
-{#            </div>#}
-{#            <div class="row">#}
-{#                <p><img class="entry-poster" src="{{ entry.get_poster }}" ></p>#}
-{#            </div>#}
-{#            {{ entry.body | pygmentify_inline }}#}
-{#            <hr>#}
-{#            {% with entry.tags.all as tags %}#}
-{#            {% if tags.exists %}#}
-{#            <span class="text-muted">Tags</span>#}
-{#            <ul class="post-meta">#}
-{#                {% for tag in entry.tags.all %}#}
-{#                <li><i class="fa fa-tags"></i> {{ tag }}</li>#}
-{#                {% endfor %}#}
-{#            </ul>#}
-{#            {% endif %}#}
-{#            {% endwith %}#}
-{#        </div>#}
-{#    </div>#}
-{#    {% with entry.get_similar_post as entries %}#}
-{#    {% if entries.exists %}#}
-{#    <h3 class="text-center">Related Posts</h3>#}
-{#    <div class="row">#}
-{#        {% for entry in entries %}#}
-{#        {% if forloop.counter < 4 %}#}
-{#        <div class="col-md-4">#}
-{#            <div class="card">#}
-{#                <img class="card-img-top" style="min-height: 224px; max-height: 224px;" src="{{entry.get_poster}}" alt="{{entry.title|truncatechars:12}}">#}
-{#                <div class="card-body">#}
-{#                    <h5 class="card-title">{{entry.title|truncatechars:30 }}</h5>#}
-{#                    <p class="card-text">{{entry.body|truncatechars:128| pygmentify_inline }}</p>#}
-{#                    <a href="{{entry.get_absolute_url}}" class="btn btn-primary"> View </a>#}
-{#                </div>#}
-{#                <div class="card-footer">#}
-{#                    <small class="text-muted">{{entry.modified_at | date}}</small>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#        {%endif%}#}
-{#        {%endfor%}#}
-{#    </div>#}
-{#    {% endif %}#}
-{#    {% endwith %}#}
-{#    <div class="row category_ul_bottom">#}
-{#        <div class="bg-light border border-white">#}
-{#               {% if categories.exists %}#}
-{#                <p>#}
-{#                    <h5 class="text-muted text-center"> Categories </h5>#}
-{#                    <hr>#}
-{#                    <ul>#}
-{#                        {% for category in categories %}#}
-{#                        <li><a href="{% url 'post-in-category' category.pk %}">{{category.name}}</a></li>#}
-{#                        {% endfor %}#}
-{#                    </ul>#}
-{#                </p>#}
-{#                {%endif%}#}
-{#        </div>#}
-{#    </div>#}
-{#    <hr><br>#}
-{#</div>#}
 {% endblock %}
