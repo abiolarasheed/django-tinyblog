@@ -23,7 +23,7 @@
 }
 
 .navbar .navbar-brand {
-    color: #22222;
+    color: #222222;
     font-family: "Times New Roman" !important;
     font-style: italic;
 }
@@ -310,8 +310,7 @@
 
 
 /*----- Blog ------*/
-.blog {
-}
+.blog {}
 
 .blog .jumbo-image {
     width: 100%;
