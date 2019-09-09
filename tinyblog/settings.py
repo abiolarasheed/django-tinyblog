@@ -26,7 +26,7 @@ DIR = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = b_eval(os.environ.get("DEBUG", "True").title())
+DEBUG = b_eval(os.environ.get("DEBUG", "False").title())
 ALLOWED_HOSTS = ['*']
 
 SITE_ID = 1
