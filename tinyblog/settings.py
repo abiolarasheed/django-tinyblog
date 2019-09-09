@@ -102,7 +102,23 @@ if os.path.exists(CUSTOM_TEMPLATES):
 WSGI_APPLICATION = "tinyblog.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
+if os.environ.get("BLOG_DATABASE_NAME"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ["BLOG_DATABASE_NAME"],
+            "USER": os.environ["BLOG_DATABASE_USER"],
+            "PASSWORD": os.environ["BLOG_DATABASE_PASSWORD"],
+            "CONN_MAX_AGE": None,
+        }
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": 'database',
+        }
+    }
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
