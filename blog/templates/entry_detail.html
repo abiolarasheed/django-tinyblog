@@ -1,12 +1,10 @@
 {% extends "base.html" %}
 {% load static pygmentify gravatar %}
-{% block content %}
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/vs.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/entry_detail.css' %}"/>
 {% endblock %}
-
-
+{% block content %}
 <div class="blog">
     <div class="jumbo-image" style="background:url('{{ entry.get_poster }}')"></div>
     <article class="blog-container">
