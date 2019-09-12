@@ -8,6 +8,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
+from django.http import Http404
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls.base import reverse_lazy
@@ -112,12 +113,16 @@ class EntryDetail(DetailView):
     model = Entry
 
     def get_object(self, queryset=None):
+        if self.kwargs.get("slug", None) is None:
+            raise Http404
+
         try:
             return self.model.objects.select_related("author").get(
-                author=self.request.user, slug=self.kwargs["slug"]
+                author=self.request.user, slug=self.kwargs.get("slug")
             )
         except (self.model.DoesNotExist, TypeError):
-            return get_object_or_404(self.model.published, slug=self.kwargs["slug"])
+            obj = get_object_or_404(self.model, slug=self.kwargs.get("slug"), is_published=True)
+            return obj
 
     def get_context_data(self, **kwargs):
         entry = self.get_object()

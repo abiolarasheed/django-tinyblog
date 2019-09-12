@@ -220,9 +220,11 @@ class EntryViewTestCase(TestCase):
         get_redis_connection("default").flushall()
 
     def setUp(self):
-        self.author, auth_created = get_user_model().objects.get_or_create(
-            email="iamatest@test.com", username="iamatest"
-        )
+        user = get_user_model()(email="iamatest@test.com", username="iamatest")
+        user.set_password('Passiamatest123')
+        user.save()
+        self.author = user
+
         self.blog_title = "Test blog Title"
         self.blog_body = "This is my test blog"
         self.entry = Entry.objects.get_or_create(
@@ -233,16 +235,10 @@ class EntryViewTestCase(TestCase):
         )[0]
 
     def test_basic_view(self):
-        response = self.client.get(self.entry.get_absolute_url())
+        self.client.login(username="iamatest", password='Passiamatest123')
+        url = self.entry.get_absolute_url()
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-
-        # Unpublish entry
-        self.entry.is_published = False
-        self.entry.save()
-
-        #  Check now to see it entry will no longer be found
-        response = self.client.get(self.entry.get_absolute_url())
-        self.assertEqual(response.status_code, 404)
 
     def test_title_in_entry(self):
         response = self.client.get(self.entry.get_absolute_url())
@@ -280,9 +276,10 @@ class EntryListViewTestCase(TestCase):
 
     def test_results_not_found(self):
         url = reverse("entry_list")
+        expected_text = "There are currently no articles available to view."
         response = self.client.get(url)
         content = str(response.content)
-        self.assertInHTML("No Post Found", content)
+        self.assertTrue(expected_text, content)
 
     def test_single_entry(self):
         entry, __ = Entry.objects.get_or_create(

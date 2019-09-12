@@ -53,9 +53,9 @@
       // Remove any existing results.
       $('.ac-results').remove()
 
-      var results = data.results || []
-      var results_wrapper = $('<div class="ac-results"></div>')
-      var base_elem = $('<div class="result-wrapper text-center"><a href="#" class="ac-result"></a></div>')
+      var results = data.results || [];
+      var results_wrapper = $('<div class="ac-results"><div class="searchTitle">Posts</div></div>')
+      var base_elem = $('<div class="result-wrapper"><a href="#" class="ac-result"></a></div>');
 
       if(results.length > 0) {
         for(var res_offset in results) {

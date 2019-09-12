@@ -1,71 +1,128 @@
-{% extends "base.html" %}{% load pygmentify %}
+{% extends "base.html" %}{% load static pygmentify gravatar %}
 {% block content %}
-<div class="container">
-     <div class="row">
-    {% if entries.exists %}
-    {% for entry in entries %}
-    <div class="col-md-4">
-      <div class="card">
-        <img class="card-img-top" style="min-height: 224px; max-height: 224px;" src="{{entry.get_poster}}" alt="{{entry.title|truncatechars:12}}">
-        <div class="card-body">
-            <h5 class="card-title">{{entry.title|truncatechars:30 }}</h5>
-            <p class="card-text">{{entry.body|truncatechars:128| pygmentify_inline }}</p>
-            <a href="{{entry.get_absolute_url}}" class="btn btn-primary"> View </a>
-            {% if entry.category %}
-            <a href="{% url 'post-in-category' entry.category.pk %}" class="pull-right"><small class="text-muted">{{entry.category|truncatechars:12}}</small></a>
-            {% endif %}
+    {% if object_list.count >= 2 %}
+        <div class="container" style="margin-top:80px;">
+        <div class="row">
+            <div class="col-md-7">
+                {% with object_list.0 as post %}
+                <div class="blog-card" onclick="window.location='{{ post.get_absolute_url }}';">
+                    <div class="image"><img src="{{ post.get_poster }}"/></div>
+                    <h2 class="title">{{ post.title }}</h2>
+                    <p class="description">{{ post.body|truncatechars:128| pygmentify_inline }}</p>
+                    <div class="author">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <img src="{% gravatar_url post.author.email 150 %}" class="avatar">
+                                <p class="name">{{ post.author }}</p>
+                                <p class="description"> {{ post.modified_at | date }} </p>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="time-estimate float-right">{{ post.estimate_reading_time }} minutes read</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endwith %}
+            </div>
+            <div class="col-md-5">
+                {% with object_list.1 as post %}
+                <div class="blog-card" onclick="window.location='{{ post.get_absolute_url }}';">
+                    <div class="image"><img src="{{ post.get_poster }}"/></div>
+                    <h2 class="title">{{ post.title }}</h2>
+                    <p class="description">{{ post.body|truncatechars:128| pygmentify_inline }}</p>
+                    <div class="author">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <img src="{% gravatar_url post.author.email 150 %}" class="avatar">
+                                <p class="name">{{ post.author }}</p>
+                                <p class="description"> {{ post.modified_at | date }} </p>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="time-estimate float-right">{{ post.estimate_reading_time }} minutes read </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endwith %}
+            </div>
         </div>
-        <div class="card-footer">
-            <small class="text-muted">{{entry.modified_at | date}}</small>
+    </div>
+    {% endif %}
+
+    <div class="container" style="margin-top:80px;">
+        <div class="row">
+            <div class="col-md-12">
+                {% if entries.exists %}
+                    {% for entry in entries %}
+                        <div class="blog-card-long" onclick="window.location='{{ entry.get_absolute_url }}';">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="image" style="background:url('{{ entry.get_poster }}')" alt="{{ entry.title|truncatechars:12 }}"></div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <h3 class="title">{{ entry.title }}</h3>
+                                            <p class="description">{{ entry.body|truncatechars:128| pygmentify_inline }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="author">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <img src="{% gravatar_url entry.author.email 150 %}" class="avatar">
+                                                <p class="name">{{ entry.author }}</p>
+                                                <p class="description"> {{ entry.modified_at | date }} </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="container" style="margin-top:40px;">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="no-content">
+                                    There are currently no articles available to view.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
         </div>
-      </div>
-    </div>
-    {%endfor%}
-    {%else%}
-         <section class="text-center">
-             <div class="container">
-                 <h1 class="jumbotron-heading text-muted">No Post Found</h1>
-             </div>
-         </section>
-         </div>
-    {%endif%}
-    </div>
-<br>
-{% if is_paginated %}
-<nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-        {% if page_obj.has_previous %}
-          <li class="page-item">
-              <a class="page-link" href="{{request.path}}?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
-          </li>
-        {% else %}
-        <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1">Previous</a>
-        </li>
-        {% endif %}
-        {% for _ in page_obj.paginator.page_range %}
-         <li class="page-item"><a class="page-link" href="{{request.path}}?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
-        {% endfor %}
-        {% if page_obj.has_next %}
-          <li class="page-item">
-              <a class="page-link" href="{{request.path}}?page={{ page_obj.next_page_number }}">Next</a>
-          </li>
-        {% else %}
-        <li class="page-item disabled">
-            <a class="page-link" href="#">Next</a>
-        </li>
-        {% endif %}
-    </ul>
-</nav>
-{% endif %}
+    <br>
+    {% if is_paginated %}
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ request.path }}?page={{ page_obj.previous_page_number }}"
+                           tabindex="-1">Previous</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                    </li>
+                {% endif %}
+                {% for _ in page_obj.paginator.page_range %}
+                    <li class="page-item"><a class="page-link"
+                                             href="{{ request.path }}?page={{ forloop.counter }}">{{ forloop.counter }}</a>
+                    </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ request.path }}?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
 {% endblock %}
-{% block js%}
-<script>
-    $(document).ready(function() {
-      window.autocomplete = new Autocomplete({
-        form_selector: '#navBarSearchForm'
-      })
-      window.autocomplete.setup()
-});
-</script>
-{%endblock%}

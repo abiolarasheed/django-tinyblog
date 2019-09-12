@@ -49,6 +49,7 @@ prompt_toolkit = "==1.0.15"
 Pygments = "==2.2.0"
 Whoosh = "==2.7.4"
 pipenv = "*"
+django-gravatar2 = "*"
 
 [requires]
 python_version = "3.7"

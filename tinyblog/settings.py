@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = b_eval(os.environ.get("DEBUG", "False").title())
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 SITE_ID = 1
 # Application definition
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "blog",
     "robots",
     "gunicorn",
+    'django_gravatar',
     "meta",
 ]
 
@@ -101,17 +102,23 @@ if os.path.exists(CUSTOM_TEMPLATES):
 WSGI_APPLICATION = "tinyblog.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ["BLOG_DATABASE_NAME"],
-        "USER": os.environ["BLOG_DATABASE_USER"],
-        "PASSWORD": os.environ["BLOG_DATABASE_PASSWORD"],
-        "CONN_MAX_AGE": None,
+if os.environ.get("BLOG_DATABASE_NAME"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ["BLOG_DATABASE_NAME"],
+            "USER": os.environ["BLOG_DATABASE_USER"],
+            "PASSWORD": os.environ["BLOG_DATABASE_PASSWORD"],
+            "CONN_MAX_AGE": None,
+        }
     }
-}
-
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        }
+    }
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
