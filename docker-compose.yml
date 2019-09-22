@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  django:
+    container_name: "tinyblog"
+    build: .
+    command:  sh start_gunicon_server
+    env_file: ./.env
+    ports:
+      - "8000:8000"
+    expose:
+      - 8000
+    depends_on:
+      - redis
+
+  redis:
+    container_name: 'redis'
+    image: redis:4.0.5-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    expose:
+      - 6379
+    volumes:
+      - redis_data:/data
+
+volumes:
+  redis_data:
+    driver: local
