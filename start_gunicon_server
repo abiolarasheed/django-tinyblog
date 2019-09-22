@@ -1,15 +1,5 @@
 #!/bin/bash
 set -e
-while getopts v:a:p:w: option
-do
-case "${option}"
-in
-v) VIRTUALENV_NAME=${OPTARG};;
-a) APP_NAME=${OPTARG};;
-p) PROCESS_NAME=${OPTARG};;
-w) WSGI=${OPTARG};;
-esac
-done
 
 backlog=2048
 max_requests=1000
@@ -22,32 +12,14 @@ FULL_PATH=$CURRENT_DIR/$BASENAME  # full path to this file
 user=`stat -c '%U' $FULL_PATH`  # owner of file
 group=`id -gn $user`    # pry group of file owner
 homedir=$( getent passwd "$user" | cut -d: -f6 )
-project_name=$APP_NAME
-proc_name=$PROCESS_NAME
-DJANGODIR=$CURRENT_DIR
-cd $DJANGODIR
+proc_name="tinyblog"
 workers=$(( 2 * `cat /proc/cpuinfo | grep 'core id' | wc -l` + 1 ))
 timeout=30
-preload_app=True
-log=log
-LOG_DIR=$homedir/logs
-test -d $LOG_DIR || mkdir -p $LOG_DIR
-debug=False
-spew=True
-check_config=True
 loglevel=info
-pidfile=$LOG_DIR/gunicorn.pid
-accesslog=$LOG_DIR/access.log
-errorlog=$LOG_DIR/error.log
-DJANGO_SETTINGS_MODULE=$project_name'.settings'
-source $homedir/$VIRTUALENV_NAME/bin/activate --name $proc_name
-export DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
-export PYTHONPATH=$DJANGODIR:$PYTHONPATH
 echo "Starting $proc_name"
-exec $homedir/$VIRTUALENV_NAME/bin/gunicorn --backlog=$backlog\
-       -b=0.0.0.0:8000 $WSGI:application --user=$user --group=$group\
-      --access-logfile=$accesslog --error-logfile=$errorlog\
-      -w=$workers --timeout=$timeout --max-requests=$max_requests\
-      --keep-alive=$keepalive --log-level=$loglevel --name=$proc_name\
-      --chdir=$CURRENT_DIR --worker-connections=$worker_connections\
-      --preload
+python manage.py migrate
+exec /usr/local/bin/gunicorn --backlog=$backlog\
+       -b=0.0.0.0:8000 tinyblog.wsgi --user=$user --group=$group\
+       -w=$workers --timeout=$timeout --max-requests=$max_requests\
+       --keep-alive=$keepalive --log-level=$loglevel --name=$proc_name\
+       --chdir=$CURRENT_DIR --worker-connections=$worker_connections
