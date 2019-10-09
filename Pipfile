@@ -50,6 +50,7 @@ pipenv = "*"
 django-gravatar2 = "*"
 django = "*"
 urllib3 = "*"
+django-minio-storage = "*"
 
 [requires]
 python_version = "3.7"
