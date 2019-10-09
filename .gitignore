@@ -40,17 +40,9 @@ TODO
 */static/*
 */.git
 
-fixtures
-fixtures/*
-djcelery.schedulers.DatabaseScheduler
-celerybeat.pid
-celerybeat-schedule
-*_pycache__
-*/__pycache__
-db.sqlite3
-
 # Env
 .env
+.env-minio
 
 # Coverage
 .coverage

@@ -242,7 +242,7 @@ if b_eval(os.environ.get("ENABLE_CELERY", "false").title()):
     CELERY_TIMEZONE = TIME_ZONE
     CELERY_BEAT_SCHEDULE = {}
 
-if os.environ.get("MINIO_STORAGE", "false"):
+if b_eval(os.environ.get("MINIO_STORAGE", "false").title()):
     INSTALLED_APPS = INSTALLED_APPS + ["minio_storage",]
     DEFAULT_FILE_STORAGE = "minio_storage.storage.MinioMediaStorage"
     STATICFILES_STORAGE = "minio_storage.storage.MinioStaticStorage"
