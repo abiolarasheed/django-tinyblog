@@ -1,29 +1,87 @@
 version: '3.7'
 
 services:
-  django:
-    container_name: "tinyblog"
-    build: .
-    command:  sh start_gunicon_server
-    env_file: ./.env
+  minio:
+    container_name: minio
+    image: minio/minio:RELEASE.2019-10-02T21-19-38Z
+    command: server /data
+    env_file:
+      - .env-minio
+    expose:
+      - 9000
     ports:
-      - "8000:8000"
+      - 9000
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  postgres:
+    container_name: postgres
+    image: postgres:12-alpine
+    expose:
+      - 5432
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    container_name: redis
+    image: redis:4.0.5-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    expose:
+      - 6379
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 8
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+    expose:
+      - 80
+    depends_on:
+      - minio
+      - django
+
+  django:
+    container_name: django
+    build: .
+    command: sh ./start_gunicon_server
+    env_file: .env
+    ports:
+      - 8000
     expose:
       - 8000
     depends_on:
+      - minio
+      - postgres
       - redis
 
-  redis:
-    container_name: 'redis'
-    image: redis:4.0.5-alpine
-    command: ["redis-server", "--appendonly", "yes"]
-    ports:
-      - "6379:6379"
-    expose:
-      - 6379
-    volumes:
-      - redis_data:/data
 
 volumes:
   redis_data:
+    driver: local
+  postgres_data:
+    driver: local
+  minio_data:
     driver: local
