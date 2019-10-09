@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import os
+
 from django.conf import settings
 from django.conf.urls import include
 from django.conf.urls.static import static
@@ -54,6 +56,6 @@ else:
     ] + urlpatterns
 
 
-if settings.DEBUG:
+if settings.DEBUG and (not os.environ.get("MINIO_STORAGE", False)):
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
