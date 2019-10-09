@@ -109,7 +109,7 @@ if os.environ.get("BLOG_DATABASE_NAME"):
             "NAME": os.environ["BLOG_DATABASE_NAME"],
             "USER": os.environ["BLOG_DATABASE_USER"],
             "PASSWORD": os.environ["BLOG_DATABASE_PASSWORD"],
-            'HOST': os.environ["BLOG_DATABASE_HOST"],
+            'HOST': os.environ.get("BLOG_DATABASE_HOST", "localhost"),
             "CONN_MAX_AGE": None,
         }
     }
