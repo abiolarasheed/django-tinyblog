@@ -1,25 +1,21 @@
-#!/bin/bash
-set -e
-
 backlog=2048
 max_requests=1000
-daemon=False
 keepalive=3
 worker_connections=1001
-CURRENT_DIR=$(dirname $(readlink -f $0)) # get absolute path to this file
-BASENAME=`basename $0` # get the name of this file
-FULL_PATH=$CURRENT_DIR/$BASENAME  # full path to this file
-user=`stat -c '%U' $FULL_PATH`  # owner of file
-group=`id -gn $user`    # pry group of file owner
-homedir=$( getent passwd "$user" | cut -d: -f6 )
+user=root
+group=root
+accesslogfile=-  # log to stdout
 proc_name="tinyblog"
-workers=$(( 2 * `cat /proc/cpuinfo | grep 'core id' | wc -l` + 1 ))
+workers=$(( 2 * $(cat /proc/cpuinfo | grep 'core id' | wc -l) + 1 ))
+echo $workers
 timeout=30
 loglevel=info
 echo "Starting $proc_name"
+python manage.py collectstatic --noinput
 python manage.py migrate
 exec /usr/local/bin/gunicorn --backlog=$backlog\
        -b=0.0.0.0:8000 tinyblog.wsgi --user=$user --group=$group\
        -w=$workers --timeout=$timeout --max-requests=$max_requests\
        --keep-alive=$keepalive --log-level=$loglevel --name=$proc_name\
-       --chdir=$CURRENT_DIR --worker-connections=$worker_connections
+       --chdir=$CURRENT_DIR --worker-connections=$worker_connections\
+       --access-logfile=$accesslogfile
