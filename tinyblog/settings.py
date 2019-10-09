@@ -109,6 +109,7 @@ if os.environ.get("BLOG_DATABASE_NAME"):
             "NAME": os.environ["BLOG_DATABASE_NAME"],
             "USER": os.environ["BLOG_DATABASE_USER"],
             "PASSWORD": os.environ["BLOG_DATABASE_PASSWORD"],
+            'HOST': os.environ["BLOG_DATABASE_HOST"],
             "CONN_MAX_AGE": None,
         }
     }
@@ -126,7 +127,7 @@ SESSION_CACHE_ALIAS = "default"
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": os.environ.get("CACHE_URL", "redis://127.0.0.1:6379/1"),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "COMPRESSOR": "django_redis.compressors.zlib.ZlibCompressor",
@@ -155,27 +156,15 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
-
-TIME_ZONE = "Europe/Dublin"
-
+LANGUAGE_CODE = os.environ.get("LANGUAGE_CODE", "en-us")
+TIME_ZONE = os.environ.get("TIME_ZONE", "Europe/Dublin")
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 STATICFILES_DIRS = [os.path.join(DIR, "assets/")]
-
-CATEGORIES_IN_DETAIL = b_eval(os.environ.get("CATEGORIES_IN_DETAIL", "true").title())
-
-# https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-STATIC_URL = "/static/"
-MEDIA_URL = "/media/"
-STATIC_ROOT = os.path.join(DIR, "static")
-MEDIA_ROOT = os.path.join(DIR, "media")
 
 # Set the path where you will place your custom static.
 # Please use same name so that you don't need to change anything when upgrading
@@ -186,6 +175,8 @@ if os.path.exists(CUSTOM_STATIC):
     STATICFILES_DIRS.append(("custom", CUSTOM_STATIC))
 
 SITE_LOGO = os.environ.get("SITE_LOGO", "image/py.png")
+
+CATEGORIES_IN_DETAIL = b_eval(os.environ.get("CATEGORIES_IN_DETAIL", "true").title())
 
 #  django-taggit settings
 TAGGIT_CASE_INSENSITIVE = True
@@ -226,7 +217,7 @@ INDEX_TEMPLATE = os.environ.get(
 
 # Django Meta
 META_SITE_PROTOCOL = os.environ.get("META_SITE_PROTOCOL", "http")
-META_SITE_DOMAIN = os.environ.get("META_SITE_DOMAIN", "blog.example.com")
+META_SITE_DOMAIN = os.environ.get("META_SITE_DOMAIN", "*")
 META_SITE_NAME = os.environ.get("META_SITE_NAME")
 META_USE_OG_PROPERTIES = b_eval(
     os.environ.get("META_USE_OG_PROPERTIES", "False").title()
@@ -242,24 +233,48 @@ DEFAULT_META_DESCRIPTION = os.environ.get("DEFAULT_META_DESCRIPTION", "")
 DEFAULT_META_KEYWORDS = os.environ.get("DEFAULT_META_KEYWORDS", "")
 DEFAULT_META_TITLE = os.environ.get("DEFAULT_META_TITLE", "")
 
-
 if b_eval(os.environ.get("ENABLE_CELERY", "false").title()):
-    CELERY_BROKER_URL = os.environ.get("BROKER_URL", "redis://localhost:6379")
-    CELERY_RESULT_BACKEND = os.environ.get("RESULT_BACKEND", "redis://localhost:6379")
+    CELERY_BROKER_URL = os.environ.get("BROKER_URL", "redis://localhost:6379/2")
+    CELERY_RESULT_BACKEND = os.environ.get("RESULT_BACKEND", "redis://localhost:6379/3")
     CELERY_ACCEPT_CONTENT = ["application/json"]
     CELERY_RESULT_SERIALIZER = "json"
     CELERY_TASK_SERIALIZER = "json"
     CELERY_TIMEZONE = TIME_ZONE
     CELERY_BEAT_SCHEDULE = {}
 
+if os.environ.get("MINIO_STORAGE", "false"):
+    INSTALLED_APPS = INSTALLED_APPS + ["minio_storage",]
+    DEFAULT_FILE_STORAGE = "minio_storage.storage.MinioMediaStorage"
+    STATICFILES_STORAGE = "minio_storage.storage.MinioStaticStorage"
+    MINIO_STORAGE_ENDPOINT = os.environ.get("MINIO_STORAGE_ENDPOINT")
+    MINIO_STORAGE_ACCESS_KEY = os.environ.get("MINIO_STORAGE_ACCESS_KEY")
+    MINIO_STORAGE_SECRET_KEY = os.environ.get("MINIO_STORAGE_SECRET_KEY")
+    MINIO_STORAGE_MEDIA_BUCKET_NAME = os.environ.get("MINIO_STORAGE_MEDIA_BUCKET_NAME")
+    MINIO_STORAGE_STATIC_BUCKET_NAME = os.environ.get("MINIO_STORAGE_STATIC_BUCKET_NAME")
+    MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = b_eval(os.environ.get("MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET", "false").title())
+    MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = b_eval(os.environ.get("MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET", "false").title())
+    MINIO_STORAGE_USE_HTTPS = b_eval(os.environ.get("MINIO_STORAGE_USE_HTTPS", "false").title())
+    MINIO_STORAGE_MEDIA_URL = os.environ.get("MINIO_STORAGE_MEDIA_URL")
+    MINIO_STORAGE_STATIC_URL = os.environ.get("MINIO_STORAGE_STATIC_URL")
 
-# Do not place any settings bellow this setting.
-# Define all your custom settings in the custom_settings.py
-# file next to the settings.py file.
-CUSTOM_SETTINGS = os.path.join(DIR, "custom_settings.py")
-if os.path.exists(CUSTOM_SETTINGS):
-    from .custom_settings import *
+    STATIC_URL = MINIO_STORAGE_STATIC_URL + "/"
+    MEDIA_URL = MINIO_STORAGE_MEDIA_URL + "/"
+
+    MINIO_STORAGE_MEDIA_USE_PRESIGNED = b_eval(os.environ.get("MINIO_STORAGE_MEDIA_USE_PRESIGNED", "false").title())
+    MINIO_STORAGE_STATIC_USE_PRESIGNED = b_eval(os.environ.get("MINIO_STORAGE_STATIC_USE_PRESIGNED", "false").title())
+
+else:
+    STATIC_ROOT = os.path.join(DIR, "static")
+    MEDIA_ROOT = os.path.join(DIR, "media")
+    STATIC_URL = "/static/"
+    MEDIA_URL = "/media/"
 
 DEFAULT_META_IMAGE = os.path.join(STATIC_URL, SITE_LOGO)
 if not DEBUG:
     ALLOWED_HOSTS = [META_SITE_DOMAIN]
+
+# Do not place any settings bellow this setting.
+# Define all your custom settings in the custom_settings.py
+# file next to the settings.py file.
+if os.path.exists(os.path.join(DIR, "custom_settings.py")):
+    from .custom_settings import *
