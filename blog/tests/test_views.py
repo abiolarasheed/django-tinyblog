@@ -221,7 +221,7 @@ class EntryViewTestCase(TestCase):
 
     def setUp(self):
         user = get_user_model()(email="iamatest@test.com", username="iamatest")
-        user.set_password('Passiamatest123')
+        user.set_password("Passiamatest123")
         user.save()
         self.author = user
 
@@ -235,7 +235,7 @@ class EntryViewTestCase(TestCase):
         )[0]
 
     def test_basic_view(self):
-        self.client.login(username="iamatest", password='Passiamatest123')
+        self.client.login(username="iamatest", password="Passiamatest123")
         url = self.entry.get_absolute_url()
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)

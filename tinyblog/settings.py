@@ -29,7 +29,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = b_eval(os.environ.get("DEBUG", "False").title())
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 SITE_ID = 1
 # Application definition
@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     "blog",
     "robots",
     "gunicorn",
-    'django_gravatar',
+    "django_gravatar",
     "meta",
 ]
 
@@ -111,7 +111,7 @@ if os.environ.get("BLOG_DATABASE_NAME"):
             "NAME": os.environ["BLOG_DATABASE_NAME"],
             "USER": os.environ["BLOG_DATABASE_USER"],
             "PASSWORD": os.environ["BLOG_DATABASE_PASSWORD"],
-            'HOST': os.environ.get("BLOG_DATABASE_HOST", "localhost"),
+            "HOST": os.environ.get("BLOG_DATABASE_HOST", "localhost"),
             "CONN_MAX_AGE": None,
         }
     }
@@ -248,21 +248,33 @@ STATIC_ROOT = os.path.join(DIR, "static")
 MEDIA_ROOT = os.path.join(DIR, "media")
 if b_eval(os.environ.get("MINIO_STORAGE", "false").title()):
     INSTALLED_APPS = INSTALLED_APPS + ["minio_storage"]
-    MINIO_STORAGE_MEDIA_USE_PRESIGNED = b_eval(os.environ.get("MINIO_STORAGE_MEDIA_USE_PRESIGNED", "false").title())
-    MINIO_STORAGE_STATIC_USE_PRESIGNED = b_eval(os.environ.get("MINIO_STORAGE_STATIC_USE_PRESIGNED", "false").title())
+    MINIO_STORAGE_MEDIA_USE_PRESIGNED = b_eval(
+        os.environ.get("MINIO_STORAGE_MEDIA_USE_PRESIGNED", "false").title()
+    )
+    MINIO_STORAGE_STATIC_USE_PRESIGNED = b_eval(
+        os.environ.get("MINIO_STORAGE_STATIC_USE_PRESIGNED", "false").title()
+    )
     DEFAULT_FILE_STORAGE = "minio_storage.storage.MinioMediaStorage"
     STATICFILES_STORAGE = "minio_storage.storage.MinioStaticStorage"
     MINIO_STORAGE_ENDPOINT = os.environ.get("MINIO_STORAGE_ENDPOINT")
     MINIO_STORAGE_ACCESS_KEY = os.environ.get("MINIO_STORAGE_ACCESS_KEY")
     MINIO_STORAGE_SECRET_KEY = os.environ.get("MINIO_STORAGE_SECRET_KEY")
     MINIO_STORAGE_MEDIA_BUCKET_NAME = os.environ.get("MINIO_STORAGE_MEDIA_BUCKET_NAME")
-    MINIO_STORAGE_STATIC_BUCKET_NAME = os.environ.get("MINIO_STORAGE_STATIC_BUCKET_NAME")
-    MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = b_eval(os.environ.get("MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET", "false").title())
-    MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = b_eval(os.environ.get("MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET", "false").title())
-    MINIO_STORAGE_USE_HTTPS = b_eval(os.environ.get("MINIO_STORAGE_USE_HTTPS", "false").title())
+    MINIO_STORAGE_STATIC_BUCKET_NAME = os.environ.get(
+        "MINIO_STORAGE_STATIC_BUCKET_NAME"
+    )
+    MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = b_eval(
+        os.environ.get("MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET", "false").title()
+    )
+    MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = b_eval(
+        os.environ.get("MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET", "false").title()
+    )
+    MINIO_STORAGE_USE_HTTPS = b_eval(
+        os.environ.get("MINIO_STORAGE_USE_HTTPS", "false").title()
+    )
     MINIO_STORAGE_MEDIA_URL = os.environ.get("MINIO_STORAGE_MEDIA_URL")
     MINIO_STORAGE_STATIC_URL = os.environ.get("MINIO_STORAGE_STATIC_URL")
-    STATIC_URL = '/static/'
+    STATIC_URL = "/static/"
 
 else:
     STATIC_URL = "/static/"

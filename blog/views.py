@@ -121,7 +121,9 @@ class EntryDetail(DetailView):
                 author=self.request.user, slug=self.kwargs.get("slug")
             )
         except (self.model.DoesNotExist, TypeError):
-            obj = get_object_or_404(self.model, slug=self.kwargs.get("slug"), is_published=True)
+            obj = get_object_or_404(
+                self.model, slug=self.kwargs.get("slug"), is_published=True
+            )
             return obj
 
     def get_context_data(self, **kwargs):
