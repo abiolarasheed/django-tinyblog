@@ -68,6 +68,8 @@ services:
     build: .
     command: sh ./start_gunicon_server
     env_file: .env
+    healthcheck:
+      test: ["CMD", "./manage.py", "check"]
     ports:
       - 8000
     expose:
@@ -76,7 +78,6 @@ services:
       - minio
       - postgres
       - redis
-
 
 volumes:
   redis_data:
