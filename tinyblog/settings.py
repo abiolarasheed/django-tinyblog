@@ -15,6 +15,8 @@ import os
 from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from minio_storage.storage import MinioMediaStorage
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -242,8 +244,12 @@ if b_eval(os.environ.get("ENABLE_CELERY", "false").title()):
     CELERY_TIMEZONE = TIME_ZONE
     CELERY_BEAT_SCHEDULE = {}
 
+STATIC_ROOT = os.path.join(DIR, "static")
+MEDIA_ROOT = os.path.join(DIR, "media")
 if b_eval(os.environ.get("MINIO_STORAGE", "false").title()):
-    INSTALLED_APPS = INSTALLED_APPS + ["minio_storage",]
+    INSTALLED_APPS = INSTALLED_APPS + ["minio_storage"]
+    MINIO_STORAGE_MEDIA_USE_PRESIGNED = b_eval(os.environ.get("MINIO_STORAGE_MEDIA_USE_PRESIGNED", "false").title())
+    MINIO_STORAGE_STATIC_USE_PRESIGNED = b_eval(os.environ.get("MINIO_STORAGE_STATIC_USE_PRESIGNED", "false").title())
     DEFAULT_FILE_STORAGE = "minio_storage.storage.MinioMediaStorage"
     STATICFILES_STORAGE = "minio_storage.storage.MinioStaticStorage"
     MINIO_STORAGE_ENDPOINT = os.environ.get("MINIO_STORAGE_ENDPOINT")
@@ -256,16 +262,9 @@ if b_eval(os.environ.get("MINIO_STORAGE", "false").title()):
     MINIO_STORAGE_USE_HTTPS = b_eval(os.environ.get("MINIO_STORAGE_USE_HTTPS", "false").title())
     MINIO_STORAGE_MEDIA_URL = os.environ.get("MINIO_STORAGE_MEDIA_URL")
     MINIO_STORAGE_STATIC_URL = os.environ.get("MINIO_STORAGE_STATIC_URL")
-
-    STATIC_URL = MINIO_STORAGE_STATIC_URL + "/"
-    MEDIA_URL = MINIO_STORAGE_MEDIA_URL + "/"
-
-    MINIO_STORAGE_MEDIA_USE_PRESIGNED = b_eval(os.environ.get("MINIO_STORAGE_MEDIA_USE_PRESIGNED", "false").title())
-    MINIO_STORAGE_STATIC_USE_PRESIGNED = b_eval(os.environ.get("MINIO_STORAGE_STATIC_USE_PRESIGNED", "false").title())
+    STATIC_URL = '/static/'
 
 else:
-    STATIC_ROOT = os.path.join(DIR, "static")
-    MEDIA_ROOT = os.path.join(DIR, "media")
     STATIC_URL = "/static/"
     MEDIA_URL = "/media/"
 
