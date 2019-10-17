@@ -51,6 +51,8 @@ django-gravatar2 = "*"
 django = "*"
 urllib3 = "*"
 django-minio-storage = "*"
+boto3 = "*"
+django-storages = "*"
 
 [requires]
 python_version = "3.7"
