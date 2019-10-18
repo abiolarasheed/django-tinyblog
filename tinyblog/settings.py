@@ -289,7 +289,11 @@ if b_eval(os.environ.get("S3", "false").title()):
     AWS_S3_OBJECT_PARAMETERS = {
         'CacheControl': 'max-age=86400',
     }
-
+    AWS_HEADERS = {
+        'Expires': 'Thu, 15 Apr 2010 20:00:00 GMT',
+        'Cache-Control': 'max-age=86400',
+    }
+    AWS_AUTO_CREATE_BUCKET = b_eval(os.environ.get("AWS_AUTO_CREATE_BUCKET", "false").title())
     DEFAULT_FILE_STORAGE = "tinyblog.utils.MediaStorage"
     STATICFILES_STORAGE = 'tinyblog.utils.StaticStorage'
     AWS_STATIC_LOCATION = "static"
