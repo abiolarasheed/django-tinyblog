@@ -1,0 +1,79 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "django-tinyblog.fullname" .}}-django-web-app
+  labels:
+    chart: {{ template "django-tinyblog.fullname" .}}-django-web-app
+spec:
+  replicas: {{ $.Values.django_web_app.replicaCount }}
+  selector:
+    matchLabels:
+      chart: {{ template "django-tinyblog.fullname" . }}-django-web-app
+  template:
+    metadata:
+      labels:
+        chart: {{ template "django-tinyblog.fullname" . }}-django-web-app
+    spec:
+      affinity:
+        # Lets ensure that no two instances are Scheduled on the same host and never Scheduled along side list of
+        # pods in the values list
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: chart
+                    operator: In
+                    values:
+                      - {{ template "django-tinyblog.fullname" .}}-django-web-app
+              topologyKey: "kubernetes.io/hostname"
+      imagePullSecrets:
+        - name:  {{ $.Values.django_web_app.imagePullSecrets.name }}
+      containers:
+      - image: {{ $.Values.django_image }}
+        name: {{ $.Values.django_web_app.imageName }}
+        imagePullPolicy: {{ $.Values.django_web_app.pullPolicy }}
+        command:
+          - scripts/start_gunicon_server
+        envFrom:
+          - secretRef:
+              name: {{ $.Values.django_web_app.envFrom.secretRef.name }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "django-tinyblog.fullname" .}}-redis
+  labels:
+    chart: {{ template "django-tinyblog.fullname" .}}-redis
+spec:
+  replicas: {{ $.Values.redis.replicaCount }}
+  selector:
+    matchLabels:
+      chart: {{ template "django-tinyblog.fullname" .}}-redis
+  template:
+    metadata:
+      labels:
+        chart: {{ template "django-tinyblog.fullname" .}}-redis
+    spec:
+      containers:
+      - name: {{ $.Values.redis.imageName }}
+        image: {{ $.Values.redis_image }}
+        command: ["redis-server", "--appendonly", "yes"]
+        imagePullPolicy: {{ $.Values.redis.pullPolicy }}
+        volumeMounts:
+        - name: redis-volume
+          mountPath: /data
+      initContainers:
+      - name: redis-init
+        image: alpine
+        command: ["/bin/chmod","-R","777", "/data"]
+        volumeMounts:
+          - name: redis-volume
+            mountPath: /data
+        securityContext:
+          privileged: true
+      volumes:
+        - name: redis-volume
+          persistentVolumeClaim:
+            claimName: {{ template "django-tinyblog.fullname" .}}-redis-pvc

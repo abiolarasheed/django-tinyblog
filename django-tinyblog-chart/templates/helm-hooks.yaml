@@ -1,0 +1,93 @@
+# Django Migrations DB
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "django-tinyblog.fullname" . }}-django-migrations
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "4"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: {{ template "django-tinyblog.fullname" . }}-django-migrations
+    spec:
+      restartPolicy: Never
+      imagePullSecrets:
+        - name:  {{ $.Values.django_web_app.imagePullSecrets.name }}
+      containers:
+      - image: {{ $.Values.django_image }}
+        name: {{ $.Values.django_web_app.imageName }}
+        imagePullPolicy: {{ $.Values.django_web_app.pullPolicy }}
+        command: ['python', 'manage.py', 'migrate']
+        envFrom:
+          - secretRef:
+              name: {{ $.Values.django_web_app.envFrom.secretRef.name }}
+  backoffLimit: 1
+
+
+# Django Collect static
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "django-tinyblog.fullname" . }}-django-collectstatic
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": pre-install,pre-upgrade,pre-rollback,post-delete
+    "helm.sh/hook-weight": "5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: {{ template "django-tinyblog.fullname" .}}-django-collectstatic
+    spec:
+      restartPolicy: Never
+      imagePullSecrets:
+        - name:  {{ $.Values.django_web_app.imagePullSecrets.name }}
+      containers:
+      - image: {{ $.Values.django_image }}
+        name: {{ $.Values.django_web_app.imageName }}
+        imagePullPolicy: {{ $.Values.django_web_app.pullPolicy }}
+        command:  ['python', 'manage.py', 'collectstatic', '--noinput', '--ignore', 'node_modules']
+        envFrom:
+          - secretRef:
+              name: {{ $.Values.django_web_app.envFrom.secretRef.name }}
+  backoffLimit: 1
+
+# Django Build Search index
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "django-tinyblog.fullname" .}}-rebuild-search-index
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-install
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: {{ template "django-tinyblog.fullname" .}}-rebuild-search-index
+    spec:
+      imagePullSecrets:
+        - name:  {{ $.Values.django_web_app.imagePullSecrets.name }}
+      containers:
+      - image: {{ $.Values.django_image }}
+        name: {{ $.Values.django_web_app.imageName }}
+        imagePullPolicy: {{ $.Values.django_web_app.pullPolicy }}
+        command: ['python', 'manage.py', 'rebuild_index', '--noinput']
+        envFrom:
+          - secretRef:
+              name: {{ $.Values.django_web_app.envFrom.secretRef.name }}
+      initContainers:
+        - name: init-myservice
+          image: busybox:1.28
+          command: ['sh', '-c', 'until nslookup elasticsearch; do echo waiting for elasticsearch; sleep 2; done;']
+      restartPolicy: Never
+  backoffLimit: 1

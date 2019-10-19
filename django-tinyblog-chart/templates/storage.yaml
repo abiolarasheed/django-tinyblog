@@ -1,0 +1,27 @@
+---
+# elastic-search
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "django-tinyblog.fullname" .}}-elasticsearch-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ $.Values.redis.resources.pvc.requests.storage }}
+  storageClassName: do-block-storage
+
+---
+# Redis
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "django-tinyblog.fullname" .}}-redis-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ $.Values.elasticsearch.resources.pvc.requests.storage }}
+  storageClassName: do-block-storage
