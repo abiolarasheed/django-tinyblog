@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import os
 from collections import OrderedDict
 from urllib.parse import urlencode
 
@@ -108,9 +109,14 @@ class PublishEntryView(View):
 
 
 class EntryDetail(DetailView):
-    template_name = "entry_detail.html"
     context_object_name = "entry"
     model = Entry
+    template_dir = os.environ.get("CUSTOM_TEMPLATE_DIR")
+
+    def get_template_names(self):
+        if self.template_dir:
+            return f"{self.template_dir}/entry_detail.html"
+        return "entry_detail.html"
 
     def get_object(self, queryset=None):
         if self.kwargs.get("slug", None) is None:
@@ -140,11 +146,18 @@ class EntryDetail(DetailView):
 
 
 class EntryListView(PageMetaData, ListView):
-    template_name = "entry_list.html"
-    context_object_name = "entries"
     paginate_by = 12
     model = Entry
-    queryset = model.published.select_related("category").all().order_by("-modified_at")
+    context_object_name = "entries"
+    template_dir = os.environ.get("CUSTOM_TEMPLATE_DIR")
+
+    def get_queryset(self):
+        return self.model.published.select_related("category").all().order_by("-modified_at")
+
+    def get_template_names(self):
+        if self.template_dir:
+            return f"{self.template_dir}/entry_list.html"
+        return "entry_list.html"
 
     def get_context_data(self, **kwargs):
         context = super(EntryListView, self).get_context_data(**kwargs)

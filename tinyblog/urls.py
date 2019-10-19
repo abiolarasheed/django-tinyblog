@@ -45,13 +45,7 @@ urlpatterns = [
 ]
 
 
-if settings.HAS_INDEX_PAGE:
-    index_template = getattr(settings, "INDEX_TEMPLATE", "index.html")
-    urlpatterns = [
-        path("", TemplateView.as_view(template_name=index_template), name="index")
-    ] + urlpatterns
-else:
-    urlpatterns = [
+urlpatterns = [
         path("", blog_views.EntryListView.as_view(), name="index")
     ] + urlpatterns
 

@@ -170,7 +170,7 @@ STATICFILES_DIRS = [os.path.join(DIR, "assets/")]
 
 # Set the path where you will place your custom static.
 # Please use same name so that you don't need to change anything when upgrading
-CUSTOM_STATIC = os.path.join(os.path.dirname(BASE_DIR), "custom_dir/static")
+CUSTOM_STATIC = os.path.join(DIR, "custom_static")
 
 if os.path.exists(CUSTOM_STATIC):
     # Insert into the STATICFILES_DIR list if CUSTOM_STATIC exists
@@ -211,11 +211,8 @@ MESSAGE_TAGS = {
 
 # template
 # set to true if you want you index page to be different from you list of blogs page
-HAS_INDEX_PAGE = b_eval(os.environ.get("HAS_INDEX_PAGE", "False").title())
-INDEX_TEMPLATE = os.environ.get(
-    "INDEX_TEMPLATE", "index.html"
-)  # Path to your index template
-
+CUSTOM_TEMPLATE_DIR = os.environ.get("CUSTOM_TEMPLATE_DIR")
+# name of folder where custom templates are located
 
 # Django Meta
 META_SITE_PROTOCOL = os.environ.get("META_SITE_PROTOCOL", "http")
@@ -302,7 +299,7 @@ if b_eval(os.environ.get("S3", "false").title()):
 
     STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_STATIC_LOCATION}/"
     MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_MEDIA_LOCATION}/"
-    
+
 
 DEFAULT_META_IMAGE = os.path.join(STATIC_URL, SITE_LOGO)
 if not DEBUG:

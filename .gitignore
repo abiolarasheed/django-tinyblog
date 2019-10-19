@@ -39,7 +39,7 @@ TODO
 */media/*
 */static/*
 */.git
-
+*/custom_static/*
 # Env
 .env
 .env-minio
@@ -52,3 +52,4 @@ coverage_html_report
 tinyblog/test_whoosh_index
 custom_settings.py
 scripts/*
+*/templates/custom
