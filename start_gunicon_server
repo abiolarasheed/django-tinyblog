@@ -2,8 +2,8 @@ backlog=2048
 max_requests=1000
 keepalive=3
 worker_connections=1001
-user=root
-group=root
+user=blogger
+group=blogger
 accesslogfile=-  # log to stdout
 proc_name="tinyblog"
 workers=$(( 2 * $(cat /proc/cpuinfo | grep 'core id' | wc -l) + 1 ))
@@ -13,7 +13,7 @@ loglevel=info
 echo "Starting $proc_name"
 python manage.py collectstatic --noinput
 python manage.py migrate
-exec /usr/local/bin/gunicorn --backlog=$backlog\
+exec /home/blogger/.local/bin/gunicorn --backlog=$backlog\
        -b=0.0.0.0:8000 tinyblog.wsgi --user=$user --group=$group\
        -w=$workers --timeout=$timeout --max-requests=$max_requests\
        --keep-alive=$keepalive --log-level=$loglevel --name=$proc_name\
