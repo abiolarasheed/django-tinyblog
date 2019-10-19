@@ -1,8 +1,6 @@
 FROM python:3.7
 EXPOSE 8000
 
-ARG APP_USER=blogger
-
 # Update to latest pip, create app user and install pipenv
 RUN pip install --no-cache-dir --upgrade pip \
     && adduser --disabled-password --gecos "" blogger \
