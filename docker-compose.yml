@@ -1,38 +1,38 @@
 version: '3.7'
 
 services:
-  minio:
-    container_name: minio
-    image: minio/minio:RELEASE.2019-10-02T21-19-38Z
-    command: server /data
-    env_file:
-      - .env-minio
-    expose:
-      - 9000
-    ports:
-      - 9000
-    volumes:
-      - minio_data:/data
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-      interval: 10s
-      timeout: 10s
-      retries: 10
+#  minio:
+#    container_name: minio
+#    image: minio/minio:RELEASE.2019-10-02T21-19-38Z
+#    command: server /data
+#    env_file:
+#      - .env-minio
+#    expose:
+#      - 9000
+#    ports:
+#      - 9000
+#    volumes:
+#      - minio_data:/data
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+#      interval: 10s
+#      timeout: 10s
+#      retries: 10
 
-  postgres:
-    container_name: postgres
-    image: postgres:12-alpine
-    expose:
-      - 5432
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+#  postgres:
+#    container_name: postgres
+#    image: postgres:12-alpine
+#    expose:
+#      - 5432
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#    healthcheck:
+#      test: ["CMD-SHELL", "pg_isready -U postgres"]
+#      interval: 5s
+#      timeout: 5s
+#      retries: 10
 
   redis:
     container_name: redis
@@ -60,7 +60,7 @@ services:
     expose:
       - 80
     depends_on:
-      - minio
+    #  - minio
       - django
 
   django:
@@ -75,8 +75,8 @@ services:
     expose:
       - 8000
     depends_on:
-      - minio
-      - postgres
+    #  - minio
+    #  - postgres
       - redis
 
 volumes:
