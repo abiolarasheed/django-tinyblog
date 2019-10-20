@@ -20,7 +20,5 @@ RUN cd /tmp && pipenv lock --clear --requirements > requirements.txt \
     && rm -rf /tmp/requirements.txt && rm -rf /tmp/Pipfile* \
     && touch /tmp/.coverage && chmod 777 /tmp/.coverage
 
-VOLUME /tmp/.coverage
-
 # Copy code over to user home directory
 COPY --chown=blogger:blogger . .
