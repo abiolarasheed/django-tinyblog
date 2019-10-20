@@ -10,11 +10,14 @@ env:
 before_install:
   - export DJANGO_SETTINGS_MODULE=tinyblog.settings
   - export PIP_USE_MIRRORS=true
+  - export COVERAGE_FILE=/tmp/.coverage
 
 services:
   - docker
 
 before_script:
+  - touch $COVERAGE_FILE
+  - chmod 777 $COVERAGE_FILE
   - docker network create --driver bridge blog-net
   - docker run -d -p 5432:5432 --network=blog-net --name=postgres postgres:latest
   - docker run -d -p 6379:6379 --network=blog-net --name=redis redis:latest
@@ -22,7 +25,7 @@ before_script:
 
 script:
   - docker ps
-  - docker run -e BLOG_DATABASE_HOST=$BLOG_DATABASE_HOST -e BLOG_DATABASE_NAME=$BLOG_DATABASE_NAME -e BLOG_DATABASE_USER=$BLOG_DATABASE_USER -e BLOG_DATABASE_PASSWORD=BLOG_DATABASE_PASSWORD -e SECRET_KEY=$SECRET_KEY -e CACHE_URL=$CACHE_URL -e RESULT_BACKEND=$RESULT_BACKEND -e BROKER_URL=$BROKER_URL --network=blog-net --rm -it --name=django-tinyblog $BLOGGER_IMAGE coverage run manage.py test --noinput
+  - docker run -v $COVERAGE_FILE:$COVERAGE_FILE -e COVERAGE_FILE=$COVERAGE_FILE -e BLOG_DATABASE_HOST=$BLOG_DATABASE_HOST -e BLOG_DATABASE_NAME=$BLOG_DATABASE_NAME -e BLOG_DATABASE_USER=$BLOG_DATABASE_USER -e BLOG_DATABASE_PASSWORD=BLOG_DATABASE_PASSWORD -e SECRET_KEY=$SECRET_KEY -e CACHE_URL=$CACHE_URL -e RESULT_BACKEND=$RESULT_BACKEND -e BROKER_URL=$BROKER_URL --network=blog-net --rm -it --name=django-tinyblog $BLOGGER_IMAGE coverage run manage.py test -v 2 --noinput
 
 #after_success:
 #  - coverage report
