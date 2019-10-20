@@ -28,7 +28,7 @@ before_script:
   - docker build -t $BLOGGER_IMAGE .
 
 script:
-  - docker run --network=blog-net -rm -it --name=django-tinyblog $BLOGGER_IMAGE coverage run manage.py test --noinput
+  - docker run --network=blog-net --rm -it --name=django-tinyblog $BLOGGER_IMAGE coverage run manage.py test --noinput
 
 after_success:
   - coverage report
