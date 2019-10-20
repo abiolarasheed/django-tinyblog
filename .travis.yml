@@ -18,6 +18,9 @@ before_install:
   - export PIP_USE_MIRRORS=true
   - export COVERAGE_FILE=/tmp/.coverage
 
+install:
+  - pip install coverage
+
 services:
   - docker
 
@@ -31,8 +34,8 @@ before_script:
 
 script:
   - docker ps
-  - docker run --user $(id -u):$(id -g) -v $COVERAGE_FILE:$COVERAGE_FILE -e COVERAGE_FILE=$COVERAGE_FILE -e BLOG_DATABASE_HOST=$BLOG_DATABASE_HOST -e BLOG_DATABASE_NAME=$BLOG_DATABASE_NAME -e BLOG_DATABASE_USER=$BLOG_DATABASE_USER -e BLOG_DATABASE_PASSWORD=BLOG_DATABASE_PASSWORD -e SECRET_KEY=$SECRET_KEY -e CACHE_URL=$CACHE_URL -e RESULT_BACKEND=$RESULT_BACKEND -e BROKER_URL=$BROKER_URL --network=blog-net --rm -it --name=django-tinyblog $BLOGGER_IMAGE coverage run manage.py test -v 2 --noinput
+  - docker run --user $(id -u):$(id -g) -v $COVERAGE_FILE:$COVERAGE_FILE -e COVERAGE_FILE=$COVERAGE_FILE -e BLOG_DATABASE_HOST=$BLOG_DATABASE_HOST -e BLOG_DATABASE_NAME=$BLOG_DATABASE_NAME -e BLOG_DATABASE_USER=$BLOG_DATABASE_USER -e BLOG_DATABASE_PASSWORD=BLOG_DATABASE_PASSWORD -e SECRET_KEY=$SECRET_KEY -e CACHE_URL=$CACHE_URL -e RESULT_BACKEND=$RESULT_BACKEND -e BROKER_URL=$BROKER_URL --network=blog-net --rm -it --name=django-tinyblog $BLOGGER_IMAGE sh run_test
 
-#after_success:
-#  - coverage report
+after_success:
+  - coverage report
 #  - coveralls
