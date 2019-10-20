@@ -27,7 +27,7 @@ services:
 before_script:
   - touch $COVERAGE_FILE
   - sudo chown 1000:1000 $COVERAGE_FILE
-  - sudo chmod 777:777 $COVERAGE_FILE
+  - sudo chmod 777 $COVERAGE_FILE
   - docker network create --driver bridge blog-net
   - docker run -d -p 5432:5432 --network=blog-net --name=postgres postgres:latest
   - docker run -d -p 6379:6379 --network=blog-net --name=redis redis:latest
