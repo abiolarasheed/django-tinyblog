@@ -13,13 +13,12 @@ before_install:
 
 services:
   - docker
-  - redis-server
 
 before_script:
 #  - docker build -t $BLOGGER_IMAGE .
   - docker network create --driver bridge blog-net
   - docker run -d -p 5432:5432 --network=blog-net --name=postgres postgres:latest
-  - docker run -d --network=blog-net --name=redis redis:latest
+  - docker run -d -p 6379:6379 --network=blog-net --name=redis redis:latest
 
 script:
   - docker ps
