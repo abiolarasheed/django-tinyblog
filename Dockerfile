@@ -17,7 +17,10 @@ ENV PATH="/home/blogger/.local/bin:${PATH}"
 COPY --chown=blogger:blogger Pipfile* /tmp/
 RUN cd /tmp && pipenv lock --clear --requirements > requirements.txt \
     && pip install --user --no-cache-dir -r /tmp/requirements.txt \
-    && rm -rf /tmp/requirements.txt && rm -rf /tmp/Pipfile*
+    && rm -rf /tmp/requirements.txt && rm -rf /tmp/Pipfile* \
+    && touch /tmp/.coverage && && chmod 777 /tmp/.coverage
+
+VOLUME /tmp/.coverage
 
 # Copy code over to user home directory
 COPY --chown=blogger:blogger . .
