@@ -1,2 +1,1 @@
-chown blogger:blogger  $COVERAGE_FILE
 coverage run manage.py test -v 2 --noinput
