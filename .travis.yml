@@ -12,7 +12,6 @@ matrix:
 
 env:
   - BLOGGER_IMAGE=abiolarashed/django-tinyblog:$TRAVIS_BUILD_ID
-  - NETWORK=blog-net
 
 before_install:
   - export DJANGO_SETTINGS_MODULE=tinyblog.settings
@@ -22,14 +21,14 @@ services:
   - docker
 
 before_script:
-  - docker network create --driver bridge $NETWORK
-  - docker run -d -p 6379:6379 --network=$NETWORK --name=redis redis:4.0.5-alpine
-  - docker run -d -p 5432:5432 --network=$NETWORK --name=postgres postgres:12-alpine
+  - docker network create --driver bridge blog-net
+  - docker run -d -p 6379:6379 --network=blog-net --name=redis redis:4.0.5-alpine
+  - docker run -d -p 5432:5432 --network=blog-net --name=postgres postgres:12-alpine
   - docker exec -d postgres psql -c 'create database test_db;' -U postgres
   - docker build -t $BLOGGER_IMAGE .
 
 script:
-  - docker run --network=$NETWORK -itd --name=django-tinyblog $BLOGGER_IMAGE coverage run manage.py test --noinput
+  - docker run --network=blog-net -itd --name=django-tinyblog $BLOGGER_IMAGE coverage run manage.py test --noinput
 
 after_success:
   - coverage report
