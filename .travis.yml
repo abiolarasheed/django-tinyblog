@@ -11,31 +11,25 @@ matrix:
       sudo: true
 
 env:
-  - DJANGO_VERSION=2.0.8
-  - DJANGO_VERSION=2.0.2
+  - BLOGGER_IMAGE=abiolarashed/django-tinyblog:$TRAVIS_BUILD_ID
+  - NETWORK=${NETWORK}
 
 before_install:
   - export DJANGO_SETTINGS_MODULE=tinyblog.settings
   - export PIP_USE_MIRRORS=true
 
-install:
-  - pip install pipenv
-  - pipenv sync
-  - pipenv install
-  - pipenv install Django==$DJANGO_VERSION
-
 services:
-  - postgresql
-  - redis-server
-
-addons:
-  postgresql: "9.6"
+  - docker
 
 before_script:
-  - psql -c 'create database test_db;' -U postgres
+  - docker network create --driver bridge ${NETWORK}
+  - docker run -d -p 6379:6379 --network=${NETWORK} --name=redis redis:4.0.5-alpine
+  - docker run -d -p 5432:5432 --network=${NETWORK} --name=postgres postgres:12-alpine
+  - docker exec -d postgres psql -c 'create database test_db;' -U postgres
+  - docker build -t ${BLOGGER_IMAGE} .
 
 script:
-  - coverage run manage.py test --noinput
+  - docker run --network=${NETWORK} -itd --name=django-tinyblog ${BLOGGER_IMAGE} coverage run manage.py test --noinput
 
 after_success:
   - coverage report
