@@ -9,6 +9,7 @@ env:
   - CACHE_URL=redis://redis:6379/1
   - BROKER_URL=redis://redis:6379/2
   - RESULT_BACKEND=redis://redis:6379/3
+  - BLOG_DATABASE_HOST=postgres
 
 before_install:
   - export DJANGO_SETTINGS_MODULE=tinyblog.settings
@@ -25,7 +26,7 @@ before_script:
 
 script:
   - docker ps
-  - docker run -e SECRET_KEY=$SECRET_KEY -e CACHE_URL=$CACHE_URL -e RESULT_BACKEND=$RESULT_BACKEND -e BROKER_URL=$BROKER_URL --network=blog-net --rm -it --name=django-tinyblog $BLOGGER_IMAGE coverage run manage.py test --noinput
+  - docker run -e BLOG_DATABASE_NAME=$BLOG_DATABASE_NAME -e BLOG_DATABASE_USER=$BLOG_DATABASE_USER -e BLOG_DATABASE_PASSWORD=BLOG_DATABASE_PASSWORD -e SECRET_KEY=$SECRET_KEY -e CACHE_URL=$CACHE_URL -e RESULT_BACKEND=$RESULT_BACKEND -e BROKER_URL=$BROKER_URL --network=blog-net --rm -it --name=django-tinyblog $BLOGGER_IMAGE coverage run manage.py test --noinput
 
 #after_success:
 #  - coverage report
