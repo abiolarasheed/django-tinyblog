@@ -1,4 +1,5 @@
-pip install coverage pyyaml coveralls
+export PIP_USE_MIRRORS=true
+pip install --user --no-cache-dir coverage pyyaml coveralls
 coverage run manage.py test -v 2 --noinput
 cp $COVERAGE_FILE $(pwd)
 coverage report
