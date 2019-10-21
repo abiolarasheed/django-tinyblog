@@ -1,14 +1,15 @@
+language: bash
+
 matrix:
   include:
     - dist: xenial
       sudo: true
 
-env:
-  - BLOGGER_IMAGE=abiolarashed/django-tinyblog:$TRAVIS_BUILD_ID
-
 before_install:
   - export DJANGO_SETTINGS_MODULE=tinyblog.settings
   - export PIP_USE_MIRRORS=true
+  - export BASE_IMAGE_NAME=rasheedabiola3/django-tinyblog
+  - export BLOGGER_IMAGE=$BASE_IMAGE_NAME:$TRAVIS_BUILD_ID
 
 services:
   - docker
@@ -21,3 +22,10 @@ before_script:
 
 script:
   - docker run -v /tmp/test:/tmp/test -e BLOG_DATABASE_HOST=$BLOG_DATABASE_HOST -e BLOG_DATABASE_NAME=$BLOG_DATABASE_NAME -e BLOG_DATABASE_USER=$BLOG_DATABASE_USER -e BLOG_DATABASE_PASSWORD=BLOG_DATABASE_PASSWORD -e SECRET_KEY=$SECRET_KEY -e CACHE_URL=$CACHE_URL -e RESULT_BACKEND=$RESULT_BACKEND -e BROKER_URL=$BROKER_URL --network=blog-net --rm -it --name=django-tinyblog $BLOGGER_IMAGE sh run_test
+
+deploy:
+  provider: script
+  script: bash docker_push
+
+after_success:
+  - docker logout

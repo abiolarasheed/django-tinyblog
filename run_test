@@ -1,5 +1,8 @@
+#!/bin/sh
+set -e  # Configure shell so that if one command fails, it exits
 export PIP_USE_MIRRORS=true
 pip install --user --no-cache-dir coverage pyyaml coveralls
+coverage erase
 coverage run manage.py test -v 2 --noinput
 coverage report
 coveralls
