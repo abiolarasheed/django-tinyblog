@@ -26,6 +26,3 @@ script:
 deploy:
   provider: script
   script: bash docker_push
-
-after_success:
-  - docker logout
