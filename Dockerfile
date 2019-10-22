@@ -1,8 +1,8 @@
 FROM python:3.7
 EXPOSE 8000
 
-ARG PROJECT_USER=blogger
-ARG PROJECT_DIR=/home/blogger/django-tinyblog
+ENV PROJECT_USER=blogger
+ENV PROJECT_DIR=/home/blogger/django-tinyblog
 
 # Update to latest pip, create app user and install pipenv
 RUN pip install --no-cache-dir --upgrade pip \
