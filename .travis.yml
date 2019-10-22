@@ -23,6 +23,20 @@ before_script:
 script:
   - docker run -v /tmp/test:/tmp/test -e BLOG_DATABASE_HOST=$BLOG_DATABASE_HOST -e BLOG_DATABASE_NAME=$BLOG_DATABASE_NAME -e BLOG_DATABASE_USER=$BLOG_DATABASE_USER -e BLOG_DATABASE_PASSWORD=BLOG_DATABASE_PASSWORD -e SECRET_KEY=$SECRET_KEY -e CACHE_URL=$CACHE_URL -e RESULT_BACKEND=$RESULT_BACKEND -e BROKER_URL=$BROKER_URL --network=blog-net --rm -it --name=django-tinyblog $BLOGGER_IMAGE sh run_test
 
+before_deploy:
+  # override image name and use the tag name too
+  - export BLOGGER_IMAGE=$BASE_IMAGE_NAME:$TRAVIS_TAG
+
 deploy:
   provider: script
   script: bash docker_push
+  skip_cleanup: true
+  on:
+    tags: true
+    branch: master
+branches:
+  only:
+    # Pushes and PR to the master branch
+    - master
+    # a new tag is pushed. Version tags should be of the form: v0.1.0
+- /^v\d+\.\d+\.\d+.*$/
