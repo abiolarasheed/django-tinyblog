@@ -282,18 +282,18 @@ if b_eval(os.environ.get("S3", "false").title()):
     AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
     AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
-    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-    AWS_S3_OBJECT_PARAMETERS = {
-        'CacheControl': 'max-age=86400',
-    }
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+    AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
     AWS_HEADERS = {
-        'Expires': 'Thu, 15 Apr 2010 20:00:00 GMT',
-        'Cache-Control': 'max-age=86400',
+        "Expires": "Thu, 15 Apr 2010 20:00:00 GMT",
+        "Cache-Control": "max-age=86400",
     }
     AWS_DEFAULT_ACL = os.environ.get("AWS_DEFAULT_ACL", "public-read")
-    AWS_AUTO_CREATE_BUCKET = b_eval(os.environ.get("AWS_AUTO_CREATE_BUCKET", "false").title())
+    AWS_AUTO_CREATE_BUCKET = b_eval(
+        os.environ.get("AWS_AUTO_CREATE_BUCKET", "false").title()
+    )
     DEFAULT_FILE_STORAGE = "tinyblog.utils.MediaStorage"
-    STATICFILES_STORAGE = 'tinyblog.utils.StaticStorage'
+    STATICFILES_STORAGE = "tinyblog.utils.StaticStorage"
     AWS_STATIC_LOCATION = "static"
     AWS_MEDIA_LOCATION = "media"
 

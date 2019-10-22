@@ -152,7 +152,11 @@ class EntryListView(PageMetaData, ListView):
     template_dir = os.environ.get("CUSTOM_TEMPLATE_DIR")
 
     def get_queryset(self):
-        return self.model.published.select_related("category").all().order_by("-modified_at")
+        return (
+            self.model.published.select_related("category")
+            .all()
+            .order_by("-modified_at")
+        )
 
     def get_template_names(self):
         if self.template_dir:

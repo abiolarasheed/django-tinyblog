@@ -45,9 +45,7 @@ urlpatterns = [
 ]
 
 
-urlpatterns = [
-        path("", blog_views.EntryListView.as_view(), name="index")
-    ] + urlpatterns
+urlpatterns = [path("", blog_views.EntryListView.as_view(), name="index")] + urlpatterns
 
 
 if settings.DEBUG and (not os.environ.get("MINIO_STORAGE", False)):
