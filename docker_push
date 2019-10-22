@@ -1,7 +1,6 @@
 #!/bin/bash
-
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-docker push $BLOGGER_IMAGE
-docker tag $BLOGGER_IMAGE $BASE_IMAGE_NAME:lastest
-docker push $BASE_IMAGE_NAME:lastest
+docker push $BLOGGER_IMAGE  # push latest
+docker tag $BLOGGER_IMAGE $BASE_IMAGE_NAME:$TRAVIS_TAG
+docker push $BASE_IMAGE_NAME:$TRAVIS_TAG
 docker logout
