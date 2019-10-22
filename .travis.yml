@@ -8,7 +8,7 @@ matrix:
 before_install:
   - export DJANGO_SETTINGS_MODULE=tinyblog.settings
   - export PIP_USE_MIRRORS=true
-  - export BLOGGER_IMAGE=$BASE_IMAGE_NAME:$latest
+  - export BLOGGER_IMAGE=$BASE_IMAGE_NAME:latest
 
 services:
   - docker
