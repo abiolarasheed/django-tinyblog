@@ -7,7 +7,7 @@ RUN pip install --no-cache-dir --upgrade pip \
     && pip install pipenv
 
 USER blogger
-WORKDIR /home/blogger
+WORKDIR /home/blogger/django-tinyblog
 
 RUN pip install --user pipenv
 ENV PATH="/home/blogger/.local/bin:${PATH}"
