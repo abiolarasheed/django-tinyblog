@@ -8,7 +8,6 @@ matrix:
 before_install:
   - export DJANGO_SETTINGS_MODULE=tinyblog.settings
   - export PIP_USE_MIRRORS=true
-  - export BASE_IMAGE_NAME=rasheedabiola3/django-tinyblog
   - export BLOGGER_IMAGE=$BASE_IMAGE_NAME:$TRAVIS_BUILD_ID
 
 services:
@@ -39,4 +38,4 @@ branches:
     # Pushes and PR to the master branch
     - master
     # a new tag is pushed. Version tags should be of the form: v0.1.0
-- /^v\d+\.\d+\.\d+.*$/
+    - /^v\d+\.\d+\.\d+.*$/
