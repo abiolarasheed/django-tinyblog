@@ -24,7 +24,7 @@ script:
 
 before_deploy:
   # Change image tag
-  - docker tag $BLOGGER_IMAGE $BASE_IMAGE_NAME:TRAVIS_TAG
+  - docker tag $BLOGGER_IMAGE $BASE_IMAGE_NAME:$TRAVIS_TAG
   # Override image name and use the tag name too
   - export BLOGGER_IMAGE=$BASE_IMAGE_NAME:$TRAVIS_TAG
 
