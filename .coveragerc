@@ -1,7 +1,6 @@
 [run]
 include = ./*
 branch = True
-exclude = ./.local
 
 [report]
 # Regexes for lines to exclude from consideration
