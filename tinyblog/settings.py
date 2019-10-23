@@ -77,6 +77,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "blog.context_processors.brand",
             ],
             "loaders": [
                 (
@@ -304,6 +305,15 @@ if b_eval(os.environ.get("S3", "false").title()):
 DEFAULT_META_IMAGE = os.path.join(STATIC_URL, SITE_LOGO)
 if not DEBUG:
     ALLOWED_HOSTS = [META_SITE_DOMAIN]
+
+# A list of dicts to be rendered as nav bar links
+NAVBAR_LINKS = ({"label": "home", "url_name": "index", "url_args": ()},
+                {"label": "Startups", "url_name": "navbar_search", "url_args": ()},
+                {"label": "Python", "url_name": "navbar_search", "url_args": ()},
+                {"label": "Machine Learning", "url_name": "navbar_search", "url_args": ()},)
+
+# Tuple to display
+NAVBAR_BRAND = ("tiny", "Blog")
 
 # Do not place any settings bellow this setting.
 # Define all your custom settings in the custom_settings.py
