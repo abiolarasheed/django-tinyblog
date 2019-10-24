@@ -77,7 +77,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "blog.context_processors.brand",
+                "blog.context_processors.navbar",
             ],
             "loaders": [
                 (
@@ -313,7 +313,10 @@ NAVBAR_LINKS = ({"label": "home", "url_name": "index", "url_args": ()},
                 {"label": "Machine Learning", "url_name": "navbar_search", "url_args": ()},)
 
 # Tuple to display
-NAVBAR_BRAND = ("tiny", "Blog")
+print(os.environ.get("NAVBAR_BRAND"))
+NAVBAR_BRAND = os.environ.get("NAVBAR_BRAND", "tiny Blog").split()
+NAVBAR_BACKGROUND_COLOR = os.environ.get("NAVBAR_BACKGROUND_COLOR")
+NAVBAR_BORDER_COLOR = os.environ.get("NAVBAR_BORDER_COLOR")
 
 # Do not place any settings bellow this setting.
 # Define all your custom settings in the custom_settings.py
