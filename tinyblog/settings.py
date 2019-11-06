@@ -113,9 +113,13 @@ if os.environ.get("BLOG_DATABASE_NAME"):
             "USER": os.environ["BLOG_DATABASE_USER"],
             "PASSWORD": os.environ["BLOG_DATABASE_PASSWORD"],
             "HOST": os.environ.get("BLOG_DATABASE_HOST", "localhost"),
+            "PORT": os.environ.get("BLOG_DATABASE_PORT", "5432"),
+            'OPTIONS': {'sslmode': 'require'},
             "CONN_MAX_AGE": None,
         }
     }
+    if os.environ.get("BLOG_DATABASE_SSLMODE"):
+        DATABASES["default"]['OPTIONS'] = {'sslmode': 'require'}
 else:
     DATABASES = {
         "default": {
@@ -313,7 +317,6 @@ NAVBAR_LINKS = ({"label": "home", "url_name": "index", "url_args": ()},
                 {"label": "Machine Learning", "url_name": "navbar_search", "url_args": ()},)
 
 # Tuple to display
-print(os.environ.get("NAVBAR_BRAND"))
 NAVBAR_BRAND = os.environ.get("NAVBAR_BRAND", "tiny Blog").split()
 NAVBAR_BACKGROUND_COLOR = os.environ.get("NAVBAR_BACKGROUND_COLOR")
 NAVBAR_BORDER_COLOR = os.environ.get("NAVBAR_BORDER_COLOR")
