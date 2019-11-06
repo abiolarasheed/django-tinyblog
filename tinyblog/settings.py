@@ -114,7 +114,6 @@ if os.environ.get("BLOG_DATABASE_NAME"):
             "PASSWORD": os.environ["BLOG_DATABASE_PASSWORD"],
             "HOST": os.environ.get("BLOG_DATABASE_HOST", "localhost"),
             "PORT": os.environ.get("BLOG_DATABASE_PORT", "5432"),
-            'OPTIONS': {'sslmode': 'require'},
             "CONN_MAX_AGE": None,
         }
     }
