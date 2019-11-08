@@ -29,8 +29,7 @@ env = environ.Env()
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = b_eval(os.environ.get("DEBUG", "False").title())
-ALLOWED_HOSTS = ["*"]
+DEBUG = b_eval(os.environ.get("DEBUG", "False").title()) or False
 
 SITE_ID = 1
 # Application definition
@@ -296,8 +295,7 @@ if b_eval(os.environ.get("S3", "false").title()):
 
 
 DEFAULT_META_IMAGE = os.path.join(STATIC_URL, SITE_LOGO)
-if not DEBUG:
-    ALLOWED_HOSTS = [META_SITE_DOMAIN]
+ALLOWED_HOSTS = [META_SITE_DOMAIN]
 
 # A list of dicts to be rendered as nav bar links
 NAVBAR_LINKS = (
