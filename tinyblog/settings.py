@@ -13,13 +13,14 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 from ast import literal_eval as b_eval
 import os
 from django.contrib.messages import constants as messages
+import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from minio_storage.storage import MinioMediaStorage
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIR = os.path.dirname(os.path.abspath(__file__))
-
+env = environ.Env()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -105,20 +106,9 @@ if os.path.exists(CUSTOM_TEMPLATES):
 WSGI_APPLICATION = "tinyblog.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-if os.environ.get("BLOG_DATABASE_NAME"):
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.environ["BLOG_DATABASE_NAME"],
-            "USER": os.environ["BLOG_DATABASE_USER"],
-            "PASSWORD": os.environ["BLOG_DATABASE_PASSWORD"],
-            "HOST": os.environ.get("BLOG_DATABASE_HOST", "localhost"),
-            "PORT": os.environ.get("BLOG_DATABASE_PORT", "5432"),
-            "CONN_MAX_AGE": None,
-        }
-    }
-    if os.environ.get("BLOG_DATABASE_SSLMODE"):
-        DATABASES["default"]['OPTIONS'] = {'sslmode': 'require'}
+if os.environ.get("DATABASE_URL"):
+    DATABASES = {"default": env.db()}
+
 else:
     DATABASES = {
         "default": {
@@ -310,10 +300,12 @@ if not DEBUG:
     ALLOWED_HOSTS = [META_SITE_DOMAIN]
 
 # A list of dicts to be rendered as nav bar links
-NAVBAR_LINKS = ({"label": "home", "url_name": "index", "url_args": ()},
-                {"label": "Startups", "url_name": "navbar_search", "url_args": ()},
-                {"label": "Python", "url_name": "navbar_search", "url_args": ()},
-                {"label": "Machine Learning", "url_name": "navbar_search", "url_args": ()},)
+NAVBAR_LINKS = (
+    {"label": "home", "url_name": "index", "url_args": ()},
+    {"label": "Startups", "url_name": "navbar_search", "url_args": ()},
+    {"label": "Python", "url_name": "navbar_search", "url_args": ()},
+    {"label": "Machine Learning", "url_name": "navbar_search", "url_args": ()},
+)
 
 # Tuple to display
 NAVBAR_BRAND = os.environ.get("NAVBAR_BRAND", "tiny Blog").split()
