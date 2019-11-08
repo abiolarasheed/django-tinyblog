@@ -53,6 +53,7 @@ urllib3 = "*"
 django-minio-storage = "*"
 boto3 = "*"
 django-storages = "*"
+django-environ = "*"
 
 [requires]
 python_version = "3.7"
