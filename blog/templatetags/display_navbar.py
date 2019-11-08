@@ -12,6 +12,7 @@ class NavBarLink:
     """
     Creates link to use for narbar
     """
+
     def __init__(self, **kwargs):
         self.label = kwargs.get("label")
         self.url = reverse_lazy(kwargs.get("url_name"), args=kwargs.get("url_args"))
