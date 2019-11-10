@@ -48,6 +48,6 @@ urlpatterns = [
 urlpatterns = [path("", blog_views.EntryListView.as_view(), name="index")] + urlpatterns
 
 
-if settings.DEBUG and (not os.environ.get("MINIO_STORAGE", False)):
+if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
