@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
+import json
 from ast import literal_eval as b_eval
 import os
 from django.contrib.messages import constants as messages
@@ -298,12 +299,9 @@ DEFAULT_META_IMAGE = os.path.join(STATIC_URL, SITE_LOGO)
 ALLOWED_HOSTS = [META_SITE_DOMAIN]
 
 # A list of dicts to be rendered as nav bar links
-NAVBAR_LINKS = (
-    {"label": "home", "url_name": "index", "url_args": ()},
-    {"label": "Startups", "url_name": "navbar_search", "url_args": ()},
-    {"label": "Python", "url_name": "navbar_search", "url_args": ()},
-    {"label": "Machine Learning", "url_name": "navbar_search", "url_args": ()},
-)
+NAVBAR_LINKS = ()
+if os.environ.get("NAVBAR_LINKS"):
+    NAVBAR_LINKS = json.loads(os.environ.get("NAVBAR_LINKS"))
 
 # Tuple to display
 NAVBAR_BRAND = os.environ.get("NAVBAR_BRAND", "tiny Blog").split()
