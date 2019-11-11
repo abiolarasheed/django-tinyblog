@@ -10,14 +10,18 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-import json
 from ast import literal_eval as b_eval
-import os
-from django.contrib.messages import constants as messages
 import environ
+import json
+import os
 
+from django.contrib.messages import constants as messages
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from minio_storage.storage import MinioMediaStorage
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIR = os.path.dirname(os.path.abspath(__file__))
@@ -313,3 +317,6 @@ NAVBAR_BORDER_COLOR = os.environ.get("NAVBAR_BORDER_COLOR")
 # file next to the settings.py file.
 if os.path.exists(os.path.join(DIR, "custom_settings.py")):
     from .custom_settings import *
+
+if os.environ.get("SENTRY_PROJECT_URL"):
+    sentry_sdk.init(dsn=os.environ.get("SENTRY_PROJECT_URL"), integrations=[DjangoIntegration()])
