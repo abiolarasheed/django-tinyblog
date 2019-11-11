@@ -54,6 +54,7 @@ django-minio-storage = "*"
 boto3 = "*"
 django-storages = "*"
 django-environ = "*"
+sentry-sdk = "*"
 
 [requires]
 python_version = "3.7"
