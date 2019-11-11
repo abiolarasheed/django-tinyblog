@@ -16,6 +16,7 @@ import json
 import os
 
 from django.contrib.messages import constants as messages
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from minio_storage.storage import MinioMediaStorage
 
@@ -319,4 +320,6 @@ if os.path.exists(os.path.join(DIR, "custom_settings.py")):
     from .custom_settings import *
 
 if os.environ.get("SENTRY_PROJECT_URL"):
-    sentry_sdk.init(dsn=os.environ.get("SENTRY_PROJECT_URL"), integrations=[DjangoIntegration()])
+    sentry_sdk.init(
+        dsn=os.environ.get("SENTRY_PROJECT_URL"), integrations=[DjangoIntegration()]
+    )
