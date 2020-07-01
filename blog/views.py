@@ -164,6 +164,7 @@ class EntryListView(PageMetaData, ListView):
         return "entry_list.html"
 
     def get_context_data(self, **kwargs):
+        self.object_list = self.get_queryset()
         context = super(EntryListView, self).get_context_data(**kwargs)
         context["title"] = _("Latest Posts")
         context["meta"] = self.get_meta(context=context)
@@ -262,9 +263,12 @@ class CategoryListView(CreateView, ListView):
     model = Category
     success_url = reverse_lazy("category-list")
     fields = ["name"]
-    queryset = model.objects.all().order_by("name")
+
+    def get_queryset(self):
+        return self.model.objects.all().order_by("name")
 
     def get_context_data(self, **kwargs):
+        self.object_list = self.get_queryset()
         context = super(CategoryListView, self).get_context_data(**kwargs)
         context["title"] = _("Categories")
         return context
@@ -291,6 +295,7 @@ class EntryByCategoryListView(EntryListView, PageMetaData):
         )
 
     def get_context_data(self, **kwargs):
+        self.object_list = self.get_queryset()
         context = super(EntryByCategoryListView, self).get_context_data(**kwargs)
 
         try:
